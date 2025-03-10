@@ -1,5 +1,3 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
 <script lang="ts">
   import { goto } from '$app/navigation';
   import { Window } from '$lib';
@@ -401,3 +399,33 @@
     };
   });
 </script>
+
+<div class="container" bind:this={container}>
+  <div class="progress-bar" bind:this={progressBar}></div>
+
+  <div class="progress-counter" bind:this={progressCounter}>
+    <h2>0</h2>
+  </div>
+
+  <!-- Optional navigation buttons -->
+  <button class="nav-btn prev" onclick={() => scrollToSection(currentSection - 1)}>←</button>
+  <button class="nav-btn next" onclick={() => scrollToSection(currentSection + 1)}>→</button>
+
+  <section class="mainContain scroller" bind:this={scroller}>
+    <Window role="child" class="contentContain" color="transparent" style="--hoverC:white" bind:this={sections[0]}>
+      <p>no yoo</p>
+    </Window>
+    <Window role="child" class="contentContain" color="transparent" bind:this={sections[1]}>
+      <p>no yoo</p>
+    </Window>
+    <Window role="child" class="contentContain" color="transparent" style="--hoverC:beige" bind:this={sections[2]}>
+      <p>no ya</p>
+    </Window>
+    <Window role="child" class="contentContain" color="transparent" style="--hoverC:#ffffca" bind:this={sections[3]}>
+      <p>no y333</p>
+    </Window>
+    <Window role="child" class="contentContain" color="transparent" style="--hoverC:#3B6E25" bind:this={sections[4]}>
+      <p>no y443</p>
+    </Window>
+  </section>
+</div>
