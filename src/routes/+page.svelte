@@ -429,3 +429,115 @@
     </Window>
   </section>
 </div>
+
+<style>
+  :root, * {
+    --scale: 0;
+    will-change: transform, scale, background-color;
+  }
+  .container {
+    position: relative;
+    inset: 0;
+    width: 100vw;
+    height: 100%;
+	overflow-y: hidden;
+    overflow-x: hidden;
+
+  }
+  .progress-bar {
+    position: fixed;
+    bottom: 0;
+    inset-inline: 0;
+    width: 100vw;
+    height: 10px;
+    transform: scaleX(var(--scale));
+    transform-origin: center left;
+    background-color: #2c5d9859;
+    z-index: 2;
+  }
+  .progress-counter {
+    position: fixed;
+    height: fit-content;
+    bottom: 3%;
+    right: 10%;
+    color: blue;
+    z-index: 2;
+    outline: solid #2C5D98;
+  }
+  .mainContain {
+    position: relative;
+    display: flex;
+	gap: 10px;
+    flex-direction: row;
+	/* justify-content: space-evenly; */
+    overflow-y: hidden;
+    overflow-x: hidden;
+    height: 99.8%;
+    width: auto;
+  }
+  :global(.contentContain) {
+    margin-top: 1px !important;
+    position: relative;
+    top: 10px;
+    flex: 0 0 90vw;
+    height: 97.5%;
+    padding-inline: var(--Padding-genral);
+	translate:clamp(-4% ,-5vw, -10%) 0;
+	background-color: color-mix(in srgb, var(--hoverC,#2C5D98) , rgba(255, 255, 255, 0.466) 70% );
+	transition: .5s ease-out;
+
+	display: grid;
+	grid-template-columns: repeat(60,1fr);
+	grid-template-rows: repeat(40,1fr);
+
+	box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+	box-shadow: rgba(224, 224, 238, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.177) 0px -2px 6px 0px inset,rgba(212, 211, 203, 0.505) 0px 30px 60px -12px inset, rgba(211, 188, 131, 0.3) 0px 18px 36px -18px inset;
+	box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset;
+	/* box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset; */
+	box-shadow: rgba(0, 0, 0, 0.1) -4px 9px 25px -6px;
+	/* box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset; */
+
+  }
+
+  :global(.contentContain:hover){
+	background-color: color-mix(in srgb, var(--hoverC,#2C5D98) , rgba(255, 255, 255, 0.466) 30% );
+	transition: 1s ease-out;
+
+  }
+
+  :global(.contentContain) p{
+	grid-column: 10/30;
+	grid-row: 31/36;
+	outline: solid;
+	/* width: fit-content; */
+  }
+
+  /* Add navigation button styles */
+  .nav-btn {
+    position: fixed;
+    bottom: 3%;
+    transform: translateY(0%);
+    background: rgba(0, 0, 0, 0.2);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 10;
+    transition: background 0.3s;
+  }
+  
+  .nav-btn:hover {
+    background: rgba(0, 0, 0, 0.5);
+  }
+  
+  .prev {
+    left: 20px;
+  }
+  
+  .next {
+    right: 20px;
+  }
+</style>
