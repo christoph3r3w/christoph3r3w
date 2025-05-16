@@ -1,22 +1,30 @@
-<script>
+<script lang="ts">
  	import { menuOpen } from "$lib/store";
 	let open = $state()
 
-	
-	function menuClose(event){
-
-		if(event.key == 'h'){
-			menuOpen.set(false)
-
+	function startViewTransition(callback: () => void) {
+		if (!document.startViewTransition) {
+			// Fallback for browsers that don't support View Transitions
+			callback();
+			return;
 		}
-		 menuOpen.set(false)
+		
+		// Start a view transition
+		return document.startViewTransition(() => {
+			// Update the DOM within the transition
+			callback();
+		});
+	}
+	
+	function menuClose(){
+		startViewTransition(function() {
+			menuOpen.set(false);
+		})
 	}
 
 	function dropMenu()  {
 		menuOpen.set(true);
-
 	}
-
 
 	$effect(()=>{
 		   $: menuOpen.subscribe(value => {
@@ -28,9 +36,7 @@
 
 {#snippet menuContent()}
 	<section>
-		<button class="closebtn" onmouseup={menuClose} onkeypress="{menuClose}">close menu</button>
 		{@render headerC()}
-
 	</section>
 {/snippet}
 
@@ -43,16 +49,14 @@
 				</figure>
 			</a>
 		</li>
-		<!-- {#if open == true}
-			<li><button onclick={dropMenu}>menu</button></li>
-		{/if} -->
 		<li class="head-routes">
-			<span> <a href="/">work</a></span>
+			<span> <a href="#works">work</a></span>
 			<span> <a href="/">about</a></span>
 			<span> <a href="/">workshops,events</a></span>
 		</li>
 		<li class="head-extra">
-			<span>darkmode toggle</span>
+			<button class="modeDark">darkmode toggle</button>
+
 			<h3>Contact</h3>
 			<span><img src="" alt="insta"> <a href="/">insta</a></span>
 			<span><img src="" alt="github"> <a href="/">github</a></span>
@@ -62,7 +66,6 @@
 	</ul>
 {/snippet}
 
-
 {#if open == true}
 	<article class="active">
 		{@render menuContent()}
@@ -70,27 +73,28 @@
 
 {:else if open == false}
 	<article class="close">		
-		{@render menuContent()}
+		<!-- {@render menuContent()} -->
 	</article>
 {/if}
 
 <style>
 	:root{
 		--H-menu:50cqh;
-		/* --H-top:0; */
 	}
 
 	article{
 		position: relative;
-		z-index: 10;
+		z-index: 1;
 		height:var(--H-menu);
 		
 		background-color: rgba(0, 119, 255, 0.495);
-		background-color: rgb(255, 255, 255);
+		background-color: rgba(255, 255, 255, 0.801);
 		backdrop-filter: blur(5px);
 		padding-inline: var(--Padding-genral);
 		container-type: inline-size;
 		container-name: menu;
+		view-transition-name: menu;
+
 
 		@starting-style{
 			background-color:blue;
@@ -103,15 +107,16 @@
 		display: block;
 		inset: 0;
 		top: calc(var(--H-top) - .1%);
-		/* outline: solid rgba(0, 119, 255, 0.548); */
 		box-shadow: 0 10px 5px -10px rgba(0, 0, 0, 0.278);
+		box-shadow: rgba(27, 21, 14, 0.041) 0px 50px 50px -20px, rgba(0, 0, 0, 0.15) 0px 10px 60px -30px, rgba(10, 37, 64, 0.35) 0px -1.7px 3px 0px inset;
+		z-index: 1;
+		animation: block .55s linear 0s alternate both;
+		view-transition-name: menu;
 
-		animation: block .6s linear 0s alternate both;
-
-
+		/* border-bottom: solid rgba(0, 119, 255, 0.548); */
 	}
 
-	.active:has(button:is(:active,:focus-within)) {
+	.active:has(button.closebtn:is(:active,:focus-within)) {
 		height: calc(var(--H-menu) + 12px);
 		transition: .4s cubic-bezier(0.375, 0.685, 0.32, 1.275);
 	}
@@ -144,20 +149,19 @@
 	.close{
 		position: absolute;
 		inset: 0;
-		/* background-color: rgba(0, 119, 255, 0.548); */
-		/* background-color: chartreuse; */
-		animation: launch .2s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275);
-		
+		animation: launch .2s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275) .01s;
+		/* view-transition-name: menu; */
+		z-index: 0;
 		
 		@starting-style{
 			translate: 0 100%;
 			opacity:0;
 		}
+
 		.flower{
 			animation: none !important;
 		}
 	}
-
 	
 	section{
 		display: block;
@@ -168,7 +172,7 @@
 
 	section button.closebtn{
 		position: absolute;
-		bottom: 4cqh;
+		bottom: 5cqh;
 		right: 2%;
 		width: 6rem;
 		aspect-ratio: 1;
@@ -179,7 +183,6 @@
 	
 	section button.closebtn:active{
 		scale: .95;
-
 	}
 
 	/* ////////////// */
@@ -198,7 +201,7 @@
 	}
 
 	.headerUl li{
-		outline: solid 1px rgba(207, 82, 82, 0.525);
+		/* outline: solid 1px rgba(207, 82, 82, 0.525); */
 	}
 
 	/* home, main icon  */
@@ -208,49 +211,51 @@
 		width: var(--w);
 		height: 60cqh;
 		max-height: 100%;
+		z-index: 30;
 		/* outline: solid blue; */
-		/* flex: .5 0 ; */
 	}
 
 	.headerUl li:nth-of-type(1) a {
+		position: relative;
 		overflow: hidden;
-		display: block;
+		display: grid;
+		place-content: center;
 		aspect-ratio: 1;
 
 		width: fit-content;
 		height: 100%;
+		/* outline: solid; */
 	}
 
-
-	/* make the flower face a component that has a custom event, when theis event is truggered then moved it to the menu   */
-	.headerUl figure{
+	/* make the flower face a component that has a custom event, when theis event is triggered then moved it to the menu   */
+	.headerUl li:nth-of-type(1) a figure{
 		flex: 0 1 auto;
-
 		position: relative;
-		width: 100%;
-		/* height: 100%; */
+		width: 95%;
+		height: 100%;
 		aspect-ratio: 1;
 		view-transition-name: header-figure;
+		isolation: isolate;
 
 		& img{
-
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-		object-position: center;
-		animation: sway 10s linear infinite .2s backwards ;
-			
-
+			position: relative;
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			object-position: center;
+			animation: sway 10s linear infinite .2s backwards ;
 		}
 
 		&.flower{
+			position: relative;
 			aspect-ratio: 1;
 			--g:/25.486% 25.486% radial-gradient(#000 calc(71% - 1px),#0000 71%) no-repeat;
 			mask: 100% 50% var(--g),88.302% 82.139% var(--g),58.682% 99.24% var(--g),25% 93.301% var(--g),3.015% 67.101% var(--g),3.015% 32.899% var(--g),25% 6.699% var(--g),58.682% 0.76% var(--g),88.302% 17.861% var(--g),radial-gradient(100% 100%,#000 35.01%,#0000 calc(35.01% + 1px));
 			scale: 1;
 			transition: .8s cubic-bezier(0.175, 0.885, 0.32, 1.275) ;
 			animation: sway 10s linear infinite .5s backwards ;
-			
+			view-transition-name: header-figure;
+			z-index: 3;
 
 			
 
@@ -259,27 +264,20 @@
 				position: absolute;
 				display: inline-grid;
 				place-content: center;
-				inset: 23%;
-				background-color: #2e2d2de4;
-				outline: solid 10px;
-				color: aliceblue;
-				z-index: 4;
+				inset: 0%;
+				z-index: 0;
 				isolation: isolate;
+				background-color: #2c5d984f;
+				mix-blend-mode:screen;
 
-				&:hover{
-					transform: rotateY(0.5turn);
-					background-color: aquamarine !important;
-
-				}
-				
+				--g:/25.486% 25.486% radial-gradient(#000 calc(71% - 1px),#0000 71%) no-repeat;
+				mask: 100% 50% var(--g),88.302% 82.139% var(--g),58.682% 99.24% var(--g),25% 93.301% var(--g),3.015% 67.101% var(--g),3.015% 32.899% var(--g),25% 6.699% var(--g),58.682% 0.76% var(--g),88.302% 17.861% var(--g),radial-gradient(100% 100%,#000 35.01%,#0000 calc(35.01% + 1px));
+				scale: 1;
+				transition: .8s cubic-bezier(0.175, 0.885, 0.32, 1.275) ;
+				animation: sway 30s linear .5s backwards ;
 			} */
-	
-
 
 		}
-
-		
-
 	}
 
 	.headerUl:has(li:nth-of-type(n) a:hover)  .flower{
@@ -292,7 +290,7 @@
 
 	.headerUl:has(li:nth-of-type(1) a:not(:hover)) .flower {
 		transition: .9s cubic-bezier(0.175, 0.885, 0.32, 1.275)  1s ;
-		/* animation: sway 10s backwards infinite .1s; */
+		animation: sway 10s backwards infinite .1s;
 	}
 
 
@@ -314,10 +312,23 @@
 	}
 
 	.headerUl .head-extra{
+		position: relative;
 		flex: 1 1 20%;
 	}
 
+	 button.modeDark{
+		position: absolute;
+		top: 5cqh;
+		right: 2cqw;
+		width: 6rem;
+		aspect-ratio: 1;
+		/* border-radius: 50%; */
+		/* border: none; */
+		z-index: 100;
+		view-transition-name: darkmode;
 
+
+	}
 
 	@keyframes sway {
 		/* 0%,100%{
@@ -356,20 +367,18 @@
 	}
 
 	@keyframes launch {
-		from{
-			
-		}
-
+		
 		50%{
-			filter: blur(2px);
+			filter: blur(1px) ;
 		}
 
 		100%{
 			translate: 0 -100%;
+			filter: opacity(5%);
 		}
-}
+	}
 
-@keyframes flip{
+	@keyframes flip{
 		to{
 			transform: rotateY(2turn);
 		}
@@ -390,23 +399,12 @@
 		.headerUl{
 			flex-direction: column-reverse;
 			height: 100%;
-
 		}
 
 		.headerUl li:nth-of-type(1) {
 			aspect-ratio: none;
-			width: fit-content
-
-		}
-
-		.headerUl{
+			width: fit-content;
 			width: 100%;
-			
-		}
-
-		.headerUl li:nth-of-type(1){
-			width: 100%;
-
 		}
 
 		.headerUl li:nth-of-type(1) a {
@@ -424,24 +422,27 @@
 			
 		}
 
+		:global(main:has(button.closeBtn:is(:active,:focus-within)) article.active) {
+			height: calc-size(fit-content, size + 2%) !important;
+			transition: .4s cubic-bezier(0.375, 0.685, 0.32, 1.275);
+		}
+
 
 		.headerUl figure.flower{
 			animation: sway 10s linear infinite .5s, flip 12s ease-out 3s both;
-
+			view-transition-name: header-figure;
+			isolation: isolate;
 		}
 
 		.headerUl:has(li:nth-of-type(n) a:hover)  .flower{
 			/* --g:/28.486% 28.486% radial-gradient(#000 calc(71% - 1px),#0000 71%) no-repeat; */
 			transition: all 1s .1s ;
 			transform: rotateY(0deg) !important;
-		
-		/* animation:flip 1s alternate forwards .1s   ; */
-	
+			/* animation:flip 1s alternate forwards .1s   ; */
 		}
 
 		.headerUl .head-routes{
 			line-height: 1.5;
-
 		}
 
 
