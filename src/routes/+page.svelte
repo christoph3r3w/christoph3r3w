@@ -105,7 +105,8 @@
   })
 </script>
 
-<div class="container" bind:this={container}>
+  <div class="container" bind:this={container}>
+  <!-- the progress bar -->
   <div class="progress-bar" bind:this={progressBar}></div>
 
   <div class="progress-counter" bind:this={progressCounter}>
@@ -116,23 +117,30 @@
   <button class="nav-btn prev" onclick={() => scrollToSection(currentSection - 1)}>←</button>
   <button class="nav-btn next" onclick={() => scrollToSection(currentSection + 1)}>→</button>
 
-  <section class="mainContain scroller" bind:this={scroller}>
-    <Window role="child" class="contentContain" color="transparent" style="--hoverC:white" bind:this={sections[0]}>
-      <p>no yoo</p>
+  <!-- the section -->
+  <section class="mainContain scroller" bind:this={scroller} onclick={menuClose}  >
+    <Window role="child" class="contentContain" color="white" style="--hoverC:white" bind:this={sections[0]}>
+     <Intro/>
     </Window>
+
     <Window role="child" class="contentContain" color="transparent" bind:this={sections[1]}>
       <p>no yoo</p>
     </Window>
-    <Window role="child" class="contentContain" color="transparent" style="--hoverC:beige" bind:this={sections[2]}>
-      <p>no ya</p>
+
+    <Window role="child" class="contentContain" color="transparent" style="--hoverC:#DCA256" bind:this={sections[2]}>
+      <Works/>
     </Window>
-    <Window role="child" class="contentContain" color="transparent" style="--hoverC:#ffffca" bind:this={sections[3]}>
-      <p>no y333</p>
-    </Window>
-    <Window role="child" class="contentContain" color="transparent" style="--hoverC:#3B6E25" bind:this={sections[4]}>
+    
+    <Window role="child" class="contentContain" color="transparent" style="--hoverC:#3B6E25" bind:this={sections[3]}>
       <p>no y443</p>
     </Window>
   </section>
+
+  <noscript>
+    <section class="mainContain"  onclick={menuClose}>
+      x111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111
+    </section>
+  </noscript>
 </div>
 
 <style>
@@ -140,13 +148,22 @@
     --scale: 0;
     will-change: transform, scale, background-color;
   }
+
+  :global(body:has(noscript .mainContain)) {
+    .container:has(.scroller){
+    background-color: aqua !important;
+    display: none;
+    }
+    header{
+     background-color: red;
+    }
+  } 
   .container {
     position: relative;
     inset: 0;
     width: 100vw;
     height: 100%;
-	overflow-y: hidden;
-    overflow-x: hidden;
+	  overflow: hidden;
 
   }
   .progress-bar {
@@ -172,7 +189,7 @@
   .mainContain {
     position: relative;
     display: flex;
-	gap: 10px;
+	  gap: 10px;
     flex-direction: row;
 	/* justify-content: space-evenly; */
     overflow-y: hidden;
@@ -180,41 +197,44 @@
     height: 99.8%;
     width: auto;
   }
+
   :global(.contentContain) {
     margin-top: 1px !important;
     position: relative;
     top: 10px;
-    flex: 0 0 90vw;
+    flex: 0 0 89vw;
+    flex-basis: clamp(60vw,100%,90vw);
     height: 97.5%;
-    padding-inline: var(--Padding-genral);
-	translate:clamp(-4% ,-5vw, -10%) 0;
-	background-color: color-mix(in srgb, var(--hoverC,#2C5D98) , rgba(255, 255, 255, 0.466) 70% );
-	transition: .5s ease-out;
+	  translate:clamp(-4% ,-5vw, -10%) 0;
+	  background-color: color-mix(in srgb, var(--hoverC,#2C5D98) , rgba(255, 255, 255, 0.466) 70% );
+	  transition: .5s ease-out;
+    display: grid;
+    grid-template-columns: repeat(60,1fr);
+    grid-template-rows: repeat(40,1fr);
 
-	display: grid;
-	grid-template-columns: repeat(60,1fr);
-	grid-template-rows: repeat(40,1fr);
-
-	box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
-	box-shadow: rgba(224, 224, 238, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.177) 0px -2px 6px 0px inset,rgba(212, 211, 203, 0.505) 0px 30px 60px -12px inset, rgba(211, 188, 131, 0.3) 0px 18px 36px -18px inset;
-	box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset;
-	/* box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset; */
-	box-shadow: rgba(0, 0, 0, 0.1) -4px 9px 25px -6px;
-	/* box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset; */
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+    box-shadow: rgba(224, 224, 238, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.177) 0px -2px 6px 0px inset,rgba(212, 211, 203, 0.505) 0px 30px 60px -12px inset, rgba(211, 188, 131, 0.3) 0px 18px 36px -18px inset;
+    box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset;
+    /* box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset; */
+    box-shadow: rgba(0, 0, 0, 0.1) -4px 9px 25px -6px;
+    /* box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset; */
 
   }
 
   :global(.contentContain:hover){
-	background-color: color-mix(in srgb, var(--hoverC,#2C5D98) , rgba(255, 255, 255, 0.466) 30% );
-	transition: 1s ease-out;
-
+    background-color: color-mix(in srgb, var(--hoverC,#2C5D98) , rgba(255, 255, 255, 0.466) 30% );
+    transition: 1s ease-out;
   }
 
-  :global(.contentContain) p{
-	grid-column: 10/30;
-	grid-row: 31/36;
-	outline: solid;
-	/* width: fit-content; */
+  :global(.contentContain :is(.pad)) {
+    display: grid;
+    /* grid-template-columns: subgrid;
+    grid-template-rows: subgrid; */
+    position: relative;
+		grid-column: 1/-1;
+		grid-row: 1/-1;
+    padding-inline: var(--Padding-genral) !important;
+
   }
 
   /* Add navigation button styles */
