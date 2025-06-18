@@ -31,8 +31,6 @@
 		flex-direction: column;
 		height: 100dvh;
 		overflow: hidden;
-
-
 	}
 
 	:global(body :nth-child(n):focus-visible){
@@ -54,7 +52,6 @@
 		margin: 0;
 		padding: 0;
 		overflow: hidden;
-
 	}
 
 

@@ -89,12 +89,8 @@
 		gap: 1rem;
 	}
 	
-	
-	details{
+	details{	
 		border-radius: inherit;
-		background-color: black;
-		/* important */
-		z-index: calc(10 - var(--index));
 	}
 	
 	details[open]{	
@@ -126,6 +122,8 @@
 		color: transparent;
 		font-size: 1.5rem;
 		list-style-position: outside;
+		z-index: calc(10 - var(--index));
+
 		/* Enhanced transitions using the new variables */
 		transition: top var(--transition-duration) var(--transition-timing) calc(var(--index) * var(--delay-factor)),
 					left var(--transition-duration) var(--transition-timing) calc(var(--index) * var(--delay-factor)),

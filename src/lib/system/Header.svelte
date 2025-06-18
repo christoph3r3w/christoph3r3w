@@ -56,8 +56,8 @@
 		<li class="head-extra">
 			{#if open == false}
 			<div><a href="/contact">Contact</a></div>
-			<button class="dark-mode">darkmode toggle</button>
 			{/if}
+			<button class="dark-mode">darkmode toggle</button>
 		</li>
 	</ul>
 </header>
@@ -69,7 +69,6 @@
 		flex-direction: column;
 		width: 100%;
 		height: var(--H-top, fit-content);
-		/* height: fit-content; */
 		background-color: white;
 		z-index: 200;
 		container-type: inline-size;
@@ -142,7 +141,6 @@
 				transition: 12s;
 			}
 		}
-
 	}
 
 	/* menu button section */
@@ -156,10 +154,6 @@
 		transition: .6s ease-out;
 		z-index: 200;
 	}
-	
-	/* header:hover  li:nth-of-type(2).D-menu{
-		flex: 0 0 30%;
-	} */
 
 	header:hover li:nth-of-type(2).D-menu:hover{
 		background-color: color-mix(in srgb, var(--hoverC,#2C5D98) , rgba(255, 255, 255, 0.466) 30% );
@@ -220,15 +214,7 @@
 	}
 
 	@keyframes sway {
-		50%{
-			rotate: 15deg;
-		}
-	}
-
-	@container header (width < 500px) {
-		/* header{
-			height: 100dvh;
-		} */
+		50%{rotate: 15deg;}
 	}
 
 </style>

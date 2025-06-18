@@ -1,4 +1,5 @@
 <script lang="ts">
+	// I think the functionality of the menu actually can be a popover. Popovers are a bit more stable now on many browsers. If not, then it can revert to using JavaScript. But I think a popover is a better idea.
  	import { menuOpen } from "$lib/store";
 	let open = $state()
 
@@ -120,31 +121,6 @@
 		height: calc(var(--H-menu) + 12px);
 		transition: .4s cubic-bezier(0.375, 0.685, 0.32, 1.275);
 	}
-
-	/* :global(article):has(.closebtn):active {
-		height: calc(var(--H-menu) + 0%);
-		transition: .4s cubic-bezier(0.375, 0.685, 0.32, 1.275) ;
-
-	} */
-
-	/* pull down animation before retriving - needs to fixed  */
-	
-	/* article {
-		.active:has(button.closebtn:active,:focus-within) .active{
-			background-color: chartreuse;
-			height: calc(var(--H-menu) + 12px);
-			transition: .5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-			
-		}
-		.active:has(button.closebtn:hover) button:focus-within{
-			translate: 0px 12px;
-			transition: .2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-	
-		}
-
-
-	} */
-
 	
 	.close{
 		position: absolute;
@@ -322,12 +298,10 @@
 		right: 2cqw;
 		width: 6rem;
 		aspect-ratio: 1;
-		/* border-radius: 50%; */
+		border-radius: 50%;
 		/* border: none; */
 		z-index: 100;
-		view-transition-name: darkmode;
-
-
+		/* view-transition-name: darkmode; */
 	}
 
 	@keyframes sway {
@@ -341,7 +315,8 @@
 
 	@keyframes block {
 		0% { transform: translate(0, -100%); } 
-		30% { transform: translate(0, 0%); animation-timing-function: linear; filter: blur(1.4px); } 
+		30% { transform: translate(0, 15%); animation-timing-function: linear; filter: blur(1.4px); } 
+		35% { transform: translate(0, -5%); animation-timing-function: linear; filter: blur(0); } 
 		37% { transform: translate(0, -15%);animation-timing-function: ease-out; } 
 		55% { transform: translate(0, -20%);animation-timing-function: linear; } 
 		/* 60% { transform: translate(0, 0%);animation-timing-function: ease-out;  filter: blur(1px);}  */
@@ -390,11 +365,7 @@
 			--H-menu:fit-content;
 		}
 		
-		/* article{
-			height:100%;
-			background-color: red;
-
-		} */
+		article{background-color: rgba(255, 255, 255, 0.37);}
 
 		.headerUl{
 			flex-direction: column-reverse;
@@ -419,14 +390,12 @@
 			& figure{
 				width: 100%;
 			}
-			
 		}
 
 		:global(main:has(button.closeBtn:is(:active,:focus-within)) article.active) {
 			height: calc-size(fit-content, size + 2%) !important;
 			transition: .4s cubic-bezier(0.375, 0.685, 0.32, 1.275);
 		}
-
 
 		.headerUl figure.flower{
 			animation: sway 10s linear infinite .5s, flip 12s ease-out 3s both;
@@ -444,9 +413,6 @@
 		.headerUl .head-routes{
 			line-height: 1.5;
 		}
-
-
-
 	}
 
 	@media (min-width: 700px){
