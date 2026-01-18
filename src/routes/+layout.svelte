@@ -67,7 +67,8 @@
 	}
 
 	:global(footer){
-		/* background-color: green; */
+		display: block;
+		background-color: rgba(0, 128, 0, 0);
 		flex: 0 1 auto;
 		padding-inline: var(--Padding-genral);
 
@@ -83,6 +84,12 @@
 		text-align: center;
 		padding: 0.5rem;
 		z-index: 1000;
+	}
+
+	@media (width < 900px) {
+		:global(footer){
+			display: none;
+		}
 	}
 
 </style>

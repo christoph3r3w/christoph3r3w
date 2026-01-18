@@ -1,13 +1,14 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
-  import { Window,Intro,Works } from '$lib';
+  import { Window,Intro,Intro2,Works } from '$lib';
   import { onMount, onDestroy } from 'svelte';
   import { menuOpen } from '$lib/store';
-  import { InfiniteScroll, type ScrollState } from '$lib/system/InfiniteScroll';
 
   // Reactive variables using $state
   let container = $state<HTMLElement | undefined>(undefined);
-  let scroller = $state<HTMLElement | undefined>(undefined);
+  let scroller : HTMLElement;
+  let targetScrollLeft = 0;
+  let isAnimating = false;
   let progressCounter = $state<HTMLElement | any>(undefined);
   let progressBar = $state<HTMLElement | undefined>(undefined);
   let sections = $state<any[]>([]); // Using any[] as the initial type
@@ -15,24 +16,66 @@
   // Add current section tracking
   let currentSection = $state(0);
   let totalSections = $state(0);
+ 
+ 
 
-  let infiniteScroll: InfiniteScroll;
+onMount(() => {
 
+  function debounce(func :Function, timeout = 300){
+    let timer : NodeJS.Timeout;
+    return (...args:any[]) => {
+      clearTimeout(timer);
+      timer = setTimeout(() => { func.apply(this, args); }, timeout);
+    };
+  }
+
+  if (!scroller) return;
+  
+ function checkScrollButtons(el:HTMLElement) {
+  const atStart = el.scrollLeft === 0;
+  const atEnd = Math.ceil(el.scrollLeft + el.clientWidth) >= el.scrollWidth;
+
+  console.log('Scroll start disabled:', atStart);
+  console.log('Scroll end disabled:', atEnd);
+
+  // Optional: add classes if needed
+  if(atStart) {
+    el.classList.add('at-start');
+  } else {
+    el.classList.remove('at-start');
+  };
+
+  if(atEnd) {
+    el.classList.add('at-end');
+  } else {
+    el.classList.remove('at-end');
+  };
+ 
+}
+ 
+
+  const debouncedScrollCheck = debounce(() => checkScrollButtons(scroller));
+  const debouncedResizeCheck = debounce(() => checkScrollButtons(scroller));
+
+  scroller.addEventListener('scroll', debouncedScrollCheck);
+  window.addEventListener('resize', debouncedResizeCheck);
+  checkScrollButtons(scroller); // Initial check          
+});
   
 
-  // function startViewTransition(callback: () => void) {
-	// 	if (!document.startViewTransition) {
-	// 		// Fallback for browsers that don't support View Transitions
-	// 		callback();
-	// 		return;
-	// 	}
+  function startViewTransition(callback: () => void) {
+		if (!document.startViewTransition) {
+			// Fallback for browsers that don't support View Transitions
+			callback();
+			return;
+		}
 		
-	// 	// Start a view transition
-	// 	return document.startViewTransition(() => {
-	// 		// Update the DOM within the transition
-	// 		callback();
-	// 	});
-	// }
+		// Start a view transition
+		return document.startViewTransition(() => {
+			// Update the DOM within the transition
+			callback();
+		});
+	}
 
   function escapeKey(event: KeyboardEvent) {
         if (event.key === 'Escape' || event.code === 'Escape') { 
@@ -48,78 +91,28 @@
 		// })
 	}
 
-  onMount(() => {
-    if (!scroller || !progressBar || !progressCounter || !container) return;
-
-    const scrollState: ScrollState = {
-      container,
-      scroller,
-      progressCounter,
-      progressBar,
-      sections,
-      currentSection,
-      totalSections
-    };
-
-
-    infiniteScroll = new InfiniteScroll(scrollState);
-    const sequenceWidth = infiniteScroll.setupScroll();
-    if (!sequenceWidth) return;
-
-    infiniteScroll.updateProgress(sequenceWidth, true);
-    progressBar.style.transform = `scaleX(${0})`;
-
-    // Set up event listeners
-    const scrollerElement = scroller as HTMLElement;
-    const containerElement = container as HTMLElement;
-
-    scrollerElement.addEventListener('wheel', (e) => infiniteScroll.handleWheel(e, sequenceWidth));
-    containerElement.addEventListener('touchstart', infiniteScroll.handleTouchStart);
-    containerElement.addEventListener('touchmove', (e) => infiniteScroll.handleTouchMove(e, sequenceWidth));
-    containerElement.addEventListener('touchend', () => infiniteScroll.handleTouchEnd(sequenceWidth));
-    window.addEventListener('keydown', infiniteScroll.handleKeyDown);
-    window.addEventListener('keydown', escapeKey);
-
-    infiniteScroll.animate(sequenceWidth);
-
-    return () => {
-      scrollerElement.removeEventListener('wheel', (e) => infiniteScroll.handleWheel(e, sequenceWidth));
-      containerElement.removeEventListener('touchstart', infiniteScroll.handleTouchStart);
-      containerElement.removeEventListener('touchmove', (e) => infiniteScroll.handleTouchMove(e, sequenceWidth));
-      containerElement.removeEventListener('touchend', () => infiniteScroll.handleTouchEnd(sequenceWidth));
-      window.removeEventListener('keydown', (infiniteScroll.handleKeyDown, escapeKey));
-    };
-  });
-
-  onDestroy(() => {
-      infiniteScroll
-  });
-
-  // Update scrollToSection to use infiniteScroll
-  const scrollToSection = (sectionIndex: number) => {
-    infiniteScroll?.scrollToSection(sectionIndex);
-  };
-
-  $effect(()=>{
-	  console.log(currentSection,totalSections);
-  })
+  
 </script>
 
   <div class="container" bind:this={container}>
   <!-- the progress bar -->
-  <div class="progress-bar" bind:this={progressBar}></div>
+    <div class="progress-bar" bind:this={progressBar}></div>
 
-  <div class="progress-counter" bind:this={progressCounter}>
-    <h2>0</h2>
+    <div class="progress-counter" bind:this={progressCounter}>
+    <!-- <h2>0</h2> -->
   </div>
 
   <!-- Optional navigation buttons -->
-  <button class="nav-btn prev" onclick={() => scrollToSection(currentSection - 1)}>←</button>
-  <button class="nav-btn next" onclick={() => scrollToSection(currentSection + 1)}>→</button>
+  <!-- <button class="nav-btn prev" onclick={() => scrollToSection(currentSection - 1)}>←</button>
+  <button class="nav-btn next" onclick={() => scrollToSection(currentSection + 1)}>→</button> -->
 
   <!-- the section -->
-  <section class="mainContain scroller" bind:this={scroller} onclick={menuClose}  >
+  <section class="mainContain scroller" bind:this={scroller} onclick={menuClose} role="section" >
     <Window role="child" class="contentContain" color="white" style="--hoverC:white" bind:this={sections[0]}>
+     <Intro2/>
+    </Window>
+
+    <!-- <Window role="child" class="contentContain" color="white" style="--hoverC:white" bind:this={sections[0]}>
      <Intro/>
     </Window>
 
@@ -133,7 +126,7 @@
     
     <Window role="child" class="contentContain" color="transparent" style="--hoverC:#3B6E25" bind:this={sections[3]}>
       <p>no y443</p>
-    </Window>
+    </Window> -->
   </section>
 
   <noscript>
@@ -147,25 +140,32 @@
   :root, * {
     --scale: 0;
     will-change: transform, scale, background-color;
+
+    @property --Padding-genral {
+      syntax: "<length>";
+      initial-value: 1rem;
+      inherits: true;
+    }
   }
 
   :global(body:has(noscript .mainContain)) {
     .container:has(.scroller){
-    background-color: aqua !important;
-    display: none;
+      background-color: aqua !important;
+      display: none;
     }
     header{
-     background-color: red;
+      background-color: red;
     }
   } 
+
   .container {
     position: relative;
     inset: 0;
     width: 100vw;
     height: 100%;
-	  overflow: hidden;
-
+	  overflow: hidden; 
   }
+
   .progress-bar {
     position: fixed;
     bottom: 0;
@@ -177,26 +177,81 @@
     background-color: #2c5d9859;
     z-index: 2;
   }
+
   .progress-counter {
     position: fixed;
     height: fit-content;
     bottom: 3%;
     right: 10%;
-    color: blue;
     z-index: 2;
-    outline: solid #2C5D98;
+    /* outline: solid #2C5D98; */
   }
+
   .mainContain {
     position: relative;
     display: flex;
-	  gap: 10px;
+	  gap: 5dvw;
     flex-direction: row;
-	/* justify-content: space-evenly; */
     overflow-y: hidden;
-    overflow-x: hidden;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
     height: 99.8%;
     width: auto;
+    padding-inline: 5dvw;
   }
+
+  /* carousel control logic and animation */
+  .scroller {
+    
+    &::scroll-button(*){
+      position: fixed;
+      /* top: anchor(top);
+      left: anchor(left);
+      right: anchor(right);
+      bottom: anchor(bottom); */
+      bottom: 4%;
+      margin-inline: 6%;
+      background: rgba(197, 197, 197, 0.762);
+      color: rgb(178, 67, 67);
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      aspect-ratio: 1;
+      font-size: 20px;
+      cursor: pointer;
+      z-index: 10;
+      transition: width .8s cubic-bezier(0,1.47,0.28,0.97),opacity .9s ease-in-out;
+    }
+
+    &::scroll-button(*):disabled {
+      visibility: hidden;
+      opacity: 0;
+    }
+
+    &::scroll-button(left) {
+      content: "<" / "Scroll Left";
+      position-anchor: --button-left;
+      left: calc(var(--end2) * 1%);
+    }
+
+    &::scroll-button(right) {
+      content: ">" / "Scroll Right";
+      position-anchor: --button-right;
+      right: calc(var(--end1,0) * 1%);
+    }
+  }
+
+  /* button grow animation */
+  :global(body:has(.at-start, .at-end)) {
+    .scroller::scroll-button(*):not(:disabled) {
+      width: 5rem;
+    }
+  }
+  /* :global(body:has(.at-end)) {
+    .scroller::scroll-button(left){
+      width: 6rem;
+    }
+  } */
 
   :global(.contentContain) {
     margin-top: 1px !important;
@@ -205,12 +260,13 @@
     flex: 0 0 89vw;
     flex-basis: clamp(60vw,100%,90vw);
     height: 97.5%;
-	  translate:clamp(-4% ,-5vw, -10%) 0;
+	  /* translate:clamp(-2% ,-2vw, -8%) 0; */
 	  background-color: color-mix(in srgb, var(--hoverC,#2C5D98) , rgba(255, 255, 255, 0.466) 70% );
 	  transition: .5s ease-out;
     display: grid;
     grid-template-columns: repeat(60,1fr);
     grid-template-rows: repeat(40,1fr);
+    scroll-snap-align: center;
 
     box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
     box-shadow: rgba(224, 224, 238, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.177) 0px -2px 6px 0px inset,rgba(212, 211, 203, 0.505) 0px 30px 60px -12px inset, rgba(211, 188, 131, 0.3) 0px 18px 36px -18px inset;
@@ -228,8 +284,6 @@
 
   :global(.contentContain :is(.pad)) {
     display: grid;
-    /* grid-template-columns: subgrid;
-    grid-template-rows: subgrid; */
     position: relative;
 		grid-column: 1/-1;
 		grid-row: 1/-1;
@@ -253,16 +307,12 @@
     z-index: 10;
     transition: background 0.3s;
   }
-  
-  .nav-btn:hover {
-    background: rgba(0, 0, 0, 0.5);
-  }
-  
-  .prev {
-    left: 20px;
-  }
-  
-  .next {
-    right: 20px;
+
+  @media (width < 900px) {
+    .mainContain.scroller {
+    display: block;
+      padding-inline: 3%;
+      width: 100dvw;
+    }
   }
 </style>

@@ -1,19 +1,13 @@
 <script>
+	import { assets } from "$app/paths";
+
 	let showWorks = $state(false)
 	let works = [
-		{
-			title: 'monytri',
-			smallDescription: 'Description 1',
-			description: 'Description 1',
-			image: '',
-			link: 'https://www.google.com',
-			icon: '/pwa-64x64.png'  // Using absolute path from static directory
-		},
 		{
 			title: 'tile shifting',
 			smallDescription: 'Description 2',
 			description: 'Description 2',
-			image: '',
+			assets:{image: ['']},
 			link: 'https://www.google.com',
 			icon: ''
 
@@ -22,8 +16,8 @@
 			title: 'posion game',
 			smallDescription: 'Description 3',
 			description: 'Description 3',
-			image: '',
-			link: 'https://www.google.com',
+			assets:{image: ['']},
+			link: 'https://proof-of-concept-for-merlin.vercel.app/',
 			icon: ''
 
 		},
@@ -31,7 +25,36 @@
 			title: 'windows',
 			smallDescription: 'Description 4',
 			description: 'Description 4',
-			image: '',
+			assets:{
+				image: [
+					'works-assets/windows 2233 2026-01-18 030014.png',
+					'works-assets/windows 2 2233 2026-01-18 030014.png',
+					'works-assets/windows 3 2233 2026-01-18 030014.png'
+				]
+				},
+			link: 'https://brilletjes-squad-page.vercel.app/',
+			icon: ''
+
+		},
+		{
+			title: 'monytri',
+			smallDescription: 'Description 1',
+			description: `An MVP designed to showcase the services, capabilities, and adaptability of the Monytri financial platform to stakeholders and investors. It is a progressive web app that centralizes stock gifting, asset transfers, and payment requests, while also allowing users to practice and learn about financial literacy.
+								The platform encourages users to stay up to date with their personal portfolios, learn from curated educational content on portfolio management, and exchange assets through built-in services.`,
+			assets:{
+					image: [
+							'works-assets/monytri 2233 2026-01-18 025839.png',
+							'works-assets/Arc_jwNAJXUzVf.gif'
+							]
+					},
+			link: 'https://www.monytri.app/',
+			icon: '/pwa-64x64.png'  // Using absolute path from static directory
+		},
+		{
+			title: 'zuza website',
+			smallDescription: 'Description 4',
+			description: 'a portfolio website for a designer named zuza',
+			assets:{image: ['']},
 			link: 'https://www.google.com',
 			icon: ''
 
@@ -40,7 +63,7 @@
 			title: 'redpers',
 			smallDescription: 'Description 5',
 			description: 'Description 5',
-			image: '',
+			assets:{image: ['']},
 			link: 'https://www.google.com',
 			icon: ' '
 		}
@@ -69,8 +92,12 @@
 					{/if}
 					{work.title}
 				</summary>
-				<img src={work.image} alt={work.title} />
 				<p class="work-description">{work.description}</p>
+				<div class="work-assets">
+				{#each work.assets.image as img}
+					<img src={img} alt={work.title} />
+				{/each}
+				</div>
 			</details>
 		{/each}
 </div>
@@ -145,10 +172,10 @@
 			overflow: hidden;
 		}
 
-		span img{
+		span > img{
 			width: 100%;
 			aspect-ratio: 1;
-			opacity: 0;
+			opacity: 0.3;
 		}
 	}
 
@@ -163,12 +190,12 @@
 			box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
 
 			@container (width < 900px){
-				--move:calc(45vw +  (-8.5vw  * var(--index) ) ); 
-				inset-inline: 3%;
+				--move:calc(65vw +  (-8.5vw  * var(--index) ) ); 
+				inset-inline: 2%;
 			}
 		}
 
-		details summary span img{
+		details summary span > img{
 			opacity:1 ;
 		}
 	}
@@ -238,31 +265,47 @@
 			display: none;
 		}
 		
+		/* where the content of each project is */
 		details[open]::details-content{
 			position: absolute;
 			bottom: 0;
 			inset-inline: 0;
 			top:10%;
-			background-color: #ffffca;
+			background-color: #8c8c31;
+			background-color: #20d547;
 			display: grid;
 			grid-template-columns: repeat(56,1fr);
 			grid-template-rows: repeat(38,1fr);
 			z-index: 10 !important;
+			overflow-y: auto;
+			
+
 			
 		}
+
+		/* details[open] .work-assets{
+			display: grid;
+			grid-column: 1/-1;
+			grid-row: 1/-1;
+			grid-template-columns: subgrid ;
+			grid-template-rows: subgrid;
+		} */
 		
 		details[open] > :nth-child(n + 2){
 			animation: content-reveal 0.4s var(--transition-timing);
 		}
 
-		details[open] > img{
-			grid-column: -5/ 29;
-			grid-row: 5/span 20;
+		details[open] .work-assets {
+			grid-column: -5/ 25;
+			grid-row: 5/-2;
 			aspect-ratio: 1;
 			width: 100%;
 			height: 100%;
-			object-fit: cover;
+			display: flex;
+			flex-direction: column;
 			outline: solid #2C5D98;
+			background-color: #2C5D98;
+			container-type: inline-size;
 		}
 
 		details[open] .work-description{
@@ -273,9 +316,31 @@
 			aspect-ratio: 1;
 			width: 100%;
 			height: 100%;
-			outline: solid #98622c;
+			background-color: #98622c;
+		}
+
+		@container (width < 900px){
+			details[open] .work-assets {
+				grid-column: 5/ -5;
+				grid-row: 11/-1;
+			}
+
+			details[open] .work-description{
+				grid-column: 5/ -5;
+				grid-row: 3/span 7;
+			}
 		}
 	}
+
+	
+	.work-assets img{
+		max-width: 500px;
+		width: 100%;
+		height: auto;
+		aspect-ratio: 16/9;
+		object-fit: fill;
+		object-position: center;
+	}	
 	
 	/* Animation for content reveal */
 	@keyframes content-reveal {

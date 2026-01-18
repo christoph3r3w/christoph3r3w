@@ -8,4 +8,5 @@ export { default as Header } from './system/Header.svelte';
 export {default as Window} from './system/Window.svelte';
 
 export {default as Intro} from './sections/Intro.svelte'
+export {default as Intro2} from './sections/Intro2.svelte'
 export {default as Works} from './sections/Works.svelte'
