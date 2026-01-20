@@ -17,10 +17,16 @@
 		"@sveltejs/vite-plugin-svelte": "^4.0.0",
 		"playwright": "^1.57.0",
 		"prettier": "^3.3.2",
-		"prettier-plugin-svelte": "^3.2.6"
+		"prettier-plugin-svelte": "^3.2.6",
+		"svelte": "^5.47.1"
 	},
 	"dependencies": {
 		"@sveltejs/adapter-vercel": "^6.3.0",
-		"gsap": "^3.13.0"
+		"geist": "^1.5.1",
+		"gsap": "^3.13.0",
+		"vitefu": "^1.0.3"
+	},
+	"peerDependencies": {
+		"svelte": "^5.47.1"
 	}
 }
