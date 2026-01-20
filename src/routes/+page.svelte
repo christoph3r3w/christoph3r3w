@@ -52,7 +52,6 @@ onMount(() => {
   };
  
 }
- 
 
   const debouncedScrollCheck = debounce(() => checkScrollButtons(scroller));
   const debouncedResizeCheck = debounce(() => checkScrollButtons(scroller));
@@ -114,11 +113,11 @@ onMount(() => {
 
     <!-- <Window role="child" class="contentContain" color="white" style="--hoverC:white" bind:this={sections[0]}>
      <Intro/>
-    </Window>
+    </Window> -->
 
-    <Window role="child" class="contentContain" color="transparent" bind:this={sections[1]}>
+    <!-- <Window role="child" class="contentContain" color="transparent" bind:this={sections[1]}>
       <p>no yoo</p>
-    </Window>
+    </Window> -->
 
     <Window role="child" class="contentContain" color="transparent" style="--hoverC:#DCA256" bind:this={sections[2]}>
       <Works/>
@@ -126,7 +125,7 @@ onMount(() => {
     
     <Window role="child" class="contentContain" color="transparent" style="--hoverC:#3B6E25" bind:this={sections[3]}>
       <p>no y443</p>
-    </Window> -->
+    </Window>
   </section>
 
   <noscript>

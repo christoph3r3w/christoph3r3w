@@ -44,7 +44,6 @@
 		padding-block: .5%;
 	}
 
-
 	:global(main){
 		flex: 1 !important;
 		display: flex;
@@ -54,7 +53,6 @@
 		overflow: hidden;
 	}
 
-
 	:global(main.contain){
 		background-color: rgba(213, 213, 213, 0.904) ;
 		/* height: 500vh; */
@@ -63,7 +61,6 @@
 	:global(.mainContain){
 		/* padding-inline: var(--Padding-genral); */
 		/* margin: var(--Padding-genral); */
-
 	}
 
 	:global(footer){
@@ -71,6 +68,7 @@
 		background-color: rgba(0, 128, 0, 0);
 		flex: 0 1 auto;
 		padding-inline: var(--Padding-genral);
+		display: none;
 
 	}
 

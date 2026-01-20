@@ -1,7 +1,7 @@
 <script lang="ts">
 	// I think the functionality of the menu actually can be a popover. Popovers are a bit more stable now on many browsers. If not, then it can revert to using JavaScript. But I think a popover is a better idea.
  	import { menuOpen } from "$lib/store";
-	let open = $state()
+	let open = $derived($menuOpen)
 
 	function startViewTransition(callback: () => void) {
 		if (!document.startViewTransition) {
@@ -27,12 +27,6 @@
 		menuOpen.set(true);
 	}
 
-	$effect(()=>{
-		   $: menuOpen.subscribe(value => {
-			open = value
-		});
-	})
-
 </script>
 
 {#snippet menuContent()}
@@ -56,7 +50,11 @@
 			<span> <a href="/">workshops,events</a></span>
 		</li>
 		<li class="head-extra">
-			<button class="modeDark">darkmode toggle</button>
+			<!-- <button class="dark-mode" title="darkmode toggle" aria-label="darkmode toggle">
+				<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path d="M12.133 3C12.136 3 12.14 3 12.143 3C12.462 3 12.6 3.39301 12.36 3.60001C10.679 5.04701 9.755 7.32199 10.226 9.77399C10.749 12.495 12.988 14.566 15.773 14.938C17.532 15.173 19.161 14.728 20.456 13.839C20.719 13.658 21.068 13.897 20.989 14.203C19.885 18.519 15.626 21.595 10.767 20.902C6.73098 20.326 3.54399 17.087 3.06599 13.095C2.81599 11.013 3.28897 9.05101 4.26997 7.42001C5.85997 4.77401 8.78598 3 12.133 3Z" fill="#121212"/>
+				</svg>
+			</button> -->
 
 			<h3>Contact</h3>
 			<span><img src="" alt="insta"> <a href="/">insta</a></span>
@@ -162,7 +160,7 @@
 	}
 
 	/* ////////////// */
-	/* header content */
+	/* header/menu content */
 	/* ////////////// */
 
 	.headerUl{
@@ -269,7 +267,6 @@
 		animation: sway 10s backwards infinite .1s;
 	}
 
-
 	.headerUl li:is(:nth-of-type(n + 2)){
 		/* background-color: greenyellow; */
 		/* outline: solid greenyellow; */
@@ -292,7 +289,7 @@
 		flex: 1 1 20%;
 	}
 
-	 button.modeDark{
+	button.dark-mode{
 		position: absolute;
 		top: 5cqh;
 		right: 2cqw;
@@ -301,13 +298,13 @@
 		border-radius: 50%;
 		/* border: none; */
 		z-index: 100;
-		/* view-transition-name: darkmode; */
+		view-transition-name: darkmode;
 	}
 
 	@keyframes sway {
-		/* 0%,100%{
+		0%,100%{
 			rotate: inherit;
-		} */
+		}
 		50%{rotate: 15deg;}
 		90%{rotate: 2deg;}
 	}
@@ -336,7 +333,8 @@
 		
 		100% { 
 			transform: translate(0, 0); 
-			animation-timing-function: cubic-bezier(0.68, -1.55, 0.265, 1.55);
+			/* animation-timing-function: cubic-bezier(0.68, -1.55, 0.265, 1.55); */
+			animation-timing-function: linear(0, 0.029 1.6%, 0.123 3.5%, 0.651 10.6%, 0.862 14.1%, 1.002 17.7%, 1.046 19.6%, 1.074 21.6%, 1.087 23.9%, 1.086 26.6%, 1.014 38.5%, 0.994 46.3%, 1);
 			animation-duration:1s ;
 		} 
 	}
