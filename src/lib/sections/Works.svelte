@@ -1,6 +1,6 @@
 <script>
-	import { assets } from "$app/paths";
-	import { onMount } from "svelte";
+	import { onMount } from 'svelte';
+	import {OrderedList} from '$lib';
 
 	let showWorks = $state(false)
 	let works = [
@@ -114,6 +114,10 @@
 </script>
 
 <div class="work-section pad" id="works">
+
+	<section class="Orderedlist-container">
+		<OrderedList />
+	</section>
 	<!-- onclick it will close all details -->
 		<details class="work-cover" name='works' style="--index:0; --total-work:{works.length};">
 			<summary>
@@ -186,6 +190,15 @@
 			top:8%;
 			bottom: 0;
 		}
+	}
+
+	.Orderedlist-container,:global(.Orderedlist-container){
+		position: relative;
+		width: 4dvw ;
+		height: 100%;
+		margin-top: 5dvh;
+		opacity: .2;
+		pointer-events: none;
 	}
 	
 	.work-section{

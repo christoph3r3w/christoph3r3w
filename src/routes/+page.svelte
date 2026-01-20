@@ -1,6 +1,6 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
-  import { Window,Intro,Intro2,Works } from '$lib';
+  import { Window,Intro,Intro2,Works, OrderedList } from '$lib';
   import { onMount, onDestroy } from 'svelte';
   import { menuOpen } from '$lib/store';
 
