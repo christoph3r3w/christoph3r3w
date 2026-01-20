@@ -218,7 +218,7 @@
 		background-color: color-mix(in srgb, var(--hoverC,#2C5D98) , rgba(255, 255, 255, 0.466) 30% );
 	}
 
-	header  li:nth-of-type(2).D-menu button{
+	header li:nth-of-type(2).D-menu button{
 		position: relative;
 		background: none;
 		border: none;
@@ -239,7 +239,7 @@
 		}
 	}
 
-	header  li:nth-of-type(2) button:active{
+	header li:nth-of-type(2) button:active{
 		scale: .95;
 	}
 

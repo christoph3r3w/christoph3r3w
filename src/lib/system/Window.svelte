@@ -3,6 +3,8 @@
 <!-- how to use -->
 <!-- what are the properties  -->
 <script lang=ts>
+	import type { HTMLAreaAttributes } from 'svelte/elements';
+
 
 // defining property type
 interface Props {
@@ -11,6 +13,7 @@ interface Props {
 	role: string;
 	class?: string;
 	color?:string;
+	style?: HTMLAreaAttributes
 	
 	children?: import('svelte').Snippet<[]>; 
 }
