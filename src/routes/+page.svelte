@@ -35,8 +35,8 @@ onMount(() => {
   const atStart = el.scrollLeft === 0;
   const atEnd = Math.ceil(el.scrollLeft + el.clientWidth) >= el.scrollWidth;
 
-  console.log('Scroll start disabled:', atStart);
-  console.log('Scroll end disabled:', atEnd);
+  // console.log('Scroll start disabled:', atStart);
+  // console.log('Scroll end disabled:', atEnd);
 
   // Optional: add classes if needed
   if(atStart) {
@@ -119,9 +119,9 @@ onMount(() => {
       <p>no yoo</p>
     </Window> -->
 
-    <Window role="child" class="contentContain" color="transparent" style="--hoverC:#DCA256" bind:this={sections[2]}>
+    <!-- <Window role="child" class="contentContain" color="transparent" style="--hoverC:#DCA256" bind:this={sections[2]}>
       <Works/>
-    </Window>
+    </Window> -->
     
     <Window role="child" class="contentContain" color="transparent" style="--hoverC:#3B6E25" bind:this={sections[3]}>
       <p>no y443</p>
