@@ -48,6 +48,12 @@
 
   }
 
+  .letter-style {
+    --letter-index: 0; /* Will be set per element */
+    --random-col: calc(60 - (var(--letter-index) * 9) / 2.5 * mod(var(--letter-index), 3.5));
+    --random-row: calc(40 - (var(--letter-index) * 2.4) / .5 / mod(var(--letter-index), 3.5));
+  } 
+
   :root {
     /* light-dark */
     --LD-text:light-dark(var(--D-black),var(--D-white));
@@ -59,6 +65,9 @@
     /* new design background */
     --cream-bk:light-dark(blanchedalmond, rgb(91, 83, 72));
     --cream-bk:light-dark( hsl(36, 48%, 94%), hsl(36, 14%, 14%));
+
+    --letter-total: 0; /* This will be updated dynamically */
+  
 
     /* --color-background: var(--vt-c-white);
     --color-background-soft: var(--vt-c-white-soft);

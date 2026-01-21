@@ -17,5 +17,6 @@
 </footer>
 
 <style>
-	/* footer styling */
+
+
 </style>
