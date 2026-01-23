@@ -101,7 +101,7 @@ onMount(() => {
 </script>
 
   <div class="container" bind:this={container}>
-  <!-- the progress bar -->
+    <!-- the progress bar -->
     <div class="progress-bar" bind:this={progressBar}></div>
 
     <div class="progress-counter" bind:this={progressCounter}>
@@ -135,11 +135,6 @@ onMount(() => {
     </Window> -->
   </section>
 
-  <noscript>
-    <section class="mainContain"  onclick={menuClose}>
-      x111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111
-    </section>
-  </noscript>
 </div>
 
 <style>

@@ -29,7 +29,7 @@
 	:global(body){
 		display: flex;
 		flex-direction: column;
-		height: 100dvh;
+		height: 100lvh;
 		overflow: hidden;
 	}
 
@@ -85,6 +85,10 @@
 	}
 
 	@media (width < 900px) {
+		:global(html){
+			height: 100lvh;
+		}
+
 		:global(footer){
 			display: none;
 		}
