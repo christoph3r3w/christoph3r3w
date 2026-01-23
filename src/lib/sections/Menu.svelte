@@ -92,7 +92,7 @@
 		padding-inline: var(--Padding-genral);
 		container-type: inline-size;
 		container-name: menu;
-		view-transition-name: menu;
+		/* view-transition-name: menu; */
 
 
 		@starting-style{
@@ -110,7 +110,7 @@
 		box-shadow: rgba(27, 21, 14, 0.041) 0px 50px 50px -20px, rgba(0, 0, 0, 0.15) 0px 10px 60px -30px, rgba(10, 37, 64, 0.35) 0px -1.7px 3px 0px inset;
 		z-index: 1;
 		animation: block .55s linear 0s alternate both;
-		view-transition-name: menu;
+		/* view-transition-name: menu; */
 
 		/* border-bottom: solid rgba(0, 119, 255, 0.548); */
 	}
@@ -195,7 +195,7 @@
 		width: 95%;
 		height: 100%;
 		aspect-ratio: 1;
-		view-transition-name: header-figure;
+		/* view-transition-name: header-figure; */
 		isolation: isolate;
 
 		& img{
@@ -215,7 +215,7 @@
 			scale: 1;
 			transition: .8s cubic-bezier(0.175, 0.885, 0.32, 1.275) ;
 			animation: sway 10s linear infinite .5s backwards ;
-			view-transition-name: header-figure;
+			/* view-transition-name: header-figure; */
 			z-index: 3;
 
 			
@@ -285,7 +285,7 @@
 		border-radius: 50%;
 		/* border: none; */
 		z-index: 100;
-		view-transition-name: darkmode;
+		/* view-transition-name: darkmode; */
 	}
 
 	@keyframes sway {
@@ -384,7 +384,7 @@
 
 		.headerUl picture.flower{
 			animation: sway 10s linear infinite .5s, flip 12s ease-out 3s both;
-			view-transition-name: header-figure;
+			/* view-transition-name: header-figure; */
 			isolation: isolate;
 		}
 

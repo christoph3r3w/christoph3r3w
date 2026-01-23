@@ -477,19 +477,18 @@
 
 
 	/* files styling and animation*/
-	details.file:nth-of-type(n):is(:hover,:focus) :is( summary,::details-summary){
+	details.file:nth-of-type(n):is(:hover,:focus) :is(summary,::details-summary){
 		--hover-file-top:2rem;
 		--hover-file-right:6svw;
+
 		left: calc(var(--hover-file-right) - (var(--file-index) * 10px)); 
 		rotate:calc(-2deg + .5deg * var(--file-index));
 		transition-property: top,left, rotate, height; 
 		transform-origin: top;
-		/* transition: all 200ms var(--transition-timing),box-shadow none,filter none,background-color none; */
-		transition: 100ms var(--transition-timing);
+		transition: all 100ms var(--transition-timing),box-shadow 0s,filter 0s;
+		/* transition: 100ms var(--transition-timing); */
 		cursor: pointer;
-		/* background-color: rgba(255, 255, 255, 0.495) ; */
-		/* background-color: rgba(255, 255, 255, 0.951) ; */
-		/* background-color: rgba(128, 128, 128, 0.577) ; */
+		background-color: color-mix(in oklch, var(--file-primary-hue) , rgba(255, 255, 255, 0.466) 20% );
 
 		@container (width < 900px){
 			transform-origin: bottom left ;
@@ -663,7 +662,6 @@
 		object-fit: fill;
 		object-position: center;
 	}	
-
 
 
 	/* sticker styling */
