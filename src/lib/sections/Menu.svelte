@@ -39,9 +39,9 @@
 	<ul class="headerUl">
 		<li>
 			<a href="/">
-				<figure class="profile profile-2 flower" >
-					<img src="/25acb22a-22a3-41d5-a0eb-c91529c4c6c8.jpg" alt="icon of my face me">
-				</figure>
+				<picture class="profile profile-2 flower" >
+					<img src="./25acb22a-22a3-41d5-a0eb-c91529c4c6c8 (Custom).jpg" alt="icon of my face me">
+				</picture>
 			</a>
 		</li>
 		<li class="head-routes">
@@ -92,7 +92,7 @@
 		padding-inline: var(--Padding-genral);
 		container-type: inline-size;
 		container-name: menu;
-		view-transition-name: menu;
+		/* view-transition-name: menu; */
 
 
 		@starting-style{
@@ -110,7 +110,7 @@
 		box-shadow: rgba(27, 21, 14, 0.041) 0px 50px 50px -20px, rgba(0, 0, 0, 0.15) 0px 10px 60px -30px, rgba(10, 37, 64, 0.35) 0px -1.7px 3px 0px inset;
 		z-index: 1;
 		animation: block .55s linear 0s alternate both;
-		view-transition-name: menu;
+		/* view-transition-name: menu; */
 
 		/* border-bottom: solid rgba(0, 119, 255, 0.548); */
 	}
@@ -144,20 +144,7 @@
 		height: 100%;
 	}
 
-	section button.closebtn{
-		position: absolute;
-		bottom: 5cqh;
-		right: 2%;
-		width: 6rem;
-		aspect-ratio: 1;
-		border-radius: 50%;
-		border: none;
-		z-index: 100;
-	}
-	
-	section button.closebtn:active{
-		scale: .95;
-	}
+
 
 	/* ////////////// */
 	/* header/menu content */
@@ -202,13 +189,13 @@
 	}
 
 	/* make the flower face a component that has a custom event, when theis event is triggered then moved it to the menu   */
-	.headerUl li:nth-of-type(1) a figure{
+	.headerUl li:nth-of-type(1) a picture{
 		flex: 0 1 auto;
 		position: relative;
 		width: 95%;
 		height: 100%;
 		aspect-ratio: 1;
-		view-transition-name: header-figure;
+		/* view-transition-name: header-figure; */
 		isolation: isolate;
 
 		& img{
@@ -228,7 +215,7 @@
 			scale: 1;
 			transition: .8s cubic-bezier(0.175, 0.885, 0.32, 1.275) ;
 			animation: sway 10s linear infinite .5s backwards ;
-			view-transition-name: header-figure;
+			/* view-transition-name: header-figure; */
 			z-index: 3;
 
 			
@@ -298,7 +285,7 @@
 		border-radius: 50%;
 		/* border: none; */
 		z-index: 100;
-		view-transition-name: darkmode;
+		/* view-transition-name: darkmode; */
 	}
 
 	@keyframes sway {
@@ -385,7 +372,7 @@
 			height: 100%;
 			flex: 0 1 30%;
 
-			& figure{
+			& picture{
 				width: 100%;
 			}
 		}
@@ -395,9 +382,9 @@
 			transition: .4s cubic-bezier(0.375, 0.685, 0.32, 1.275);
 		}
 
-		.headerUl figure.flower{
+		.headerUl picture.flower{
 			animation: sway 10s linear infinite .5s, flip 12s ease-out 3s both;
-			view-transition-name: header-figure;
+			/* view-transition-name: header-figure; */
 			isolation: isolate;
 		}
 
@@ -413,9 +400,9 @@
 		}
 	}
 
-	@media (min-width: 700px){
+	/* @media (min-width: 700px){
 		
-	}
+	} */
 
 
 

@@ -15,7 +15,13 @@ const config = {
 			showToggleButton: 'always',
 			holdMode: false,
 		}
+	},
+	compilerOptions: {
+		experimental: {
+			async: true
+		}
 	}
+
 };
 
 export default config;

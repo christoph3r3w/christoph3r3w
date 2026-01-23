@@ -37,7 +37,6 @@
 	<!-- trigger specific showing with svlte and css  -->
 	<div id="ol">
 		<button type="reset" onclick={() => {console.log('recent clicked')}}>Recent</button>
-		<!-- <button onclick={()=> {console.log('all has been clicked')}}>All</button> -->
 
 		{#each mfolders as folder}
 			<ol class="main-list">
@@ -61,7 +60,7 @@
 
 		
 
-		{#each {length: folderLength} as _, i}
+		<!-- {#each {length: folderLength} as _, i}
 			<ol class="main-list">
 				<li><a href="/">{mfolders[i].year}</a></li>
 				<ol class="file-dots">
@@ -75,7 +74,7 @@
 				</ol>
 			
 			</ol> 	
-		{/each}
+		{/each} -->
 		<button onclick={()=> {console.log('all has been clicked')}}>All</button>
 
 	</div>
@@ -84,7 +83,7 @@
 		:root{
 			--list-color:color-mix(in oklch, var(--hoverC,rgba(255, 255, 255, 0.677)), black);
 			--line-color:color-mix(in oklch, var(--list-color), rgba(200, 196, 123, 0.21) );
-			--line-gap:15%;
+			--line-gap:1svh;
 		}
 
 		#ol{
@@ -122,7 +121,7 @@
 
 		ol.main-list{
 			position: relative;
-			margin-block: 10%;
+			margin-block: 1svh;
 			max-width: fit-content;
 			
 			&:nth-of-type(1)::after{
@@ -133,7 +132,6 @@
 				width: 160%;
 				height: 1px;
 				background-color: var(--line-color);
-				/* padding-top: var(--line-gap); */
 			}
 			&:nth-last-of-type(1)::after{
 				content: '';
