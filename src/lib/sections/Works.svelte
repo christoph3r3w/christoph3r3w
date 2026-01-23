@@ -71,6 +71,24 @@
 			status:{is:'',sticker:''}
 		},
 		{
+			title: 'monytri',
+			smallDescription: 'PWA MVP',
+			description: `An MVP designed to showcase the services, capabilities, and adaptability of the Monytri financial platform to stakeholders and investors. It is a progressive web app that centralizes stock gifting, asset transfers, and payment requests, while also allowing users to practice and learn about financial literacy.
+								The platform encourages users to stay up to date with their personal portfolios, learn from curated educational content on portfolio management, and exchange assets through built-in services.`,
+			assets:{
+					image: [
+							'works-assets/monytri 2233 2026-01-18 025839.png',
+							'works-assets/Arc_jwNAJXUzVf.gif'
+							]
+					},
+			link: 'https://www.monytri.app/',
+			icon: '/pwa-64x64.png',  // Using absolute path from static directory
+			color:'#497951',
+			dateStart: '2023',
+			dateEnd: '',
+			status:{is:'',sticker:''}
+		},
+		{
 			title: 'zuza website',
 			smallDescription: 'Portfolio',
 			description: 'a portfolio website for a designer named zuza',
@@ -113,12 +131,12 @@
 
 <div class="work-section pad" id="works" style="--file-index:0; --total-work:{works.length};">
 
-	<section class="Orderedlist-container">
+	<section class="Orderedlist-container" >
 		<OrderedList />
 	</section>
 	<!-- onclick it will close all details -->
 	<details class="work-cover" name='works' >
-		<summary>
+		<summary tabindex="-1">
 			<p class="cover-content">Portfolio</p>
 			<p class="cover-content sticker-label">Here are some of the works I have done</p>
 			<span class="cover-content sticker-label"><img src="/chris icon lowlowres.png" alt="chris icon"></span>
@@ -162,9 +180,9 @@
 		/* --file-index:1; */
 		--move:0;
 		--file-primary-color:#317fdf;
-		--file-primary-color:oklab(50.491% 0.15685 0.07689);
-		--file-primary-color-amount:50%;
-		--hue-number:502;
+		--file-primary-color:oklab(55.569% 0.11787 -0.02587);
+		--file-primary-color-amount:70%;
+		--hue-number:552;
 		--file-primary-hue:color-mix(in oklch, hsl(calc(213 * 700 / var(--file-index)), 55%, 38%) , var(--file-primary-color) 90%);
 		
 		--transition-timing: cubic-bezier(0.62, -0.1, 0.36, 1);
@@ -207,11 +225,13 @@
 
 	.Orderedlist-container,:global(.Orderedlist-container){
 		position: relative;
-		width: 4dvw ;
-		height: 100%;
+		width: 100%;
+		max-width: 25dvw;
+		height: 70cqh;
+		max-height: 100%;
 		margin-top: 5dvh;
-		opacity: .2;
-		pointer-events: none;
+		/* opacity: .2;
+		pointer-events: none; */
 	}
 	
 	.work-section{
@@ -221,41 +241,36 @@
 		will-change: transform,filter,top,left;		
 	}
 
-	/* initial general animation for files and folder and cover element */
-	.work-section details.file summary{
-		--move:calc(50vh +  (-6.9svh  * var(--file-index) ) ); 
-		top:var(--move) ;
-		right: 0;
-		color: black;
-		box-shadow: rgba(20, 27, 33, 0.126) 0px 2px 4px -28px, rgba(0, 0, 0, 0.207) 0px 7px 13px -7px, rgba(0, 0, 0, 0.075) 0px -3px 0px inset;
-
-		/* testing */
-		box-shadow: rgba(0, 0, 0, 0) 0px 2px 4px, rgba(28, 30, 31, 0.493) 0px -3px 8px -7px, rgba(0, 0, 0, 0.178) 0px -2px 2px inset;
-
-		@container (width < 900px){
-			--move:calc(65vw +  (-8.5vw  * var(--file-index) ) ); 
-			inset-inline: 2%;
-		}
-	}
-
 	/* Hover effect for the summary */
-	/* .work-section { */
-	.work-section:is(:hover,:focus-within) {
-		--move-all:calc(15dvw +  (-26.5vw / 1.5  * var(--total-work) ) );
+	/* .work-section, */
+	/* .work-section:is(:hover,:focus-within), */
+	/* .work-section:has(.Orderedlist-container:is(:hover,:focus-within)), */
+	.work-section:where(:focus-within,:focus) {
 		--move-all:calc(17dvw);
 
+		.Orderedlist-container:is(:hover,:focus-within){
+			--move:calc(46vh + (-43vh  * var(--file-index) / var(--total-work,1) ) ); 
+		}
+
 		/* folder cover animation */
+		details.work-cover :is(summary,::details-summary),
 		details.work-cover summary{
-			--move:calc(40dvh + 1dvw * var(--total-work) ); 
+		--transition-duration: 100ms;
+		--move:calc(40dvh + 1dvw * var(--total-work) ); 
+
+			pointer-events: none;
 			top:var(--move) ;
 			left:calc(var(--move-all) - 2rem) ;
 			color: black;
-			box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -8px, rgba(0, 0, 0, 0.2) 0px -2px 0px inset;
 			z-index: 11;
 
 			@container (width < 900px){
 				--move:calc(53vh - var(--total-work)); 
 				inset-inline: 2%;
+			}
+
+			&::after{
+				pointer-events: none;
 			}
 		}
 
@@ -264,13 +279,17 @@
 			filter: blur(2px);
 			transform: translate(-35rem, 11rem) rotate(5deg);
 		}
-	
-		details.file summary{
+
+		/* files animation */
+		details.file :is(summary,::details-summary),
+		details.file:is(:focus-within) summary
+		{
 			--move:calc(46vh + (-43vh  * var(--file-index) / var(--total-work,1) ) ); 
 			top:calc(var(--move) - var(--hover-file-top,0px)) ;
 			left:calc(.05dvw * var(--total-work) * tan(var(--file-index) ) + var(--move-all)) ;
 			color: black;
-			box-shadow: rgba(0, 0, 0, 0.259) 0px 2px 4px -4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -5			px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+			box-shadow: rgba(0, 0, 0, 0.259) 0px 2px 4px -4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -5px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+			transition:box-shadow none,filter none,background-color none;
 
 			@container (width < 900px){
 				--move:calc(53dvh - 45vh * (var(--file-index) / var(--total-work))); 
@@ -304,36 +323,38 @@
 		list-style-position: outside;
 		z-index: calc(10 - var(--file-index));
 
-		background-image: url('works-assets/material-assets/paper 1 black&white transparent cropped.png');
+		background-image: url('/works-assets/material-assets/paper 1 black&white transparent cropped (Custom).png');
 		background-size: 100% 100%;
 		background-attachment: fixed;
 		background-origin: border-box;
 		background-repeat: no-repeat;
 		background-position: 100% 100% ;
 		/* for dark backgrounds */
-		background-blend-mode:screen;
-		background-blend-mode:lighten;
+		/* background-blend-mode:screen;
+		background-blend-mode:lighten; */
 		/* for light backgrounds */
-		background-blend-mode:exclusion;
+		/* background-blend-mode:exclusion; */
 		/* for both */
-		background-blend-mode:soft-light;
+		/* background-blend-mode:soft-light; */
 		background-blend-mode:color-dodge;
 
 		/* Enhanced transitions using the new variables */
+		will-change: top, left,right, color, background-color, translate;
 		transition: 
 			top var(--transition-duration) var(--transition-timing) calc(var(--file-index) * var(--delay-factor)),
 			left var(--transition-duration) var(--transition-timing) calc(var(--file-index) * var(--delay-factor)),
 			right var(--transition-duration) var(--transition-timing) calc(var(--file-index) * var(--delay-factor)),
 			color 0.32s ease,
-			background-color 0.1s ease,
+			background-color 0s,
 			translate 0.2s var(--transition-timing);
 		
 		&::-webkit-details-marker,
 		&::marker {
 			content: 'x';
-			/* display: none; */
+			display: none;
 		}
 
+		/* every section in the summary close state */
 		> span{
 			flex: 0 1 fit-content;
 			width: 30px;
@@ -348,7 +369,6 @@
 
 		.file-title{
 			flex: 1;
-			/* outline: solid; */
 		}
 
 		.close-file{
@@ -403,9 +423,7 @@
 				:is(.date-start,.small-description){ display: none;}
 			}
 		}
-
 	}	
-
 
 	/* folder cover */
 	details.work-cover summary{
@@ -416,37 +434,58 @@
 		cursor:none;
 		overflow: hidden;
 		border-radius: var(--wc-radius);
+		box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -8px, rgba(0, 0, 0, 0.2) 0px -2px 0px inset;
 		
 		&::marker{
-			/* display: none; */
+			display: none;
+		}
+
+		&::after{
+			content: '';
+			position: absolute;
+			inset: 0;
+			opacity: 0;
+			pointer-events:fill;
+			cursor: pointer;
+			z-index: 100;
 		}
 	}
 
+	/* initial general animation for files and folder and cover element */
 	/* files covers */
 	details.file summary {
 		--file-primary-hue:color-mix(in oklch, hsl(calc(213 * var(--hue-number,213) / var(--file-index)), 55%, 38%) , var(--file-primary-color) var(--file-primary-color-amount));
-		
+		--move:calc(50vh +  (-6.9svh  * var(--file-index) ) ); 
+		top:var(--move) ;
+		right: 0;
+		color: black;
+
 		background-color: color-mix(in oklch, var(--file-primary-hue) , rgba(255, 255, 255, 0.466) 10% );
 		border-radius: var(--wc-radius) var(--wc-radius) var(--wc-radius) 0;
-		/* background-color: #2C5D98; */
-		/* background-color: color-mix(in oklch, var(--hoverC,rgb(44, 92, 150)) , rgba(255, 255, 255, 0.466) 30% ); */
+		backdrop-filter: blur(50px);
+
+		/* testing */
+		/* box-shadow: rgba(20, 27, 33, 0.126) 0px 2px 4px -28px, rgba(0, 0, 0, 0.207) 0px 7px 13px -7px, rgba(0, 0, 0, 0.075) 0px -3px 0px inset; */
+		box-shadow: rgba(0, 0, 0, 0) 0px 2px 4px, rgba(28, 30, 31, 0.493) 0px -3px 8px -7px, rgba(0, 0, 0, 0.178) 0px -2px 2px inset;
 
 		@container (width < 900px){
+			--move:calc(65vw +  (-8.5vw  * var(--file-index) ) ); 
 			border-radius: var(--wc-radius) ;
+			inset-inline: 2%;
 		}
 	}
 
 
-	/* each file's styling */
-	details.file:nth-of-type(n):hover :is( summary,::details-summary){
+	/* files styling and animation*/
+	details.file:nth-of-type(n):is(:hover,:focus) :is( summary,::details-summary){
 		--hover-file-top:2rem;
 		--hover-file-right:6svw;
 		left: calc(var(--hover-file-right) - (var(--file-index) * 10px)); 
 		rotate:calc(-2deg + .5deg * var(--file-index));
-		backdrop-filter: blur(50px);
-		transition-property: top,left, rotate, height;
+		transition-property: top,left, rotate, height; 
 		transform-origin: top;
-		transition: 200ms var(--transition-timing);
+		/* transition: all 200ms var(--transition-timing),box-shadow none,filter none,background-color none; */
+		transition: 100ms var(--transition-timing);
 		cursor: pointer;
 		/* background-color: rgba(255, 255, 255, 0.495) ; */
 		/* background-color: rgba(255, 255, 255, 0.951) ; */
@@ -458,7 +497,7 @@
 		}
 	}
 
-	details:nth-of-type(n):not(:hover) :is( summary,::details-summary){
+	details:is(.file,.work-cover):not(:hover,:focus,:active) :is( summary,::details-summary){
 		transition: 400ms var(--transition-timing);
 	}
 
@@ -480,7 +519,7 @@
 			color: var(--file-primary-hue,black);
 			border-radius: var(--wc-radius) 30px var(--wc-radius) 0;
 			corner-shape: round superellipse(0) round round ;
-			transition: all 0.3s var(--transition-timing), border-radius 100ms;
+			transition: all 0.3s var(--transition-timing), border-radius 100ms,box-shadow none,filter none,background-color none;
 			&::-webkit-details-marker,
 			&::marker {
 				content: 'x';
@@ -529,6 +568,7 @@
 
 		details[open]{
 			display: block;
+			/* display: none; */
 		}
 
 		/* where the content of each project is */
@@ -624,9 +664,11 @@
 		object-position: center;
 	}	
 
+
+
 	/* sticker styling */
 	details.work-cover .cover-content{
-		transition: .4s var(--transition-timing) ;
+		transition: .4s var(--transition-timing), box-shadow 0s, filter 0s, background-color 0s;
 
 		&:nth-child(1){
 			position: absolute;

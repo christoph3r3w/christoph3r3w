@@ -47,7 +47,9 @@
 			<a href="/">
 				{#if open == false}
 					<figure class="profile profile-2 flower" >
-						<img src="./25acb22a-22a3-41d5-a0eb-c91529c4c6c8.jpg" alt="icon of me" width="10" height="10">
+						<picture>
+							<img src="./25acb22a-22a3-41d5-a0eb-c91529c4c6c8 (Custom).jpg" alt="icon of me" width="10" height="10" loading="lazy">
+						</picture>
 					</figure>
 				{/if}
 			</a>
@@ -138,13 +140,17 @@
 		width: 100%;
 		height: 100%;
 		justify-content: space-between;
+
+		@container (width < 800px){
+			margin-top: 1rem;
+		}
 	}
 
 	header li{
 		justify-content: center;
 	}
 
-	/* face icon section */
+	/* logo - face icon section */
 	header li.header-logo{
 		aspect-ratio: 1;
 		border-radius: 50%;
@@ -212,6 +218,7 @@
 		background-color: color-mix(in srgb,#2C5D98 , rgba(255, 255, 255, 0.466) 80% );
 		transition: .6s ease-out;
 		z-index: 200;
+
 	}
 
 	header:hover li:nth-of-type(2).D-menu:hover{
@@ -223,19 +230,24 @@
 		background: none;
 		border: none;
 		width: 100%;
+		min-width: 3rem;
 		height: 100%;
+		max-height: .8rem;
+			/* outline: solid red; */
+
 
 		&::after{
 			content: '';
+			/* outline: solid red; */
 			position: absolute;
-			inset-inline: -15%;
-			inset-block: 0 -58%;
+			inset-inline: -25%;
+			inset-block: 0 -2rem;
 			border-radius:15px;
 		}
 
 		svg path {
 			fill: rgb(176, 176, 176);
-			stroke: rgb(91, 91, 91);
+			stroke: rgb(255, 0, 0);
 		}
 	}
 

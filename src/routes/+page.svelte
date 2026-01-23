@@ -58,8 +58,15 @@ onMount(() => {
 
   scroller.addEventListener('scroll', debouncedScrollCheck);
   window.addEventListener('resize', debouncedResizeCheck);
-  checkScrollButtons(scroller); // Initial check          
+  checkScrollButtons(scroller); // Initial check        
+
+  return () => {
+    scroller.removeEventListener('scroll', debouncedScrollCheck);
+    window.removeEventListener('resize', debouncedResizeCheck);
+  };
 });
+
+
   
 
   function startViewTransition(callback: () => void) {
@@ -123,9 +130,9 @@ onMount(() => {
       <Works/>
     </Window> -->
     
-    <Window role="child" class="contentContain" color="transparent" style="--hoverC:#3B6E25" bind:this={sections[3]}>
+    <!-- <Window role="child" class="contentContain" color="transparent" style="--hoverC:#3B6E25" bind:this={sections[3]}>
       <p>no y443</p>
-    </Window>
+    </Window> -->
   </section>
 
   <noscript>
