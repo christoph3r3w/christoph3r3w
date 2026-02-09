@@ -1,6 +1,7 @@
 <script lang=ts>
-	import { menuOpen } from '$lib/store';
-	let open = $state()
+	import { menuOpen, contactsOpen } from '$lib/store';
+	let openMenu= $state()
+	let openContacts = $derived($contactsOpen)
 	let dark = $state(true)
 
 	interface Props {
@@ -18,15 +19,17 @@
 		document.startViewTransition(callback);
 	}
 
-	function dropMenu()  {
+	function toggleMenu()  {
 		handleViewTransition(() => {
-			menuOpen.set(true);
+			menuOpen.set(!$menuOpen);
+			contactsOpen.set(false);
 		})
 	}
 
-	function menuClose(){
+	function toggleContacts(){
 		handleViewTransition(() => {
-			menuOpen.set(false);
+			menuOpen.set(true);
+			contactsOpen.set(!$contactsOpen);
 		})
 	}
 
@@ -36,16 +39,23 @@
 	}
 
 	$effect(() => {
-		open = $menuOpen;
+		openMenu = $menuOpen;
+		openContacts = $contactsOpen;
+
+		if(openContacts == true){
+			document.body.style.setProperty('--menu-height','66cqh')
+		}else{
+			document.body.style.setProperty('--menu-height','56cqh')
+		}
 	})
 
 </script>
 
-<header class={open == false?'down':''}>
+<header class={openMenu == false?'down':''}>
 	<ul class="headerUl">
 		<li class="header-logo">
 			<a href="/">
-				{#if open == false}
+				{#if openMenu== false}
 					<figure class="profile profile-2 flower" >
 						<picture>
 							<img src="./25acb22a-22a3-41d5-a0eb-c91529c4c6c8 (Custom).jpg" alt="icon of me" width="10" height="10" loading="lazy">
@@ -55,8 +65,8 @@
 			</a>
 		</li>
 		<li class="D-menu">
-			{#if open == false}
-				<button class="openMenuBtn" onmouseup={dropMenu} aria-label="menu button">
+			{#if openMenu== false}
+				<button class="openMenuBtn menuBtn" onmouseup={toggleMenu} aria-label="menu button">
 					<svg width="17" height="13" viewBox="0 0 17 13" fill="none" xmlns="http://www.w3.org/2000/svg">
 						<path d="M0.5 12.5L16.5 12.5" stroke="black" stroke-linecap="round"/>
 						<path d="M0.5 8.5L16.5 8.5" stroke="black" stroke-linecap="round"/>
@@ -65,7 +75,7 @@
 					</svg>
 				</button>
 			{:else}
-				<button class="closeBtn" onmouseup={menuClose} onkeypress={menuClose}>
+				<button class="closeBtn menuBtn" onmouseup={toggleMenu} onkeypress={toggleMenu}>
 					<svg width="17" height="13" viewBox="0 0 17 13" fill="none" xmlns="http://www.w3.org/2000/svg">
 						<path d="M3.5 12.5L13.5 12.5" stroke="black" stroke-linecap="round"/>
 						<path d="M0.5 0.5L16.5 0.499999" stroke="black" stroke-linecap="round"/>
@@ -73,11 +83,14 @@
 					</svg>
 				</button>
 			{/if}
+			{#if openMenu == true}
+			<div>
+				<button onmouseup={toggleContacts}  class="contactButton">Contact</button>
+			</div>
+			{/if}
 		</li>
 		<li class="head-extra">
-			{#if open == false}
-			<div><a href="/contact">Contact</a></div>
-			{/if}
+			
 			<button class="dark-mode" title="darkmode toggle" aria-label="darkmode toggle" onclick={handleDarkMode}>
 				<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 					<path d="M12.133 3C12.136 3 12.14 3 12.143 3C12.462 3 12.6 3.39301 12.36 3.60001C10.679 5.04701 9.755 7.32199 10.226 9.77399C10.749 12.495 12.988 14.566 15.773 14.938C17.532 15.173 19.161 14.728 20.456 13.839C20.719 13.658 21.068 13.897 20.989 14.203C19.885 18.519 15.626 21.595 10.767 20.902C6.73098 20.326 3.54399 17.087 3.06599 13.095C2.81599 11.013 3.28897 9.05101 4.26997 7.42001C5.85997 4.77401 8.78598 3 12.133 3Z" fill="#121212"/>
@@ -102,7 +115,6 @@
 
 	header:is(:not(.down)){
 		transition: .5s ease-out;
-		background-color: rgba(255, 255, 255, 0.959);
 
 		&:hover .head-extra{
 			box-shadow: 0 10px 5px -10px rgba(0, 0, 0, 0);
@@ -131,7 +143,6 @@
 		ul li:nth-child(n){
 			filter:drop-shadow(rgba(105, 98, 63, 0.181) 0px 28px 10px)
 		}
-	
 	}
 
 	header ul{
@@ -213,17 +224,12 @@
 		flex: 0 0 10%;
 		display: flex;
 		align-items: center;
-		justify-content: center;
-		border-radius: 15px;
-		background-color: color-mix(in srgb,#2C5D98 , rgba(255, 255, 255, 0.466) 80% );
+		justify-content: center;		
 		transition: .6s ease-out;
 		z-index: 200;
-
 	}
 
-	header:hover li:nth-of-type(2).D-menu:hover{
-		background-color: color-mix(in srgb, var(--hoverC,#2C5D98) , rgba(255, 255, 255, 0.466) 30% );
-	}
+
 
 	header li:nth-of-type(2).D-menu button{
 		position: relative;
@@ -232,8 +238,8 @@
 		width: 100%;
 		min-width: 3rem;
 		height: 100%;
-		max-height: .8rem;
-			/* outline: solid red; */
+		max-height: 8rem;
+		/* outline: solid red; */
 
 
 		&::after{
@@ -251,12 +257,24 @@
 		}
 	}
 
+	header li:nth-of-type(2).D-menu button.menuBtn{
+		background-color: color-mix(in srgb,#2C5D98 , rgba(255, 255, 255, 0.466) 80% );
+		border-radius: 15px;
+		width: 100%;
+		height: 100%;
+	}
+
+	/* menu button hover */
+	header:hover li:nth-of-type(2).D-menu .menuBtn{
+		background-color: color-mix(in srgb, var(--hoverC,#2C5D98) , rgba(255, 255, 255, 0.466) 30% );
+	}
+
 	header li:nth-of-type(2) button:active{
 		scale: .95;
 	}
 
 	:global(main:has(button.closeBtn:is(:active,:focus-within)) article.active) {
-		height: calc(var(--H-menu) + 12px);
+		height: calc(var(--menu-height) + 18px);
 		transition: .4s cubic-bezier(0.375, 0.685, 0.32, 1.275);
 	}
 
@@ -273,14 +291,25 @@
 		align-items: center;
 	}
 
-
 	header .head-extra{
 		display: flex;
 		flex-direction: row;
 		justify-content: space-evenly;
 		transition: .5s ease-out;
 		border-radius: 15px;
+		gap: 10px;
+		padding-inline: 10px;
 	}
+
+	header .head-extra div .contactButton{
+		display: grid;
+		place-content: center;
+		background-color: transparent;
+		border: none;
+		border-radius: 15px;
+		min-width: 2rem;
+		padding: 5px;
+}
 
 	:global(header .head-extra .dark-mode){
 		display:grid;
@@ -292,14 +321,11 @@
 		cursor: pointer;
 		/* view-transition-name: darkmode; */
 
-
 		svg path{
-			fill: yellow;
+			fill: rgb(0, 0, 0);
 			stroke: #000;
 		}
 	}
-
-	
 
 	@keyframes sway {
 		50%{rotate: 15deg;}

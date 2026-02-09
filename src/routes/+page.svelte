@@ -67,8 +67,6 @@ onMount(() => {
 });
 
 
-  
-
   function startViewTransition(callback: () => void) {
 		if (!document.startViewTransition) {
 			// Fallback for browsers that don't support View Transitions
@@ -140,7 +138,6 @@ onMount(() => {
 <style>
   :root, * {
     --scale: 0;
-    will-change: transform, scale, background-color;
 
     @property --Padding-genral {
       syntax: "<length>";
@@ -199,6 +196,7 @@ onMount(() => {
     height: 99.8%;
     width: auto;
     padding-inline: 5dvw;
+    will-change: transform, scale, background-color;
   }
 
   /* carousel control logic and animation */
@@ -263,7 +261,7 @@ onMount(() => {
     height: 97.5%;
 	  /* translate:clamp(-2% ,-2vw, -8%) 0; */
 	  background-color: color-mix(in srgb, var(--hoverC,#2C5D98) , rgba(255, 255, 255, 0.466) 70% );
-	  transition: .5s ease-out;
+	  transition: 200ms ease-out;
     transition-property: top,height;
     display: grid;
     grid-template-columns: repeat(60,1fr);
@@ -281,7 +279,7 @@ onMount(() => {
 
   :global(.contentContain:hover){
     background-color: color-mix(in srgb, var(--hoverC,#2C5D98) , rgba(255, 255, 255, 0.466) 30% );
-    transition: 1s ease-out;
+    transition: .1s ease-out;
   }
 
   :global(.contentContain :is(.pad)) {
@@ -307,7 +305,7 @@ onMount(() => {
     font-size: 20px;
     cursor: pointer;
     z-index: 10;
-    transition: background 0.3s;
+    transition: background-color 0.3s;
   }
 
   @media (width < 900px) {

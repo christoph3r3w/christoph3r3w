@@ -15,7 +15,7 @@
 
 <noscript>
   <div class="noscript-notice">
-    Note: JavaScript is disabled. Basic navigation functionality is available, but for the best experience, please enable JavaScript.
+    Note: JavaScript is disabled. For the best experience, please enable JavaScript.
   </div>
 </noscript>
 
@@ -89,6 +89,11 @@
 			height: 100lvh;
 		}
 
+
+		:global(body){
+			height: 100lvh;
+		}
+		
 		:global(footer){
 			display: none;
 		}

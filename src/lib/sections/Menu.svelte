@@ -1,7 +1,8 @@
 <script lang="ts">
 	// I think the functionality of the menu actually can be a popover. Popovers are a bit more stable now on many browsers. If not, then it can revert to using JavaScript. But I think a popover is a better idea.
- 	import { menuOpen } from "$lib/store";
-	let open = $derived($menuOpen)
+ 	import { menuOpen,contactsOpen } from "$lib/store";
+	let openMenu = $derived($menuOpen)
+	let openContacts = $derived($contactsOpen)
 
 	function startViewTransition(callback: () => void) {
 		if (!document.startViewTransition) {
@@ -17,17 +18,55 @@
 		});
 	}
 	
-	function menuClose(){
+	function showContacts(){
 		startViewTransition(function() {
-			menuOpen.set(false);
+			contactsOpen.set(true);
 		})
 	}
-
-	function dropMenu()  {
-		menuOpen.set(true);
-	}
-
 </script>
+
+
+
+{#snippet headerC()}
+	<ul class="headerUl">
+		<li class="header-logo">
+			<a href="/">
+				<picture class="profile profile-2 flower" >
+					<img src="./25acb22a-22a3-41d5-a0eb-c91529c4c6c8 (Custom).jpg" alt="icon of my face me">
+				</picture>
+			</a>
+		</li>
+		{#if openContacts == true}
+			<li class="head-contacts">
+				<h3>Contact</h3>
+				<span><img src="" alt="insta"> <a href="/">insta</a></span>
+				<span><img src="" alt="github"> <a href="/">github</a></span>
+				<span><img src="" alt="bluesky"> <a href="/">bluesky</a></span>
+				<span><img src="" alt="linkedin"> <a href="/">linkedin</a></span>
+			</li>
+		{:else}
+		<li class="head-routes">
+			<span> <a href="#works">work</a></span>
+			<span> <a href="/">about</a></span>
+			<span> <a class="noLink" href="/">masmesa studio</a></span>
+			<span> <a class="noLink" href="/">workshops,events</a></span>
+		</li>
+		<!-- <li class="head-extra"> -->
+			<!-- <button class="dark-mode" title="darkmode toggle" aria-label="darkmode toggle">
+				<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path d="M12.133 3C12.136 3 12.14 3 12.143 3C12.462 3 12.6 3.39301 12.36 3.60001C10.679 5.04701 9.755 7.32199 10.226 9.77399C10.749 12.495 12.988 14.566 15.773 14.938C17.532 15.173 19.161 14.728 20.456 13.839C20.719 13.658 21.068 13.897 20.989 14.203C19.885 18.519 15.626 21.595 10.767 20.902C6.73098 20.326 3.54399 17.087 3.06599 13.095C2.81599 11.013 3.28897 9.05101 4.26997 7.42001C5.85997 4.77401 8.78598 3 12.133 3Z" fill="#121212"/>
+				</svg>
+			</button> -->
+
+			<!-- <h3>Contact</h3>
+			<span><img src="" alt="insta"> <a href="/">insta</a></span>
+			<span><img src="" alt="github"> <a href="/">github</a></span>
+			<span><img src="" alt="bluesky"> <a href="/">bluesky</a></span>
+			<span><img src="" alt="linkedin"> <a href="/">linkedin</a></span> -->
+		<!-- </li> -->
+		{/if}
+	</ul>
+{/snippet}
 
 {#snippet menuContent()}
 	<section>
@@ -35,42 +74,12 @@
 	</section>
 {/snippet}
 
-{#snippet headerC()}
-	<ul class="headerUl">
-		<li>
-			<a href="/">
-				<picture class="profile profile-2 flower" >
-					<img src="./25acb22a-22a3-41d5-a0eb-c91529c4c6c8 (Custom).jpg" alt="icon of my face me">
-				</picture>
-			</a>
-		</li>
-		<li class="head-routes">
-			<span> <a href="#works">work</a></span>
-			<span> <a href="/">about</a></span>
-			<span> <a href="/">workshops,events</a></span>
-		</li>
-		<li class="head-extra">
-			<!-- <button class="dark-mode" title="darkmode toggle" aria-label="darkmode toggle">
-				<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-					<path d="M12.133 3C12.136 3 12.14 3 12.143 3C12.462 3 12.6 3.39301 12.36 3.60001C10.679 5.04701 9.755 7.32199 10.226 9.77399C10.749 12.495 12.988 14.566 15.773 14.938C17.532 15.173 19.161 14.728 20.456 13.839C20.719 13.658 21.068 13.897 20.989 14.203C19.885 18.519 15.626 21.595 10.767 20.902C6.73098 20.326 3.54399 17.087 3.06599 13.095C2.81599 11.013 3.28897 9.05101 4.26997 7.42001C5.85997 4.77401 8.78598 3 12.133 3Z" fill="#121212"/>
-				</svg>
-			</button> -->
-
-			<h3>Contact</h3>
-			<span><img src="" alt="insta"> <a href="/">insta</a></span>
-			<span><img src="" alt="github"> <a href="/">github</a></span>
-			<span><img src="" alt="bluesky"> <a href="/">bluesky</a></span>
-			<span><img src="" alt="linkedin"> <a href="/">linkedin</a></span>
-		</li>
-	</ul>
-{/snippet}
-
-{#if open == true}
+{#if openMenu == true}
 	<article class="active">
 		{@render menuContent()}
 	</article>
 
-{:else if open == false}
+{:else if openMenu == false}
 	<article class="close">		
 		<!-- {@render menuContent()} -->
 	</article>
@@ -78,13 +87,13 @@
 
 <style>
 	:root{
-		--H-menu:50cqh;
+		--menu-height:56cqh;
 	}
 
 	article{
 		position: relative;
 		z-index: 1;
-		height:var(--H-menu);
+		height:var(--menu-height);
 		
 		background-color: rgba(0, 119, 255, 0.495);
 		background-color: rgba(255, 255, 255, 0.801);
@@ -105,7 +114,7 @@
 		position:absolute;
 		display: block;
 		inset: 0;
-		top: calc(var(--H-top) - .1%);
+		top: calc(0 - .1%);
 		box-shadow: 0 10px 5px -10px rgba(0, 0, 0, 0.278);
 		box-shadow: rgba(27, 21, 14, 0.041) 0px 50px 50px -20px, rgba(0, 0, 0, 0.15) 0px 10px 60px -30px, rgba(10, 37, 64, 0.35) 0px -1.7px 3px 0px inset;
 		z-index: 1;
@@ -115,8 +124,12 @@
 		/* border-bottom: solid rgba(0, 119, 255, 0.548); */
 	}
 
+	/* :not(.active){
+		transition: .5s;
+	} */
+
 	.active:has(button.closebtn:is(:active,:focus-within)) {
-		height: calc(var(--H-menu) + 12px);
+		height: calc(var(--menu-height) + 12px);
 		transition: .4s cubic-bezier(0.375, 0.685, 0.32, 1.275);
 	}
 	
@@ -125,7 +138,7 @@
 		inset: 0;
 		animation: launch .2s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275) .01s;
 		/* view-transition-name: menu; */
-		z-index: 0;
+		z-index: 3;
 		
 		@starting-style{
 			translate: 0 100%;
@@ -162,12 +175,12 @@
 	}
 
 	.headerUl li{
-		/* outline: solid 1px rgba(207, 82, 82, 0.525); */
+		outline: solid 1px rgba(207, 82, 82, 0.525);
 	}
 
 	/* home, main icon  */
 
-	.headerUl li:nth-of-type(1){
+	.headerUl li.header-logo{
 		--w:calc-size(fit-content , size + clamp(1rem , 0.05vw + 10cqw ,10cqw));
 		width: var(--w);
 		height: 60cqh;
@@ -189,13 +202,13 @@
 	}
 
 	/* make the flower face a component that has a custom event, when theis event is triggered then moved it to the menu   */
-	.headerUl li:nth-of-type(1) a picture{
+	.headerUl li:nth-of-type(1) a .profile{
 		flex: 0 1 auto;
 		position: relative;
 		width: 95%;
 		height: 100%;
 		aspect-ratio: 1;
-		/* view-transition-name: header-figure; */
+		view-transition-name: header-figure;
 		isolation: isolate;
 
 		& img{
@@ -214,8 +227,8 @@
 			mask: 100% 50% var(--g),88.302% 82.139% var(--g),58.682% 99.24% var(--g),25% 93.301% var(--g),3.015% 67.101% var(--g),3.015% 32.899% var(--g),25% 6.699% var(--g),58.682% 0.76% var(--g),88.302% 17.861% var(--g),radial-gradient(100% 100%,#000 35.01%,#0000 calc(35.01% + 1px));
 			scale: 1;
 			transition: .8s cubic-bezier(0.175, 0.885, 0.32, 1.275) ;
-			animation: sway 10s linear infinite .5s backwards ;
-			/* view-transition-name: header-figure; */
+			/* animation: sway 10s linear infinite .5s backwards ; */
+			view-transition-name: header-figure;
 			z-index: 3;
 
 			
@@ -241,7 +254,7 @@
 		}
 	}
 
-	.headerUl:has(li:nth-of-type(n) a:hover)  .flower{
+	.headerUl:has(li:nth-of-type(n) a:hover) .flower{
 		--g:/27.486% 27.486% radial-gradient(#000 calc(71% - 1px),#0000 71%) no-repeat;
 
 		transition: all 1s .1s ;
@@ -251,7 +264,7 @@
 
 	.headerUl:has(li:nth-of-type(1) a:not(:hover)) .flower {
 		transition: .9s cubic-bezier(0.175, 0.885, 0.32, 1.275)  1s ;
-		animation: sway 10s backwards infinite .1s;
+		/* animation: sway 10s backwards infinite .1s; */
 	}
 
 	.headerUl li:is(:nth-of-type(n + 2)){
@@ -286,6 +299,13 @@
 		/* border: none; */
 		z-index: 100;
 		/* view-transition-name: darkmode; */
+	}
+
+	.noLink{
+		pointer-events: none;
+		cursor: default;
+		opacity: 0.6;
+		color: gray;
 	}
 
 	@keyframes sway {
@@ -347,7 +367,7 @@
 
 	@media (width < 520px) {
 		:root{
-			--H-menu:fit-content;
+			--menu-height:fit-content;
 		}
 		
 		article{background-color: rgba(255, 255, 255, 0.37);}
@@ -372,7 +392,7 @@
 			height: 100%;
 			flex: 0 1 30%;
 
-			& picture{
+			& .profile{
 				width: 100%;
 			}
 		}
@@ -382,10 +402,10 @@
 			transition: .4s cubic-bezier(0.375, 0.685, 0.32, 1.275);
 		}
 
-		.headerUl picture.flower{
+		.headerUl .profile.flower{
 			animation: sway 10s linear infinite .5s, flip 12s ease-out 3s both;
-			/* view-transition-name: header-figure; */
 			isolation: isolate;
+			view-transition-name: header-figure;
 		}
 
 		.headerUl:has(li:nth-of-type(n) a:hover)  .flower{
