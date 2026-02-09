@@ -12,9 +12,19 @@
 		<!-- <link rel="manifest" href="%sveltekit.assets%/portfolio icon/site.webmanifest"> -->
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="preload" href="%sveltekit.assets%/app.css" as="style" onload="this.rel='stylesheet'">
+		<link rel="stylesheet" href="../spalsh.css" as="style" onload="this.rel='stylesheet'">
 		%sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover">
+		<div id="splash" data-splash-skip="%spalsh-skip%">
+			<figure class="profile profile-2 " >
+				<picture class="flower">
+					<img src="./25acb22a-22a3-41d5-a0eb-c91529c4c6c8 (Custom).jpg" alt="icon of me" width="10" height="10" loading="lazy">
+				</picture>
+			</figure>
+
+			<div id="loading"> loading</div>
+		</div>
 		<div style="display: contents">%sveltekit.body%</div>
 	</body>
 </html>
