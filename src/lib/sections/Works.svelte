@@ -132,7 +132,7 @@
 <div class="work-section pad" id="works" style="--file-index:0; --total-work:{works.length};">
 
 	<section class="Orderedlist-container" >
-		<OrderedList />
+		<OrderedList {pagination} />
 	</section>
 	<!-- onclick it will close all details -->
 	<details class="work-cover" name='works' >
@@ -230,8 +230,11 @@
 		height: 70cqh;
 		max-height: 100%;
 		margin-top: 5dvh;
-		/* opacity: .2;
-		pointer-events: none; */
+	}
+
+	.work-section:has(details[open]) .Orderedlist-container{
+		filter: opacity(.2);
+		pointer-events: none;
 	}
 	
 	.work-section{

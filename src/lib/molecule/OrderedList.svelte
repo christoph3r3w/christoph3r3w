@@ -1,6 +1,7 @@
 <script>
-	// let {data} = $props()
+	let {pagination} = $props()
 	// let {folders} = data
+
 
 	let mfolders =  $state([
 		{
@@ -35,7 +36,7 @@
 	<!-- needs to send a post to the server na dupdtae the works component -->
 	<!-- or -->
 	<!-- trigger specific showing with svlte and css  -->
-	<div id="ol">
+	<div id="ol" class={pagination != 'none'? '' : 'no-pagination'}>
 		<button type="reset" onclick={() => {console.log('recent clicked')}}>Recent</button>
 
 		{#each mfolders as folder}
@@ -162,6 +163,11 @@
 	#ol :is(button,a,svg):nth-last-of-type(n):hover{
 		--list-color:color-mix(in oklch, var(--hoverC,rgba(255, 255, 255, 0.677)), black 80%);
 		text-decoration: underline wavy;
+	}
+
+	.no-pagination{
+		filter: opacity(.2);
+		pointer-events: none;
 	}
 	
 	</style>
