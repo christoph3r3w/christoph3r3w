@@ -109,6 +109,9 @@
 	  transition-behavior: allow-discrete;
 	  scroll-behavior: smooth;
     font-size-adjust: 0.5;
+    @view-transition {
+      navigation: auto;
+    }
 
   }
 }
