@@ -4,6 +4,7 @@ export { default as Buttons } from './atoms/Buttons.svelte';
 export { default as Menu } from './sections/Menu.svelte';
 export { default as Footer } from './molecule/Footer.svelte';
 export { default as OrderedList} from './molecule/OrderedList.svelte'
+export {default as Contacts} from './molecule/Contacts.svelte'
 // bigger components
 export { default as Header } from './system/Header.svelte';
 export {default as Window} from './system/Window.svelte';
