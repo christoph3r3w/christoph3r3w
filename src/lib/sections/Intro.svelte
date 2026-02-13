@@ -117,10 +117,20 @@
 		}
 	});
 
-	// onDestroy(() => {
-	// 	if (split) split.revert();
-	// 	if (tl) tl.kill();
-	// });
+	onDestroy(() => {
+		if (split) {
+			split.revert();
+			split = null;
+		}
+		if (tl) {
+			tl.kill();
+			tl = null as any;
+		}
+		// Clear DOM references
+		introSection = null as any;
+		textElement = null as any;
+		bar = null as any;
+	});
 
 	// let name = $state(['c','h','r','i','s','t','o','p','h','e','r','.'])
 	
@@ -159,43 +169,45 @@
 
 <style>
 	:root{
+		
 		@property --letter-index {
-		syntax: "<number>";
-		initial-value: 0;
-		inherits: true;
+			syntax: "<number>";
+			initial-value: 0;
+			inherits: true;
 		}
 		
 		@property --letter-total {
-		syntax: "<number>";
-		initial-value: 11;
-		inherits: true;
+			syntax: "<number>";
+			initial-value: 11;
+			inherits: true;
 		}
 		
 		@property --random-col {
-		syntax: "<number>";
-		initial-value: 1;
-		inherits: true;
+			syntax: "<number>";
+			initial-value: 1;
+			inherits: true;
 		}
 		
 		@property --random-row {
-		syntax: "<number>";
-		initial-value: 1;
-		inherits: true;
+			syntax: "<number>";
+			initial-value: 1;
+			inherits: true;
 		}
 		
 		@property --h {
-		syntax: "<number> | <percentage>";
-		initial-value: -0%;
-		inherits: true;
+			syntax: "<number> | <percentage>";
+			initial-value: -0%;
+			inherits: true;
 		}
 	}
+
 
 	:global(.char) {
 		display: inline-block;
 		position: relative;
 		will-change: transform;
-		/* outline: solid rgba(0, 128, 0, 0.174) 1px; */
 		font-size: 2rem ;
+		/* outline: solid rgba(0, 128, 0, 0.174) 1px; */
 	}
 	:global(.word) {
 		display: inline-block;
@@ -222,22 +234,22 @@
 		container-type: inline-size;
 	}
 
-	.text{
+	/* .text{
 		width: 60vw;
 		height: 15cqh;
 		position: relative;
 		display: inline flex;
 		align-items: center;
 		justify-content: center;
-		/* outline: solid red; */
-	}
+		outline: solid red;
+	} */
 
-	.text p{
+	/* .text p{
 		display: flex;
 		align-items: center;
-	}
+	} */
 	
-	.bar {
+	/* .bar {
 		--press:0;
 		--h:1;
 		--d:0;
@@ -247,8 +259,6 @@
 		inset-inline: 10%;
 		inset-block: 40%;
 		display: flex;
-		/* align-items: center;
-		justify-content: center; */
 		border-radius: 10rem 10rem;
 		background-color: goldenrod;
 		overflow: clip;
@@ -256,31 +266,31 @@
 		z-index: 3;
 		transition: .2s;
 		box-shadow: rgba(0, 0, 0, 0.09) var(--press) calc(2px * var(--h)) 1px var(--d), rgba(0, 0, 0, 0.09) var(--press) calc(4px * var(--h)) 2px var(--d), rgba(0, 0, 0, 0.09) var(--press) calc(8px * var(--h)) 4px var(--d), rgba(0, 0, 0, 0.09) var(--press) 16px 8px var(--d), rgba(0, 0, 0, 0.09) 0px 32px 16px var(--d);
-	}
+	} */
 
-	:global(body):has(.bar:hover) .barConShadow {
+	/* :global(body):has(.bar:hover) .barConShadow {
 		--press: 0;
-		/* box-shadow: rgba(0, 0, 0, 0.09) var(--press) 2px 1px, rgba(0, 0, 0, 0.09) var(--press) 4px 2px, rgba(0, 0, 0, 0.09) var(--press) 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px; */
+		box-shadow: rgba(0, 0, 0, 0.09) var(--press) 2px 1px, rgba(0, 0, 0, 0.09) var(--press) 4px 2px, rgba(0, 0, 0, 0.09) var(--press) 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
 		transition: .2s;
 		transform: translateY(10%) !important;
-	}
+	} */
 	/* span and button left */
-	:global(body) .bar:hover:has(span:nth-of-type(1):hover){
+	/* :global(body) .bar:hover:has(span:nth-of-type(1):hover){
 		--press: 10px ;
 		--h:-1.2;
 		--d:-5px;
 		transform: rotateY(-5deg) skewY(1deg) !important;
-	}
+	} */
 
-	:global(body) .bar:hover:has(span:nth-of-type(1) button:active){
+	/* :global(body) .bar:hover:has(span:nth-of-type(1) button:active){
 		--press: 10px ;
 		--h:-1.2;
 		--d:-5px;
 		transform: rotateY(-10deg) skewY(2deg) !important;
-	}
+	} */
 
 	/* span and button right */
-	:global(body) .bar:hover:has(span:nth-of-type(3):hover){
+	/* :global(body) .bar:hover:has(span:nth-of-type(3):hover){
 		--press: -10px;
 		--h:-1.2;
 		--d:-5px;
@@ -313,7 +323,6 @@
 		border-radius: 10rem 10rem;
 		z-index: 2;
 
-		/* display: none; */
 	}
 
 	.barControls span:is(:nth-of-type(1), :nth-of-type(3)) {
@@ -346,7 +355,6 @@
 			}
 
 			&:is(:nth-of-type(2)){
-				/* flex: 0 0 20%; */
 				justify-content: center;
 			}
 
@@ -384,13 +392,12 @@
 		position: absolute;
 		inset-inline: 10%;
 		inset-block: 40%;
-		/* transform: translate(0 ,-10px); */
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
 		border-radius: 10rem 10rem;
 		z-index: 1;
 		background-color: rgba(94, 94, 94, 0.568);
-	}
+	} */
 
 </style>

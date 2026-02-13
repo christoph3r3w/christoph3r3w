@@ -1,7 +1,6 @@
 <script lang="ts">
 	import {Header, Footer, Window,Menu} from '$lib';
 	let {children} = $props();
-	// import { gsap } from "gsap"
 
 </script>
 
@@ -33,11 +32,9 @@
 		overflow: hidden;
 	}
 
-	:global(body :nth-child(n):focus-visible){
-		/* background-color: red !important; */
-		/* outline: solid rgb(30, 255, 0) !important; */
-		/* border: solid rgb(93, 0, 255); */
-	}
+	/* :global(body :nth-child(n):focus-visible){
+		border: solid rgba(255, 140, 0, 0.815);
+	}	 */
 
 	:global(header){
 		padding-inline: var(--Padding-genral);
@@ -58,23 +55,17 @@
 		/* height: 500vh; */
 	}
 
-	:global(.mainContain){
-		/* padding-inline: var(--Padding-genral); */
-		/* margin: var(--Padding-genral); */
-	}
-
 	:global(footer){
 		display: block;
 		background-color: rgba(0, 128, 0, 0);
 		flex: 0 1 auto;
 		padding-inline: var(--Padding-genral);
 		display: none;
-
 	}
 
 	.noscript-notice {
 		position: fixed;
-		top: 0;
+		top: 5%;
 		left: 0;
 		right: 0;
 		background: #ffeb3b;
@@ -88,7 +79,6 @@
 		:global(html){
 			height: 100lvh;
 		}
-
 
 		:global(body){
 			height: 100lvh;

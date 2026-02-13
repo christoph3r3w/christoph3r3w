@@ -1,3 +1,4 @@
+import { page } from '$app/state';
 import { writable } from 'svelte/store';
 
 // menu toggle

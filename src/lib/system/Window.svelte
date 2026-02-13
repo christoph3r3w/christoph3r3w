@@ -13,12 +13,12 @@ interface Props {
 	role: string;
 	class?: string;
 	color?:string;
-	style?: HTMLAreaAttributes
+	style?: HTMLAreaAttributes ['style'];
 	
 	children?: import('svelte').Snippet<[]>; 
 }
 // props
-let {title,context,role,children, class: CLASS,color, ...props} : Props = $props(); 
+let {title,context,role,children, class: CLASS,color, style, ...props} : Props = $props(); 
 
 </script>
 
@@ -56,12 +56,12 @@ let {title,context,role,children, class: CLASS,color, ...props} : Props = $props
 <!-- logic for all the types of containers  -->
 {#if role == 'window'}
 	<!-- window container -->
-	<main class="contain {CLASS}" style="background-color:{color};" {...props} >
+	<main class="contain {CLASS}" style="background-color:{color}; {style}" {...props} >
 		{@render B()}
 	</main>
 {:else if role == 'child'}
 	<!-- any container inside the main container -->
-	<div class="contain child-container {CLASS}" style="background-color:{color};" {...props}>
+	<div class="contain child-container {CLASS}" style="background-color:{color}; {style}" {...props}>
 		{@render A()}
 	</div>
 {/if}
@@ -84,8 +84,8 @@ let {title,context,role,children, class: CLASS,color, ...props} : Props = $props
 
 	/* window container is by default a grid  */
 main{
-	width: stretch;
-	height: stretch;
+	width: 100%;
+	height: 100%;
 	container-name:window-container;
 	background-color:var(--wc-bg,white) ;
 	color: var(--wc-text,black);
@@ -112,8 +112,8 @@ main >:nth-child(1):is(.header),.header:nth-of-type(1){
 }
 
 main > section:nth-of-type(1){
-	height: stretch;
-	width: stretch;
+	height: 100%;
+	width: 100%;
 	border-radius: var(--cc-radius,inherit);
 	display: flex;
 	flex-direction: column;

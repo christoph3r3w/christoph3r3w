@@ -2,11 +2,11 @@
 	import { menuOpen, contactsOpen } from '$lib/store';
 	let openMenu= $state()
 	let openContacts = $derived($contactsOpen)
-	let dark = $state(true)
+	let dark = $state(false)
 
-	interface Props {
-		children?: () => import('svelte').Snippet<[]>; 
-	}
+	// interface Props {
+	// 	children?: () => import('svelte').Snippet<[]>; 
+	// }
 
 	function handleViewTransition(callback: () => void) {
 		if (!document.startViewTransition) {
@@ -47,6 +47,12 @@
 		}else{
 			document.body.style.setProperty('--menu-height','56cqh')
 		}
+
+		// Cleanup function for the effect
+		return () => {
+			// Reset to default value on cleanup
+			document.body.style.removeProperty('--menu-height');
+		};
 	})
 
 </script>
@@ -75,7 +81,7 @@
 					</svg>
 				</button>
 			{:else}
-				<button class="closeBtn menuBtn" onmouseup={toggleMenu} onkeypress={toggleMenu}>
+				<button class="closeBtn menuBtn" onmouseup={toggleMenu} onkeypress={toggleMenu} aria-label="close menu button">
 					<svg width="17" height="13" viewBox="0 0 17 13" fill="none" xmlns="http://www.w3.org/2000/svg">
 						<path d="M3.5 12.5L13.5 12.5" stroke="black" stroke-linecap="round"/>
 						<path d="M0.5 0.5L16.5 0.499999" stroke="black" stroke-linecap="round"/>
@@ -128,10 +134,10 @@
 	header:hover{
 		transition: .5s ease-out;
 
-		.head-extra{
+		/* .head-extra{
 			background-color: rgba(255, 255, 255, 0.959);
 			box-shadow: 0 10px 5px -10px rgba(0, 0, 0, 0.278);
-		}
+		} */
 
 		.header-logo{
 			transform: translate(0 , 15%);
@@ -205,9 +211,10 @@
 			mask: 100% 50% var(--g),88.302% 82.139% var(--g),58.682% 99.24% var(--g),25% 93.301% var(--g),3.015% 67.101% var(--g),3.015% 32.899% var(--g),25% 6.699% var(--g),58.682% 0.76% var(--g),88.302% 17.861% var(--g),radial-gradient(100% 100%,#000 35.01%,#0000 calc(35.01% + 1px));
 			scale: 1;
 			transition: .5s cubic-bezier(0.375, 0.585, 0.12, 1.091) ;
-			animation: sway 10s linear infinite 5s both ;
+			animation: sway 5s linear infinite 15s both ;
 			view-transition-name: header-figure;
-			
+			contain: paint layout;
+
 			@starting-style{
 				translate: 0 -16vw;
 			}
@@ -301,7 +308,8 @@
 		padding-inline: 10px;
 	}
 
-	header .head-extra div .contactButton{
+	/*  */
+	header  button.contactButton{
 		display: grid;
 		place-content: center;
 		background-color: transparent;
@@ -309,6 +317,7 @@
 		border-radius: 15px;
 		min-width: 2rem;
 		padding: 5px;
+		outline: solid;
 }
 
 	:global(header .head-extra .dark-mode){
@@ -319,7 +328,6 @@
 		border: none;
 		border-radius: 50%;
 		cursor: pointer;
-		/* view-transition-name: darkmode; */
 
 		svg path{
 			fill: rgb(0, 0, 0);

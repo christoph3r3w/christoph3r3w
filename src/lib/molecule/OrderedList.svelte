@@ -5,11 +5,26 @@
 
 	let mfolders =  $state([
 		{
-			year: 2024,
+			year: 2026,
+			files: [	'zuza']
+		},
+		{
+			year: 2025,
 			files: [
 				'project-proposal.docx',
 				'final-report.pdf',
 				'presentation.pptx'
+			]
+		},
+		{
+			year: 2024,
+			files: [
+				'project-proposal.docx',
+				'final-report.pdf',
+				'presentation.pptx',
+				'design-sketch.psd',
+				'user-research.csv',
+				'roadmap.md'
 			]
 		},
 		{
@@ -19,14 +34,6 @@
 				'meeting-notes.txt'
 			]
 		},
-		{
-			year: 2022,
-			files: [
-				'design-sketch.psd',
-				'user-research.csv',
-				'roadmap.md'
-			]
-		}
 	]);
 
 	let folderLength = $derived(mfolders.length);
@@ -36,13 +43,13 @@
 	<!-- needs to send a post to the server na dupdtae the works component -->
 	<!-- or -->
 	<!-- trigger specific showing with svlte and css  -->
-	<div id="ol" class={pagination != 'none'? '' : 'no-pagination'}>
-		<button type="reset" onclick={() => {console.log('recent clicked')}}>Recent</button>
+	<div id="ol" class={pagination != 'none'? '' : 'no-pagination'} >
+		<button type="reset" onclick={() => {console.log('recent clicked')}} tabindex={pagination != 'none'? undefined : -1}>Recent</button>
 
 		{#each mfolders as folder}
 			<ol class="main-list">
 				<li>
-					<a href="/">
+					<a href="/" tabindex={pagination != 'none'? undefined : -1}>
 						{folder.year}
 					</a>
 				</li>
@@ -58,26 +65,7 @@
 			
 			</ol> 	
 		{/each}
-
-		
-
-		<!-- {#each {length: folderLength} as _, i}
-			<ol class="main-list">
-				<li><a href="/">{mfolders[i].year}</a></li>
-				<ol class="file-dots">
-					{#each mfolders[i].files as file}				
-						<li>
-							<svg width="5" height="1" viewBox="0 0 5 1" fill="none" xmlns="http://www.w3.org/2000/svg">
-								<path d="M0.5 0.5L4.5 0.5" stroke="black" stroke-linecap="round"/>
-							</svg>
-						</li>
-					{/each }
-				</ol>
-			
-			</ol> 	
-		{/each} -->
-		<button onclick={()=> {console.log('all has been clicked')}}>All</button>
-
+		<button onclick={()=> {console.log('all has been clicked')}} tabindex={pagination != 'none'? undefined : -1}>All</button>
 	</div>
 
 	<style>
@@ -93,13 +81,14 @@
 			gap: 1dvh;
 			z-index: 4;
 			text-shadow: 0px 3px 3px rgba(255,255,255,0.5);
+			padding-left: 1rem;
 		}
 
 		#ol > button{
 			position: relative;
 			display: grid;
 			place-content: start;
-			width: stretch;
+			width: fit-content;
 			height: auto;
 			background-color: color-mix(in srgb, var(--hoverC,black) , rgba(255, 255, 255, 0) 100%);
 			color: var(--list-color);
