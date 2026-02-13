@@ -1,7 +1,8 @@
 <script>
 	import {Works} from '$lib'
+	let {data} = $props();
 </script>
-	<Works />
+	<Works {data} />
 <style>
 
 </style>

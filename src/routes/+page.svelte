@@ -4,11 +4,12 @@
   import { onMount, onDestroy } from 'svelte';
   import { menuOpen } from '$lib/store';
 
+  let {data} = $props();
+
+
   // Reactive variables using $state
   let container = $state<HTMLElement | undefined>(undefined);
-  let scroller : HTMLElement;
-  let targetScrollLeft = 0;
-  let isAnimating = false;
+  let scroller = $state<HTMLElement | undefined>(undefined);
   let progressCounter = $state<HTMLElement | any>(undefined);
   let progressBar = $state<HTMLElement | undefined>(undefined);
   let sections = $state<any[]>([]); // Using any[] as the initial type
@@ -17,53 +18,77 @@
   let currentSection = $state(0);
   let totalSections = $state(0);
  
- 
+ $effect(() => {
+  if (!scroller) return;
+  
+  const handleClick = () => {
+    if($menuOpen == true){
+      menuOpen.set(false);
+    }
+  };
+  
+  scroller.onclick = handleClick;
+  
+  return () => {
+    if (scroller) {
+      scroller.onclick = null;
+    }
+  };
+ })
 
 onMount(() => {
-
-  function debounce(func :Function, timeout = 300){
-    let timer : NodeJS.Timeout;
-    return (...args:any[]) => {
+  function debounce(func: Function, timeout = 300) {
+    let timer: ReturnType<typeof setTimeout>;
+    return (...args: any[]) => {
       clearTimeout(timer);
-      timer = setTimeout(() => { func.apply(this, args); }, timeout);
+      timer = setTimeout(() => { func(...args); }, timeout);
     };
   }
 
   if (!scroller) return;
   
- function checkScrollButtons(el:HTMLElement) {
-  const atStart = el.scrollLeft === 0;
-  const atEnd = Math.ceil(el.scrollLeft + el.clientWidth) >= el.scrollWidth;
+  function checkScrollButtons(el: HTMLElement) {
+    if (!el || !el.isConnected) return; // Safety check for destroyed elements
+    const atStart = el.scrollLeft === 0;
+    const atEnd = Math.ceil(el.scrollLeft + el.clientWidth) >= el.scrollWidth;
 
-  // console.log('Scroll start disabled:', atStart);
-  // console.log('Scroll end disabled:', atEnd);
+    // Optional: add classes if needed
+    if (atStart) {
+      el.classList.add('at-start');
+    } else {
+      el.classList.remove('at-start');
+    }
 
-  // Optional: add classes if needed
-  if(atStart) {
-    el.classList.add('at-start');
-  } else {
-    el.classList.remove('at-start');
-  };
+    if (atEnd) {
+      el.classList.add('at-end');
+    } else {
+      el.classList.remove('at-end');
+    }
+  }
 
-  if(atEnd) {
-    el.classList.add('at-end');
-  } else {
-    el.classList.remove('at-end');
-  };
- 
-}
-
-  const debouncedScrollCheck = debounce(() => checkScrollButtons(scroller));
-  const debouncedResizeCheck = debounce(() => checkScrollButtons(scroller));
+  const debouncedScrollCheck = debounce(() => checkScrollButtons(scroller!));
+  const debouncedResizeCheck = debounce(() => checkScrollButtons(scroller!));
 
   scroller.addEventListener('scroll', debouncedScrollCheck);
   window.addEventListener('resize', debouncedResizeCheck);
-  checkScrollButtons(scroller); // Initial check        
-
+  checkScrollButtons(scroller); // Initial check
+  
+  // Return cleanup function properly
   return () => {
-    scroller.removeEventListener('scroll', debouncedScrollCheck);
-    window.removeEventListener('resize', debouncedResizeCheck);
+    if (scroller) {
+      scroller.removeEventListener('scroll', debouncedScrollCheck);
+      window.removeEventListener('resize', debouncedResizeCheck);
+    }
   };
+});
+
+onDestroy(() => {
+  // Clear DOM references to prevent memory leaks
+  container = undefined;
+  scroller = undefined;
+  progressCounter = undefined;
+  progressBar = undefined;
+  sections = [];
 });
 
 
@@ -99,22 +124,16 @@ onMount(() => {
 </script>
 
   <div class="container" bind:this={container}>
-    <!-- the progress bar -->
-    <div class="progress-bar" bind:this={progressBar}></div>
-
-    <div class="progress-counter" bind:this={progressCounter}>
-    <!-- <h2>0</h2> -->
-  </div>
-
-  <!-- Optional navigation buttons -->
-  <!-- <button class="nav-btn prev" onclick={() => scrollToSection(currentSection - 1)}>←</button>
-  <button class="nav-btn next" onclick={() => scrollToSection(currentSection + 1)}>→</button> -->
 
   <!-- the section -->
-  <section class="mainContain scroller" bind:this={scroller} onclick={menuClose} role="section" >
+  <section class="mainContain scroller" bind:this={scroller} >
     <Window role="child" class="contentContain" color="white" style="--hoverC:white" bind:this={sections[0]}>
-     <Intro2/>
+      <Intro2 {data}/>
     </Window>
+
+    <!-- <Window role="child" class="contentContain" color="red" style="--hoverC:white" bind:this={sections[0]}>
+      <Intro2 {data}/>
+    </Window> -->
 
     <!-- <Window role="child" class="contentContain" color="white" style="--hoverC:white" bind:this={sections[0]}>
      <Intro/>
@@ -125,7 +144,7 @@ onMount(() => {
     </Window> -->
 
     <!-- <Window role="child" class="contentContain" color="transparent" style="--hoverC:#DCA256" bind:this={sections[2]}>
-      <Works/>
+      <Works {data}/>
     </Window> -->
     
     <!-- <Window role="child" class="contentContain" color="transparent" style="--hoverC:#3B6E25" bind:this={sections[3]}>
@@ -139,20 +158,17 @@ onMount(() => {
   :root, * {
     --scale: 0;
 
-    @property --Padding-genral {
-      syntax: "<length>";
-      initial-value: 1rem;
-      inherits: true;
-    }
+    @property --padding-genral {
+        syntax: "<length>";
+        initial-value: 1rem;
+        inherits: true;
+    }   
   }
 
   :global(body:has(noscript .mainContain)) {
     .container:has(.scroller){
       background-color: aqua !important;
       display: none;
-    }
-    header{
-      background-color: red;
     }
   } 
 
@@ -162,27 +178,6 @@ onMount(() => {
     width: 100vw;
     height: 100%;
 	  overflow: hidden; 
-  }
-
-  .progress-bar {
-    position: fixed;
-    bottom: 0;
-    inset-inline: 0;
-    width: 100vw;
-    height: 10px;
-    transform: scaleX(var(--scale));
-    transform-origin: center left;
-    background-color: #2c5d9859;
-    z-index: 2;
-  }
-
-  .progress-counter {
-    position: fixed;
-    height: fit-content;
-    bottom: 3%;
-    right: 10%;
-    z-index: 2;
-    /* outline: solid #2C5D98; */
   }
 
   .mainContain {
@@ -287,25 +282,8 @@ onMount(() => {
     position: relative;
 		grid-column: 1/-1;
 		grid-row: 1/-1;
-    padding-inline: var(--Padding-genral) !important;
+    padding-inline: var(--padding-genral) !important;
 
-  }
-
-  /* Add navigation button styles */
-  .nav-btn {
-    position: fixed;
-    bottom: 3%;
-    transform: translateY(0%);
-    background: rgba(0, 0, 0, 0.2);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    font-size: 20px;
-    cursor: pointer;
-    z-index: 10;
-    transition: background-color 0.3s;
   }
 
   @media (width < 900px) {
