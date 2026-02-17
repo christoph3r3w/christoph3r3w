@@ -4,7 +4,7 @@
 
 </script>
 
-<Window role='window' >
+<Window role='window' color='#d5d5d5e7'>
 	<Header />
 	<Menu />
 	{@render children()}
@@ -23,6 +23,7 @@
 	:root{
 		--H-top:5cqh;
 		--Padding-genral:2cqh;
+		--primary-gray: #d5d5d5e7;
 	}
 
 	:global(body){
@@ -51,7 +52,7 @@
 	}
 
 	:global(main.contain){
-		background-color: rgba(213, 213, 213, 0.904) ;
+		background-color: var(--primary-gray);
 		/* height: 500vh; */
 	}
 

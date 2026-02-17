@@ -14,6 +14,7 @@ export async function load() {
 		status: { is: string; sticker: string };
 		contentBlock?: Array<{ text?: string[]; images?: string[] }>;
 		collaborators?: Record<string, string>;
+		h2:string
 	}
 
 	let dataWorks : any[]  =  [
@@ -26,35 +27,16 @@ export async function load() {
 			// 	assets:{image: [''], icon: '',color:''},
 			// 	contentBlock:[{}],
 			// 	collaborators: {
-			// 		owner:'me',
+			// 		owner:'Christopher',
 			// 	},
+			// 	tags:['Experiment','Grid Motion','responsive design'],
+
 			// 	link: 'https://www.google.com',
 			// 	dateStart: '2023',
 			// 	dateEnd: '2023',
 			// 	status: {is:'an experiment',sticker:''}
 			// },
-			{
-				title: 'potion game',
-				slug: 'Project for Merlin studios',
-				description: "During a final school sprint, we've gotten a project to create a game using web fundamentals for Merlin Studio you.They wanted to test out alternative ways for user interfaces, and it took the opportunity to build an interactive game that runs fully on the server.  ",
-				assets:{
-					image: [
-						'works-assets/8a92efbb8245058d9558606619b4ba46.jpg'
-					],
-					icon: '',
-					color:'orange'
-				},
-				contentBlock:[{}],
-				collaborators: {
-					owner:'me',
-					studio:'merlin studios',
-					designer:'me',
-				},
-				link: 'https://proof-of-concept-for-merlin.vercel.app/',
-				dateStart: '2024',
-				dateEnd: '',
-				status:{is:'',sticker:''}
-			},
+			
 			{
 				title: 'windows',
 				slug: 'School project',
@@ -71,14 +53,16 @@ export async function load() {
 				contentBlock:[{}
 				],
 				collaborators: {
-					owner:'me',
-					designer:'me',
+					owner:'Christopher Willems',
+					designer:'Christopher Willems',
+					collaborator:'Anna-kyra'
 				},
+				tags:['Svelte','NodeJS','Responsive ui','UI/UX','popover'],
 				link: 'https://brilletjes-squad-page.vercel.app/',
 				dateStart: '',
 				dateEnd: '',
 				status:{is:'',sticker:''}
-			},
+			},	
 			// {
 			// 	title: 'monytri',
 			// 	slug: 'PWA MVP',
@@ -134,7 +118,7 @@ export async function load() {
 			// 		},
 			// 	],
 			// 	collaborators: {
-			// 		owner:'David Dick, Chiara lung',
+			// 		employer:'David Dick, Chiara lung',
 			// 		designer:'Amy Frost',
 			// 		collaboratorA:'collaboratorA',
 			// 		collaboratorB:'collaboratorB',
@@ -145,6 +129,33 @@ export async function load() {
 			// 	status:{is:'',sticker:''}
 			// },
 			{
+				title: 'potion game',
+				slug: 'Project for Merlin studios',
+				description: "A server based game",
+				assets:{
+					image: [
+						'works-assets/8a92efbb8245058d9558606619b4ba46.jpg'
+					],
+					icon: '',
+					color:'orange'
+				},
+				contentBlock:[
+				{
+					text:[`During a final school sprint, we've gotten a project to create a game using web fundamentals for Merlin Studio you.They wanted to test out alternative ways for user interfaces, and it took the opportunity to build an interactive game that runs fully on the server.`]
+				},
+				{}
+				],
+				collaborators: {
+					studio:'merlin studios',
+					designer:'Christopher Willems',
+				},				
+				tags:['Express','NodeJS','Directus','Figma','API','EJS','Server architecture','Motion Design'],
+				link: 'https://proof-of-concept-for-merlin.vercel.app/',
+				dateStart: '2024',
+				dateEnd: '',
+				status:{is:'',sticker:''}
+			},
+			{
 				title: 'zuza website',
 				slug: 'Portfolio',
 				description: 'a portfolio website for a designer named zuza',
@@ -153,8 +164,9 @@ export async function load() {
 				collaborators: {
 					owner:'Zuza loch',
 					designer:'Zuza loch',
-					developer:'me',
+					developer:'Christopher Willems',
 				},
+				tags:['Svelte/Vue','NodeJS','Decap'],
 				link: '',
 				dateStart: '2026',
 				dateEnd: '',
@@ -163,8 +175,7 @@ export async function load() {
 			{
 				title: 'monytri',
 				slug: 'PWA MVP',
-				description: `An MVP designed to showcase the services, capabilities, and adaptability of the Monytri financial platform to stakeholders and investors. It is a progressive web app that centralizes stock gifting, asset transfers, and payment requests, while also allowing users to practice and learn about financial literacy.
-									The platform encourages users to stay up to date with their personal portfolios, learn from curated educational content on portfolio management, and exchange assets through built-in services.`,
+				// description: `An MVP designed to showcase the services, capabilities, and adaptability of the Monytri financial platform to stakeholders and investors. `,
 				assets:{
 						image: [
 								'/works-assets/monytri/monytri 2233 2026-01-18 025839.png',
@@ -175,13 +186,9 @@ export async function load() {
 				},
 				contentBlock:[
 					{
-						text: ['test content block 1'],
-					},
-					// {
-					// 	images:['/works-assets/monytri/Arc_jwNAJXUzVf.gif']
-					// },
-					{
-						text: ['lorem2000 ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'],
+						h2:'intro',
+						text: [`An MVP designed to showcase the services, capabilities, and adaptability of the Monytri financial platform to stakeholders and investors. It is a progressive web app that centralizes stock gifting, asset transfers, and payment requests, while also allowing users to practice and learn about financial literacy.`,
+								`The platform encourages users to stay up to date with their personal portfolios, learn from curated educational content on portfolio management, and exchange assets through built-in services.`],
 						
 					},
 					{
@@ -217,11 +224,11 @@ export async function load() {
 					},
 				],
 				collaborators: {
-					owner:'David Dick, Chiara lung',
+					employer:'David Dick, Chiara lung',
 					designer:'Amy Frost',
 					developer:'Christopher Willems',
-					collaboratorB:'collaboratorB',
 				},
+				tags:['Svelte','NodeJS','ChartJS','Ionic - Capacitor','UI/UX','Appwrite','Figma','Mobile first PWA'],
 				link: 'https://www.monytri.app',
 				dateStart: '2024',
 				dateEnd: '2026',
@@ -229,20 +236,36 @@ export async function load() {
 			},
 			{
 				title: 'redpers',
-				slug: 'School project',
-				description: 'Description 5',
+				slug: 'UI overhaul',
+				description: 'School project',
 				assets:{image: [''], icon: ' ',color:'red'},
 				contentBlock:[{}],
 				collaborators: {
-					owner:'Redpers',
+					employer:'Redpers',
 					designer:'Redpers',
-					developer:'me',
+					developer:'Christopher Willems',
 				},
+				tags:['Svelte','NodeJS','Express','Directus','Figma','Mobile first PWA','Contentfull','UI/UX','Progressive enhancement'],
 				link: 'https://www.google.com',
 				dateStart: '2024',
 				dateEnd: '2024',
 				status: {is:'',sticker:''}
-			}
+			},
+			{
+				title: 'portfolio site',
+				slug: 'portfolio site',
+				description: '',
+				assets:{image: [''], icon: '',color:''},
+				contentBlock:[{}],
+				collaborators: {
+					owner:'Christopher',
+				},
+				tags:['Experiment','Grid Motion','responsive design','UI/UX'],
+				link: 'https://www.google.com',
+				dateStart: '2026',
+				dateEnd: '2026',
+				status: {is:'an experiment',sticker:''}
+			},
 		]}
 	]
 
@@ -270,16 +293,22 @@ export async function load() {
 				}
 				return updatedWork;
 			});
-		};
+	};
+	
 	let works = dataWorks[1].works
 	works = workStatus(works);
+	let delaySimulation = 9000
+	// delaySimulation = 0
+	const project = new Promise((resolve,reject)=>{
+		setTimeout(()=>{
+			resolve(dataWorks)
+			reject()
+		},delaySimulation)
+	})
 	
-	// make the data a promise
 	return {
 		dataWorks,
-		project: new Promise((resolve,reject) => {
-			resolve(dataWorks);
-			reject(error)
-		})
+		project,
+		delay: delaySimulation
 	};
 };

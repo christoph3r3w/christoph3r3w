@@ -44,8 +44,12 @@
 
   a {
     text-decoration: initial !important;
-    color: red;
+    color:black ;
+  }
 
+  a:hover{
+    color: red;
+    color: hsl(46, 79%, 57%);
   }
 
   .letter-style {
@@ -65,6 +69,7 @@
     /* new design background */
     --cream-bk:light-dark(blanchedalmond, rgb(91, 83, 72));
     --cream-bk:light-dark( hsl(36, 48%, 94%), hsl(36, 14%, 14%));
+    --primary-gray-bg:rgba(213, 213, 213, 0.904);
 
     --letter-total: 0; /* This will be updated dynamically */
   
