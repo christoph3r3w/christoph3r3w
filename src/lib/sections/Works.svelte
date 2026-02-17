@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import {OrderedList} from '$lib';
+	import {OrderedList,ContactForm} from '$lib';
 	import {fade} from 'svelte/transition';
 	import QRCode from 'qrcode';	
 	
@@ -13,21 +13,25 @@
 		dateStart: string;
 		dateEnd: string;
 		status: { is: string; sticker: string };
-		contentBlock?: Array<{ text?: string[]; images?: string[] }>;
+		contentBlock?: Array<{ text?: string[]; images?: string[]; h2?: string }>;
 		collaborators?: Record<string, string>;
+		tags?: string[];
 	}
+	// throw new Error('test error');
 
 	let {data} = $props();
-	let {dataWorks,project} = $derived(data)
+	let {dataWorks,project,delay} = $derived(data)
 	let openDetailsIndex = $state<number | null>(null);
 	let m4 = $derived(openDetailsIndex)
 
 	let pagination = $derived(dataWorks[0].pagination)
 	let works = $derived(dataWorks[1]?.works)	
+	
 	let fileLinks = $derived(works[m4 ?? 0]?.link);
 	let showQr: boolean = $state(false);
 	let qrTimeout: ReturnType<typeof setTimeout> | null = $state(null);
 	let qrURL = $state('')
+	let firstLoad:boolean = $state(true);
 	
 	const toggleQR = () => {
 		showQr = !showQr;
@@ -51,7 +55,7 @@
 		return qrURL;
 	}
 
-	function clearTimeoutOnUnmount() {
+	function clearQRTimeoutOnUnmount() {
 		if (qrTimeout !== null) {
 			clearTimeout(qrTimeout);
 			qrTimeout = null;
@@ -70,30 +74,43 @@
         }
 
         detailsElement.open = false;
-    }
+   }
+
+	function clearLoadAnimation() {
+		setTimeout(() => {
+			firstLoad = false;
+		}, delay ?? 2000);
+	}
 
 	onMount(() => {	
-		// let m3 = document.querySelector('.file-4')?.setAttribute('open','');
+		// let m3 = document.querySelector('.file-1')?.setAttribute('open','');
 		return () => {
-			clearTimeoutOnUnmount();
+			clearQRTimeoutOnUnmount();
 			works = [];
 			fileLinks = '';
 		};
 	});
 
 	$effect(() => {	
+		// loading animation clear after project is loaded
+		project.then(() => {
+			clearLoadAnimation();
+			// let m3 = document.querySelector('.file-4')?.setAttribute('open','');
+		});
 	
+		// Only generate QR code when fileLinks changes
+			generateQRCode(fileLinks);
+
+		// Clear qr timeout 
 		if (m4 === null) {
 			showQr = false;
-			// Clear timeout properly
 			if (qrTimeout !== null) {
 				clearTimeout(qrTimeout);
 				qrTimeout = null;
 			}
 		}
-		// Only generate QR code when fileLinks changes
-		generateQRCode(fileLinks);
 
+		// set timeout to hide QR code after x seconds
 		if (showQr) {
 			qrTimeout = setTimeout(() => {
 				showQr = false;
@@ -101,13 +118,33 @@
 			}, 9000);
 		}
 		
-		// Cleanup function for $effect
 		return () => {
-			clearTimeoutOnUnmount();
+			clearQRTimeoutOnUnmount();
 		};
 	});
 
 </script>
+
+{#snippet summaryContent(work: Work)}
+	<summary class="{work.status.is == 'an experiment'? 'experiment' : ''}" onmouseenter={() => {handleClose}}>
+		{#if work.assets.icon?.trim()}
+			<span class="work-icon-span">
+				<img src={work.assets.icon} alt={work.title}>
+			</span>
+		{/if}
+		<span class="file-title">{work.title}</span>
+		<span class="small-description">{work.slug}</span> 
+		<div class="side-description">
+			<span class="date-start">{work.dateEnd ||work.dateStart || ''}</span> 
+			<span class="status">{work.status.sticker || work.status.is}</span> 
+		</div>
+		<div class="close-file-icon">
+			<svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path d="M23.2396 21.8955C23.7523 22.4204 23.7523 23.2715 23.2396 23.7965C22.9841 24.0581 22.6481 24.1906 22.3121 24.1906C21.9761 24.1906 21.6401 24.0599 21.3846 23.7965L11.8121 13.996L2.23956 23.7965C1.98406 24.0581 1.64806 24.1906 1.31206 24.1906C0.97606 24.1906 0.640063 24.0599 0.384563 23.7965C-0.128187 23.2715 -0.128187 22.4204 0.384563 21.8955L9.95706 12.0951L0.384563 2.29474C-0.128187 1.76978 -0.128187 0.918677 0.384563 0.393719C0.897313 -0.13124 1.72857 -0.13124 2.24132 0.393719L11.8138 10.1942L21.3863 0.393719C21.899 -0.13124 22.7303 -0.13124 23.2431 0.393719C23.7558 0.918677 23.7558 1.76978 23.2431 2.29474L13.6706 12.0951L23.2396 21.8955Z" />
+			</svg>
+		</div>
+	</summary>
+{/snippet}
 
 {#snippet workAssets(work: Work)}
 	<article class="work-assets">
@@ -115,12 +152,15 @@
 		<div class="asset-border b-right"></div>
 		<div class="asset-border b-bottom"></div>
 		{#if work.contentBlock}
+			{#if work.description}
 			<article class="content-block">
 				<p>{work.description}</p>
 			</article>
+			{/if}
 		{#each work.contentBlock as block}
 		<article class="content-block">
 			{#if block.text && block.text.length > 1}
+				<h2>{block?.h2}</h2>
 				{#each block.text as textLine}
 					<p>{textLine}</p>			
 				{/each}
@@ -151,8 +191,11 @@
 				{/if}
 			</ul>
 			<ul class="tools stamp">
-				{#each  {length: 10}, i}
-					<li>tool {i+1}</li>
+			<li class="tags">HTML</li>
+			<li class="tags">CSS</li>
+			<li class="tags">JavaScript</li>
+				{#each  work.tags as tag, i}
+					<li class="tags" style="--tag-id:{i + 3 + tag.length}">{tag}</li>
 				{/each}
 			</ul>
 		</div>
@@ -161,19 +204,86 @@
 	<article class="work-description note stamp {showQr? 'show-qr-qr' : ''}">
 		<div class="description-space"></div> 
 		<div class="qr-container">
-			<img src='{qrURL}' alt="QR Code" class="qr-code" />
+			{#if work.link}
+				{#if showQr}
+				<p>Scan the QR code to visit the site</p>
+				{/if}
+				<img src='{qrURL}' alt="QR Code" class="qr-code" />
+			{:else}
+				<p>No link available for this project</p>
+			{/if}
 		</div> 
 		<div class="description-links">
-			<a class={{disabled:!work.link}} href={work?.link}>Visit site</a>
-			<!--  <a class='{!work.link ? 'disabled' : ''}' href={work?.link}>Visit site</a> -->
-			<!-- <button class={{disabled:!work.link}} onclick={toggleQR}> -->
-			<button class='{!work.link ? 'disabled' : ''}' onmouseup={toggleQR}>
-				<!-- this causes a hmr crash -->
-				<!-- {#if showQr} X {:else} QR Code {/if} -->
-				{showQr ? 'Hide qr code' : 'qr code'}
+			<a class={{disabled:!work.link}} href={work?.link}>
+			{showQr ? 'Link' : 'Visit site'}
+			</a>
+			<button class={{disabled:!work.link}} onclick={toggleQR}>
+				{showQr ? 'Hide qr code' : 'QR code'}
 			</button>
 		</div>
 	</article>
+{/snippet}
+
+{#snippet loadingFiles()}
+		{@const t = 4}
+		{#each {length: t}, i }	
+		<details 
+			transition:fade
+			class="file loading"
+			style="--file-index:{i + 1}; --file-primary-color:rgba(213, 213, 213, 0.904); --total-work:{t}">
+			<summary tabindex="-1" class="experiment">
+				<span class="work-title ">...loading</span>
+			</summary>
+		</details>
+		{/each}
+{/snippet}
+
+{#snippet contactForm()}
+		<details 
+		transition:fade
+		class="file file-{works.length} file-contact"
+		style="--file-index:calc(var(--total-work) ); --work-icon: url('/works-assets/material-assets/Chris website14.png'); --file-primary-color:green;">
+		<summary tabindex="-1" class="experiment">
+			<span class="file-title">
+				your project here ???
+			</span>
+			<span class="cover-content sticker-label"><img src="/chris icon lowlowres.png" alt="chris icon"></span>
+			<div class="close-file-icon">
+				<svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path d="M23.2396 21.8955C23.7523 22.4204 23.7523 23.2715 23.2396 23.7965C22.9841 24.0581 22.6481 24.1906 22.3121 24.1906C21.9761 24.1906 21.6401 24.0599 21.3846 23.7965L11.8121 13.996L2.23956 23.7965C1.98406 24.0581 1.64806 24.1906 1.31206 24.1906C0.97606 24.1906 0.640063 24.0599 0.384563 23.7965C-0.128187 23.2715 -0.128187 22.4204 0.384563 21.8955L9.95706 12.0951L0.384563 2.29474C-0.128187 1.76978 -0.128187 0.918677 0.384563 0.393719C0.897313 -0.13124 1.72857 -0.13124 2.24132 0.393719L11.8138 10.1942L21.3863 0.393719C21.899 -0.13124 22.7303 -0.13124 23.2431 0.393719C23.7558 0.918677 23.7558 1.76978 23.2431 2.29474L13.6706 12.0951L23.2396 21.8955Z" />
+				</svg>
+			</div>
+		</summary>
+		<article class="work-description">
+			<h2>Lets get in contact </h2>
+			<!-- <div class="description-space"></div>  -->
+			<div class="description-info">
+				<form action="/contactForm" method="post">
+					<fieldset>
+						<input type="text" name="name" placeholder="full Name" required>
+						<input type="email" name="email" placeholder="Your Email" required>
+					</fieldset>
+					<fieldset>
+						<textarea name="message" placeholder="Your Message" required></textarea>
+					</fieldset>
+						<button type="submit">Send</button>
+				</form>
+			</div>
+			<div class="mail-preview">
+				<h2>x</h2>
+			</div>
+		</article>
+	</details>
+
+{/snippet}
+
+{#snippet noFiles()}
+	<details class="work-cover " style="--file-index:4">
+			<summary tabindex="-1" class="experiment">
+				<p class="cover-content ">it seems quite here</p>
+			<span class="cover-content sticker-label"><img src="/chris icon lowlowres.png" alt="chris icon"></span>
+		</summary>
+	</details>
 {/snippet}
 
 <div class="work-section pad" id="works" style="--file-index:0; --total-work:{works.length};">
@@ -183,7 +293,7 @@
 	</section>
 
 	<!-- onclick it will close all details -->
-	<details class="work-cover">
+	<details class="work-cover" id="folder-cover">
 		<summary tabindex="-1">
 			<p class="cover-content">Portfolio</p>
 			<p class="cover-content sticker-label">Here are some of the works I have done</p>
@@ -191,63 +301,37 @@
 			<p class="cover-content sticker-label">In progress</p>
 		</summary>
 	</details>
-	<!-- {#await project}
-		<details 
-			transition:fade
-			class="file"
-			style="--file-index:calc(var(--total-work) - 1 ); --work-icon: url('/works-assets/material-assets/Chris website14.png'); --file-primary-color:green;">
-			<summary tabindex="-1" class="experiment">
-				<p class="cover-content sticker-label">...loading</p>
-				<p class="cover-content sticker-label">waiting for some file</p>
-				<span class="cover-content sticker-label"><img src="/chris icon lowlowres.png" alt="chris icon"></span>
-			</summary>
-		</details>
+	{#await project}
+		{@render loadingFiles()}
 	{:then dataWorks } 
-	{@const works = dataWorks[1]?.works || []} -->
-	{#each works as work, i}
-		<details class="file file-{i+1}" 
+	{@const works = dataWorks[1]?.works || []}
+	{#each works.slice(0) as work, i (work.title)}
+		<details 
+			class="file file-{i+1} {firstLoad? 'jump' : ''}" 
 			style="--file-index:{i + 1}; --work-icon: url('{work.assets.icon}'); {work.assets.color? `--file-primary-color:${work?.assets.color}`:''}"
 			ontoggle={(e) => {
 				if (e.currentTarget.open) {
 					openDetailsIndex = i;
 				} else if (openDetailsIndex === i) {
 					openDetailsIndex = null;
-				}
-			}}>
-			<summary class="{work.status.is == 'an experiment'? 'experiment' : ''}" onmouseenter={() => {handleClose}}>
-				{#if work.assets.icon?.trim()}
-					<span class="work-icon-span">
-						<img src={work.assets.icon} alt={work.title}>
-					</span>
-				{/if}
-				<span class="file-title">
-					{work.title}
-				</span>
-				<span class="small-description">
-					{work.slug}
-				</span> 
-				<div class="side-description">
-					<span class="date-start">{work.dateStart || ''}</span> 
-					<span class="status">{work.status.sticker || work.status.is}</span> 
-				</div>
-				<div class="close-file-icon">
-					<svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-						<path d="M23.2396 21.8955C23.7523 22.4204 23.7523 23.2715 23.2396 23.7965C22.9841 24.0581 22.6481 24.1906 22.3121 24.1906C21.9761 24.1906 21.6401 24.0599 21.3846 23.7965L11.8121 13.996L2.23956 23.7965C1.98406 24.0581 1.64806 24.1906 1.31206 24.1906C0.97606 24.1906 0.640063 24.0599 0.384563 23.7965C-0.128187 23.2715 -0.128187 22.4204 0.384563 21.8955L9.95706 12.0951L0.384563 2.29474C-0.128187 1.76978 -0.128187 0.918677 0.384563 0.393719C0.897313 -0.13124 1.72857 -0.13124 2.24132 0.393719L11.8138 10.1942L21.3863 0.393719C21.899 -0.13124 22.7303 -0.13124 23.2431 0.393719C23.7558 0.918677 23.7558 1.76978 23.2431 2.29474L13.6706 12.0951L23.2396 21.8955Z" />
-					</svg>
-				</div>
-			</summary>
+				}}
+			}>
+			{@render summaryContent(work)}
 			{@render workDescription(work)}
 			{@render workAssets(work)}
 		</details>
 		{:else}
+		{@render noFiles()}
+	{/each}
+	<!-- {@render contactForm()} -->
+	{:catch error}
 		<details class="work-cover">
 			<summary tabindex="-1" class="experiment">
-				<p class="cover-content sticker-label">it seems quite here</p>
+				<p class="cover-content sticker-label">something went wrong</p>
 				<span class="cover-content sticker-label"><img src="/chris icon lowlowres.png" alt="chris icon"></span>
 			</summary>
 		</details>
-		{/each}
-	<!-- {/await} -->
+	{/await}
 </div>
 
 <style>
@@ -287,6 +371,19 @@
 		}
 
 	}
+/* 
+	:global(.mainContain:has(#works details[open])) {
+		background-color: blue;
+		padding-inline: 1dvw;
+
+		.contentContain.contain{
+			width: 100dvw !important;
+			align-self: center !important;
+			max-width: 2000px !important;
+			width: 100% !important;
+			flex-basis: 100cqw !important;
+		}
+	} */
 
 	:global(.contentContain:has(#works)){
 		--_section-height: 80%;
@@ -324,8 +421,8 @@
 	}
 
 	/* Hover effect for the summary */
-	.work-section,
-	/* .work-section:where(:focus-within,:focus-visible,.Orderedlist-container:is(:hover,:focus-within)), */
+	/* .work-section, */
+	.work-section:where(:focus-within,:focus-visible,:hover,.Orderedlist-container:is(:hover,:focus-within)),
 	.work-section:where(:focus-within,:focus) {
 		--move-all:17dvw;
 
@@ -366,11 +463,11 @@
 		details.file :is(summary,::details-summary),
 		details.file:is(:focus-within) summary
 		{
-			--move:calc(46vh + (-43vh  * var(--file-index) / var(--total-work,1))); 
+			--move:calc(46vh + (-43vh  * (var(--file-index) / var(--total-work,1)))); 
 			--shadow-1-radius:calc(-4px + .5px * (var(--file-index)));
 			--shadow-1-color:color-mix(in oklch, var(--file-primary-hue) , rgba(0, 0, 0, 0.259) 30% );
 			top:calc(var(--move) - var(--hover-file-top,0px)) ;
-			left:calc(.05dvw * var(--total-work) * tan(var(--file-index) ) + var(--move-all));
+			left:calc(.1dvw * var(--total-work) + 10px * tan(var(--file-index) ) + var(--move-all));
 			
 			color: black;
 			/* box-shadow: 
@@ -380,6 +477,10 @@
 			  ; */
 			/* transition-property:box-shadow none,filter none,background-color none; */
 			transition-property: color, top, left, rotate;
+			@starting-style {
+				/* --move:calc(46vh + (-9vh  * (var(--file-index) / var(--total-work,1))));  */
+				opacity: 0;
+			}
 
 			@container (width < 900px){
 				--move:calc(53dvh - 45vh * (var(--file-index) / var(--total-work))); 
@@ -391,7 +492,8 @@
 			opacity:1 ;
 		}
 	}
-	
+
+	/* the details component */
 	details{	
 		border-radius: inherit;
 		user-select: text;
@@ -401,7 +503,6 @@
 		}
 	}
 
-	
 	/* file and folder styling */
 	details:nth-of-type(n) > summary{
 		position: absolute;
@@ -522,10 +623,15 @@
 	}	
 
 	/* folder cover */
-	details.work-cover summary{
+	details:is(#folder-cover,.work-cover) summary{
 		font-size: clamp(2rem, 20vw, 10rem);
 		color: black ;
 		background-color: color-mix(in oklch longer hue, var(--hoverC,hsl(calc(213 - 90 / var(--file-index)), 55%, 38%)) , rgba(255, 255, 255, 0.466) 30% );
+		background-image: 
+						url('/works-assets/material-assets/paper 1 black&white transparent cropped (Custom).png')	;
+		background-attachment:fixed  !important ;
+		background-size:none, cover;
+		backdrop-filter: blur(2px);
 		pointer-events: none;
 		cursor:none;
 		overflow: hidden;
@@ -536,15 +642,15 @@
 			display: none;
 		}
 
-		&::after{
+		/* &::after{
 			content: '';
 			position: absolute;
 			inset: 0;
 			opacity: 0;
-			pointer-events:fill;
+			pointer-events:none;
 			cursor: pointer;
 			z-index: 100;
-		}
+		} */
 	}
 
 	/* initial general animation for files and folder and cover element */
@@ -594,13 +700,18 @@
 	}
 
 	/* files background textures  */
-	details.file:nth-of-type(odd) summary::before{
+	details.file:nth-of-type(odd) summary::before,
+	details.file summary.experiment::before{
 		/* background-image: url('/works-assets/material-assets/vertical-illustration-orange-graph-paper.jpg'); */
-		background-image: url('/works-assets/material-assets/Chris website4.png');
+		background-image: url('/works-assets/material-assets/Chris website1.png');
+		/* background-image: url('/works-assets/material-assets/Chris website20.png'); */
 		/* for dark backgrounds */
 		background-blend-mode:lighten;
+		background-blend-mode:soft-light;
 		/* for both */
-		background-blend-mode:saturation;
+		/* background-blend-mode:saturation; */
+		background-size: cover;
+		background-position: 90% 0%;
 		filter:opacity(.5) contrast(150%) grayscale(.8);
 	}
 
@@ -609,11 +720,10 @@
 
 		/* for dark backgrounds */
 		background-blend-mode:lighten;
-	/* for both */
+		/* for both */
 		background-blend-mode:saturation;
 		filter:opacity(.5) contrast(150%) grayscale(.8);
 	}
-
 
 	/* files styling and animation*/
 	details.file:nth-of-type(n):is(:hover,:focus) :is(summary,::details-summary){
@@ -624,7 +734,7 @@
 		transform : rotate(calc(-2deg + .5deg * var(--file-index)));
 		transition-property: top,left, transform, height; 
 		transform-origin: top;
-		transition: 100ms var(--transition-timing),box-shadow 0s,filter 0s,background-color 200ms 100ms;
+		transition: 100ms var(--transition-timing),box-shadow 0s,filter 0s,background-color 200ms 100ms,transform-origin 0s;
 		cursor: pointer;
 		background-color: color-mix(in oklch, var(--file-primary-hue) , rgba(255, 255, 255, 0.466) 20% );
 
@@ -649,7 +759,6 @@
 			&[open]{
 				display: block;
 			}
-		
 	}
 
 	.work-section:has(details:nth-of-type(n)[open])	details.file > summary{
@@ -673,10 +782,6 @@
 				content: '';
 				display: none;
 			}
-
-			/* .file-title{
-
-			} */
 
 			.close-file-icon{
 				opacity: 1;
@@ -722,10 +827,17 @@
 
 	/* where the content of each project is */
 	details[open]::details-content{
-		--file-primary-hue:color-mix(in oklch , hsl(calc(var(--hue-number) / var(--file-index)), 55%, 98%) , var(--file-primary-color) 85%);
-		--file-primary-hue:color-mix(in oklch longer hue, hsl(calc(213 * 700 / var(--file-index)), 55%, 38%) , var(--file-primary-color) 90%);
-		--file-primary-hue:color-mix(in oklch, hsl(calc( var(--hue-number,213) / var(--file-index)), 55%, 38%) , var(--file-primary-color) var(--file-primary-color-amount));
-
+		/* --hue-number: calc(213 * 39 / var(--file-index)); */
+		/* --file-primary-hue:color-mix(in oklch , hsl(calc(var(--hue-number) / var(--file-index)), 55%, 98%) , var(--file-primary-color) 85%); */
+		/* --file-primary-hue:color-mix(in hsl longer hue, hsl(calc(var(--hue-number) / var(--file-index)), 5%, 98%) , var(--file-primary-color) 27%); */
+		/* --file-primary-hue:color-mix(in oklch longer hue, hsl(calc(213 * 700 / var(--file-index)), 55%, 38%) , var(--file-primary-color) 90%); */
+		/* --bg-test:color-mix(in oklch, var(--file-primary-hue) , rgba(255, 255, 255, 0.073) 85% ); */
+		
+		/* --file-primary-hue:color-mix(in oklch, hsl(calc( var(--hue-number,213) / var(--file-index)),25%, 68%) , var(--file-primary-color) var(--file-primary-color-amount)); */
+		/* --bg-test:color-mix(in oklch, var(--file-primary-hue2) 90% , var(--file-primary-hue,var(--primary-gray-bg)) 90%); */
+		--file-primary-hue:color-mix(in oklch, var(--file-primary-hue2) 90% , var(--file-primary-color) 90% );
+		--file-primary-hue2:color-mix(in oklch, hsl(calc( var(--hue-number,213) / var(--file-index)),25%, 68%) , var(--file-primary-color) var(--file-primary-color-amount));
+		--bg-test:color-mix(in oklch, var(--file-primary-hue2) 90% , var(--file-primary-color) 90% );
 
 		position: absolute;
 		bottom: 0;
@@ -743,15 +855,18 @@
 		/* background-color: color-mix(in oklch, hsl(59, 23%, 63%), var(--file-primary-color) 9%); */
 		/* background-color: hsl(60, 11%, 88%); */
 		/* background-color: hsl(59, 23%, 63%); */
-		/* background-color: color-mix(in oklch, var(--file-primary-hue) , rgb(255, 255, 255) 10% ); */
-		background-color: color-mix(in oklch, var(--file-primary-hue) , rgba(255, 255, 255, 0.466) 50% );
-
+		/* background-color: var(--bg-test); */
+		/* background-color: color-mix(in oklch, var(--file-primary-hue) , rgba(255, 255, 255, 0.466) 50% ); */
+		/* background-color: color-mix(in oklch, var(--file-primary-hue) , white 20% ); */
+		
+		background-color: color-mix(in oklch, var(--bg-test) 90% , rgba(255, 255, 255, 0.719) 70% );
 	}
 		
 	/* work description section */
 	details[open] .work-description{
-		--_line-color:color-mix(in oklch, hsl(59, 23%, 63%), var(--file-primary-color) 1%);
-		--_line-color2:color-mix(in oklch, var(--file-primary-hue) , rgb(255, 255, 255) 15% );
+		--description-bg:#e5e5f7f4;
+		--_line-color:color-mix(in oklch, var(--file-primary-hue,black) , rgb(0, 0, 0) 40% );
+		--_line-color2:color-mix(in oklch, var(--file-primary-hue,var(--primary-gray-bg)) , rgb(206, 44, 44) 15% );
 		grid-column: 5/ 18;
 		grid-row: 5/-3;
 		overflow-y: auto;
@@ -766,43 +881,34 @@
 		border-radius: 5px;
 		z-index: 4;
 		resize:both;
+		background-color: var(--description-bg);
+		box-shadow: rgba(68, 63, 43, 0.064) 0px 22px 10px;
 
-		transition: 
-			transform 
-			200ms 
-			linear(0, 0.297 6.8%, 0.515 13.8%, 0.686 22%, 0.812 31.6%, 0.895 42.6%, 0.949 56.4%, 1)			;
-
+		transition:	transform 200ms linear(0, 0.297 6.8%, 0.515 13.8%, 0.686 22%, 0.812 31.6%, 0.895 42.6%, 0.949 56.4%, 1);
 		animation: content-reveal 0.4s var(--transition-timing);
-
 		container-type: inline-size;
 
-		/* testting */
-		box-shadow: rgba(68, 63, 43, 0.064) 0px 22px 10px;
-		/* background-color: #bea892; */
-		/* background-color: #ffffff; */
-	
-		background-size:cover, cover, cover;
-		background-size: 14px 14px , 100% 100%, 14px 14px;
-		background-size: 14px 14px , 100% 100%, contain;
-		/* background-size: 14px 14px ; */
-
-		background-repeat: repeat,no-repeat, repeat;
-		background-position:center;
 		background-blend-mode:overlay;
+		background-position:center;
+		background-repeat: repeat,no-repeat, repeat;
 
-		background-color: #e5e5f7f4;
+		/* testting */
+		/* background-color: #ffffff; */
+		/* background-size:cover, cover, cover; */
+		/* background-size: 14px 14px , 100% 100%, 14px 14px; */
+		/* background-size: 14px 14px , 100% 100%, contain; */
 		/* background-image:  
 			linear-gradient(var(--_line-color) 0.7000000000000001px, transparent 0.7000000000000001px), 
 			url('/works-assets/material-assets/Chris website16.png') ,
 			url('/works-assets/material-assets/Chris website10.png'),
 			linear-gradient(to right, var(--_line-color2) 0.7000000000000001px, #e5e5f700 0.7000000000000001px)
-			;
- */
-			@supports (corner-shape: superellipse(0)){
-				&{
-					corner-shape: superellipse(-2);
-				}
+			; */
+
+		@supports (corner-shape: superellipse(0)){
+			&{
+				corner-shape: superellipse(-2);
 			}
+		}
 	}	
 
 	.work-description h2{
@@ -820,7 +926,6 @@
 	}
 
 	.work-description .description-info{
-		--_line-color:color-mix(in oklch, hsl(59, 23%, 63%), var(--file-primary-color) 1%);
 		flex: 1 1 30%;
 		display: flex;
 		flex-direction: column;
@@ -835,6 +940,7 @@
 		width: 100%;
 		border-bottom: 1px solid var(--_line-color) ;
 		container-type: inline-size;
+		max-width: 400px;
 	}
 	
 	.work-description .description-info ul.collaborators li{
@@ -845,10 +951,11 @@
 
 		&> * {
 			flex-basis: fit-content;
+			text-transform: capitalize;
 		}
 
 		.collaborator-role{
-			font-size: 1rem;
+			font-size: 0.88rem;
 			font-weight: 200;
 		}
 
@@ -861,8 +968,10 @@
 			flex: 1 1 auto;
 			background-color: #000;
 			background: #b3b39c;
-			margin-inline: 5%;
-			height: 1px;
+			background: var(--_line-color);
+			margin-inline: 2%;
+			border-radius: 10pc;
+			height: 1%;
 			align-self: center;
 			justify-self: center;
 		}
@@ -886,46 +995,56 @@
 	.work-description .description-info ul.tools{
 		display: flex;
 		flex-flow: row wrap;
-		margin-top: 5%;
-		background-color: color-mix(in oklch, var(--file-primary-hue) , rgba(80, 80, 80, 0.167) 20% );
+		margin-top: 1%;
+		background-color: color-mix(in oklch, var(--file-primary-hue,var(--primary-gray-bg)) , rgba(80, 80, 80, 0.167) 20% );
 	}
 
-	.tools.stamp {
-		--r: 19px; 
+	.description-info .tools.stamp {
+		--r: 20px; 
 
 		height: fit-content;
 		padding: var(--r);
-		background: #b3b39c;
+		background: var(--primary-gray-bg);
+		
 		contain: paint layout;
+		border: 2px solid var(--_line-color2) !important;
+		/* border: unset !important; */
 		mask: 
-			radial-gradient(50% 50%,#0000 46%,#000 27%) round 
+			radial-gradient(40% 40%,#0000 50%,#000 3%) round 
 			var(--r) var(--r)/calc(2*var(--r)) calc(2*var(--r)), 
 			conic-gradient(#000 0 0) content-box
 	}
 
-	.work-description .description-info ul.tools li{
+	.work-description .description-info ul.tools .tags{
+		--hue-number: calc(213 * 900 * var(--tag-id,13));
+		--file-primary-hue:  color-mix(in oklch, hsl(calc(var(--hue-number, 213) / var(--file-index)), calc(25% + 1% * var(--tag-id,1)), 48%), var(--file-primary-color) var(--file-primary-color-amount));
 		flex: 0 1 fit-content;
 		height: fit-content;
 		width: fit-content;
 		white-space: nowrap;
+		font-size: 0.88rem;
+		color: color-mix(in oklch, var(--_line-color)60%, black 45%);
 		padding: 0.3rem 0.8rem;
 		border-radius: 50px;
 		background-color: color-mix(in oklch, var(--file-primary-hue) , rgba(255, 255, 255, 0.566) 60% );
 		margin-inline: 1%;
-		margin-bottom: 1%;
+		margin-bottom: 2%;
 
-		&:nth-child(-n + 2){
-			background-color: color-mix(in oklch, var(--file-primary-hue) , rgba(214, 60, 60, 0.566) 90% );
+		&:nth-child(-n + 3){
+			background-color: color-mix(in oklch, var(--file-primary-hue) , rgba(214, 60, 60, 0.566) 80% );
+			background-color: color-mix(in oklch longer hue, var(--file-primary-hue) , color-mix(in hsl longer hue, hsl(calc(var(--hue-number) / var(--file-index)), 45%, 28%) , var(--file-primary-color) 98%) 96% );
+			background-color: var(--file-primary-hue);
 		}
 	}
 
+	/* the section behind the work description */
 	details[open]:has(.note .disabled) .work-description:not(.note){
 		min-height: 89% ;
 	}
 
 	details[open] .work-description:where(.note){
-		--_line-color:color-mix(in oklch, hsl(59, 23%, 63%), var(--file-primary-color) 1%);
-		--_line-color2:color-mix(in oklch, var(--file-primary-hue) , rgb(255, 255, 255) 15% );
+		--description-bg:#c9c9e3c9;
+		/* --description-bg:#c9c9e34e; */
 		grid-column: 5/ 18;
 		grid-row: 5/-5;
 		display: flex;
@@ -963,7 +1082,7 @@
 			inset: 0;
 			border-radius: inherit;
 			z-index: -1;
-			background-color: #c9c9e3c9;
+			background-color: var(--description-bg);
 			overflow: visible;
 			padding: 1px;
 			mask: 
@@ -976,47 +1095,61 @@
 
 	details[open] .work-description:where(.note):has(.disabled).stamp::after {
 		pointer-events: none;
-		background-color: color-mix(in oklch, var(--file-primary-hue) , #c9c9e3c9 80% );
+		background-color: color-mix(in oklch, var(--file-primary-hue,black) , var(--description-bg) 80% );
 	}
 
 	.work-description.note .qr-container{
 		flex: 0 1 fit-content;
 		display: flex;
-		align-items: center;
+		align-items: end;
 		justify-content: end;
 		height: 1rem;
 		gap: 1rem;
 		padding: 1%;
 		margin-bottom: 2px;
 		border-radius: 10px;
-		background-color: color-mix(in oklch, var(--file-primary-hue) , rgba(255, 255, 255, 0.566) 60% );
+		background-color: color-mix(in oklch, var(--file-primary-hue,var(--primary-gray-bg)) , rgba(255, 255, 255, 0.566) 60% );
 
 		img{
 			width: 7.6rem;
 			height: auto;
 			aspect-ratio: 1;
 		}
+
+		p{
+			font-size: 0.88rem;
+			padding: 2%;
+		}
 	}
 
 	details[open] .work-description:where(.note) .description-links{
+		--_white-toggle:color-mix(in oklch, white 100%, var(--file-primary-hue,white) 100%);
 		flex: 0 1 10%;
 		display: flex;
 		gap: 1rem;
 		align-items: end;
 		justify-content: end;
-		font-size: 1.1rem;
 
-		a{
-			flex: 1 1 60%;
+		& > * {
 			display: flex;
 			align-items: center;
 			justify-content: center;
+			font-size: 1.125rem;
+			font-weight: 500;
+			text-wrap: nowrap;
+			color: color-mix(in oklch, var(--file-primary-hue) 10% , rgba(33, 15, 15, 0.932) 100% );
+			border: solid 1px rgba(0, 0, 0, 0.179);
 			height: 100%;
 			padding: 0.5rem 1rem;
-			border: solid 1px rgba(0, 0, 0, 0.179);
+		}
+
+		a{
+			flex: 1 1 60%;
 			border-radius: 10px ;
-			color: color-mix(in oklch, var(--file-primary-hue) , rgba(229, 220, 220, 0.944) 100% );
-			background-color: color-mix(in oklch, var(--file-primary-hue) , rgba(214, 60, 60, 0.722) 20% );
+			/* background-color: color-mix(in oklch, var(--file-primary-hue) , rgba(214, 60, 60, 0.722) 20% ); */
+			/* background-color: color-mix(in oklch, var(--file-primary-hue,var(--description-bg)) , var(--_white-toggle,rgba(214, 60, 60, 0.722)) 20% ); */
+			/* background-color: color-mix(in oklch, var(--file-primary-hue,var(--description-bg)) , var(--file-primary-hue,var(--_white-toggle)) 20% ); */
+			background-color: color-mix(in oklch longer hue, var(--file-primary-hue,var(--description-bg)) , color-mix(in hsl longer hue, hsl(calc(var(--hue-number) / var(--file-index)), 45%, 68%) , var(--file-primary-color) 98%) 63% );
 
 			@supports (corner-shape: superellipse(0)){
 				&{
@@ -1028,13 +1161,13 @@
 
 		button{
 			flex: 0 1 fit-content;
-			height: 100%;
-			padding: 0.5rem 1rem;
 			border-radius: 50pc;
-			border: solid rgba(0, 0, 0, 0.179);
-			border-width: 1px;
 			background-color: color-mix(in oklch, var(--file-primary-hue) , rgba(214, 60, 60, 0.811) 60% );
-			color: color-mix(in oklch, var(--file-primary-hue) , rgb(255, 255, 255) 95% );
+			/* background-color: color-mix(in oklch, var(--file-primary-hue) , rgba(227, 220, 21, 0.811) 60% ); */
+			/* background-color: color-mix(in hsl decreasing hue, hsl(calc(797 / var(--file-index)), 99%, 88%) , var(--file-primary-color) 9%); */
+			background-color: color-mix(in oklch, var(--file-primary-hue,var(--description-bg)) , var(--_white-toggle,white) 60% );
+
+			/* color: color-mix(in oklch, var(--file-primary-hue) , rgb(255, 255, 255) 95% ); */
 			cursor: pointer;
 
 			@supports (corner-shape: superellipse(0)){
@@ -1071,21 +1204,26 @@
 		overflow-x: hidden;
 		container-type: inline-size;
 		/* testing */
-		background-color: var(--file-assets-background);
-		/* background: 
+		/* background-color: var(--file-assets-background); */
+		background: 
 			linear-gradient( 	
 				90deg, 
 				transparent 25%,
 				color-mix(in oklch longer hue, var(--file-primary-hue) , rgba(255, 255, 255, 0.126) 88% ) 53%, 
 				color-mix(in oklch longer hue, var(--file-primary-hue) , rgba(255, 255, 255, 0.092) 77% ) , 
 				color-mix(in oklch longer hue, var(--file-primary-hue) , rgba(255, 255, 255, 0.074) 88% ) 73%, 
-				transparent 85%); */
+				transparent 85%);
 
 		scrollbar-color: color-mix(in oklch, var(--file-primary-color), transparent 55%) transparent;
+		scrollbar-color: color-mix(in oklch, var(--file-assets-background), white 15%) transparent;
+		/* scrollbar-color: white transparent ; */
 		/* scrollbar-width:none; */
 		/* scroll-snap-type: both mandatory; */
 		scroll-margin-bottom: 5rem ;
-		
+
+		scroll-timeline: --work-assets-timeline ;
+		/* scroll-timeline: view(); */
+
 		& .asset-border{
 			position: absolute;
 			inset-block:0;
@@ -1144,10 +1282,11 @@
 		flex-direction: column;
 		grid-row: auto;
 		margin-bottom : 2rem;
+
+		container-type: inline-size;
 	
 		scroll-snap-align: center;
   		scroll-snap-stop: normal;
-		anchor-name: --block;
 		
 		&:nth-of-type(1),
 		&:nth-last-of-type(1){
@@ -1173,16 +1312,21 @@
 		}
 	}	
 
+	.work-assets .content-block h2{
+		font-weight: bold;
+		margin-bottom: 1rem;
+	}
 	.work-assets .content-block p{
 		line-height: 1.5;
-		max-width: 38cqw;
+		max-width: 80cqw;
 		width: 80ch;
-		transition: background-color 2s ease 2s;
+		margin-bottom: 1rem;
+		transition: background-color 200ms ease 2s;
 
-		&:is(:focus-within,:focus-visible){
+		/* &:where(:focus-within,:focus-visible,:hover){
 			color: rgb(0, 0, 0);
 			background-color: rgba(255, 255, 255, 0.459);
-		}
+		} */
 
 		&::selection{
 			color: rgb(0, 0, 0);
@@ -1224,28 +1368,101 @@
 	}
 
 	/* block has only image */
-	.work-assets .content-block:has(img:nth-child(1)):has(img:nth-last-child(1)){
+	.work-assets .content-block:nth-of-type(n):has(img:nth-child(1)):has(img:nth-last-child(1)){
+		position: relative !important;
 		min-height:20cqh ;
 		height: 30cqh;
 		width: auto;
-		position: relative;
-		flex-flow: row nowrap;
+		flex-flow: row nowrap;;
 	 	gap: 1rem;
 		padding-block: 0;
+		margin-block: 4cqb ;
     
     	overflow-y: hidden;
     	overflow-x: auto;
-    	scroll-snap-type: x proximity;
+		anchor-name: --block;
+
+    	/* scroll-snap-type: x proximity; */
+		/* overscroll-behavior-x: contain; */
 
 		img{
 			scroll-snap-stop: always;
+			scroll-snap-align: start;
 			outline: #ffffff4a 2px solid;
 			outline-offset: -2px;
 		}
 
 		img:nth-last-of-type(1){
-			scroll-snap-align: start;
+			/* scroll-snap-align: start; */
 			margin-right: 24%;
+		}
+
+		&::scroll-button(*){
+			display: grid;
+			place-content: center;
+			position: fixed;
+			position-anchor: --block;
+			width: 20px;
+			height: auto;
+			aspect-ratio: 1;
+			bottom: calc(anchor(bottom) - 2cqh);
+			right: calc(anchor(right) + 1cqi) ;
+			border-radius: 50%;
+			border: 1px;
+			z-index: 2;
+			pointer-events: auto;
+			cursor: pointer;
+			animation: work-assets-button linear both;
+			animation-timeline: view();
+			animation-range-start: contain ;
+			animation-range-end: 75cqh;
+			background-color: color-mix(in oklch longer hue, var(--file-primary-hue,var(--description-bg)) , color-mix(in hsl longer hue, hsl(calc(var(--hue-number) / var(--file-index)), 45%, 88%) , var(--file-primary-color) 98%) 95% );
+			background-color: rgb(255, 255, 255);	
+		}
+		&::scroll-button(*):disabled{
+			/* animation-play-state: paused; */
+			z-index: 0;
+			opacity: 0.2 !important;
+			pointer-events: none;
+		}
+
+		&::scroll-button(left){
+			content: ''/"Scroll Left";
+			background-image:url('/works-assets/arrow-left.png') ;
+			background-image:url('/works-assets/chevrons-left.png') ;
+			background-size: cover;
+			background-position: center;
+			cursor: pointer;
+		}
+		&::scroll-button(right){
+			content: ''/"Scroll Right";
+			background-image:url('/works-assets/arrow-right.png') ;
+			background-image:url('/works-assets/chevrons-right.png') ;
+			background-size: cover;
+			background-position: center;
+			/* bottom: calc(anchor(bottom) + 5cqh); */
+			cursor: pointer;
+		}
+
+		@supports not selector(::scroll-button(*)){
+			scroll-snap-type: none;
+			scrollbar-width:thin ;
+			outline: springgreen solid;
+		}
+	}
+
+	@keyframes work-assets-button{
+		from{
+			opacity: 0;
+			transform: translate(0, -50%) scale(0.8);
+		}
+		30%,90%{
+			opacity: 1;
+			transform: translate(0, -50%) scale(1.2);
+		}
+		to{
+			opacity: 0;
+			transform: translate(0, -50%) scale(0.8);
 		}
 	}
 
@@ -1345,15 +1562,44 @@
 	}
 
 	.show-qr-links{
-		transform: translate(-3cqw, -6cqh);
+		transform: translate(-3cqw, -7cqh);
 		filter: blur(0px) brightness(.8);
 		contain: paint;
 	}
 
 	.show-qr-qr{
-		transform: translate( 0, 6cqh);
+		transform: translate( 0, 7cqh);
 		filter: brightness(1.1);
 		contain: paint;
+	}
+
+	.file.jump.jump.jump{
+		--_delay: calc(2s / var(--total-work,1) * var(--file-index));
+		--_delay: calc(1s / var(--total-work,1) * ( var(--file-index)));
+		z-index: calc(10 - var(--file-index));
+		opacity: 0;
+		/* animation: jump 2s ease var(--_delay) infinite ; */
+		animation: jump 450ms var(--_delay) forwards steps(3,end) ;	
+		animation-timing-function: linear(0, 0.029 1.6%, 0.123 3.5%, 0.651 10.6%, 0.862 14.1%, 1.002 17.7%, 1.046 19.6%, 1.074 21.6%, 1.087 23.9%, 1.086 26.6%, 1.014 38.5%, 0.994 46.3%, 1);
+
+	}
+
+	.loading{
+		--_delay: calc(3s / var(--total-work,6) * ( var(--file-index)));
+		opacity: 0;
+		pointer-events: none;
+		animation: 
+			loading 
+			3s 
+			var(--_delay) 
+			infinite 
+			steps(4,end); 
+
+			animation-timing-function: linear(0, 0.029 1.6%, 0.123 3.5%, 0.651 10.6%, 0.862 14.1%, 1.002 17.7%, 1.046 19.6%, 1.074 21.6%, 1.087 23.9%, 1.086 26.6%, 1.014 38.5%, 0.994 46.3%, 1);
+			&*:hover{
+				animation-play-state: paused;
+				animation-name: none;
+			}
 	}
 	
 	/* Animation for content reveal */
@@ -1367,6 +1613,27 @@
 			transform: translateY(0);
 		}
 	}
+	@keyframes jump {
+		0%,30% {
+			opacity: 0;
+			pointer-events: none;
+		}
+		80% {
+			pointer-events: none;
+		}
+		100% {
+			opacity: 1;
+			z-index: calc(10 - var(--file-index));
+		}
+	}
+	@keyframes loading {
+		0%,50%{
+			opacity: 1;
+		}
+		100% {
+			z-index: calc(10 - var(--file-index));
+		}
+	}
 
 	@media screen and (max-width: 1000px) {
 		details.file:nth-of-type(n):is(:hover,:focus) :is(summary,::details-summary){
@@ -1378,7 +1645,7 @@
 		
 			rotate:calc(-2deg + .1deg * var(--file-index));
 			transition-property: top,left, rotate, height; 
-			transition: all 100ms var(--transition-timing),box-shadow 0s,filter 0s;
+			transition: 100ms var(--transition-timing),box-shadow 0s,filter 0s,transform-origin 0s;
 			cursor: pointer;
 
 			@container (width < 950px){
@@ -1458,6 +1725,7 @@
 			img{		
 				width: 12cqh;
 			}
+			p{display: none;}
 		}
 
 		/* main content */
