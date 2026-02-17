@@ -187,8 +187,9 @@ export async function load() {
 				contentBlock:[
 					{
 						h2:'intro',
-						text: [`An MVP designed to showcase the services, capabilities, and adaptability of the Monytri financial platform to stakeholders and investors. It is a progressive web app that centralizes stock gifting, asset transfers, and payment requests, while also allowing users to practice and learn about financial literacy.`,
-								`The platform encourages users to stay up to date with their personal portfolios, learn from curated educational content on portfolio management, and exchange assets through built-in services.`],
+						text: [`
+								Monytri is a cross-platform MVP built to communicate a financial concept clearly — not just to users, but to investors and stakeholders. The goal wasn’t to ship a full-scale product, but to translate an idea into something tangible, testable, and convincing.								
+								`],
 						
 					},
 					{
@@ -200,13 +201,15 @@ export async function load() {
 								]
 					},
 					{
-						text: ['test content block 5, lorem300 ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'	
-						],
+						text: [`
+						After iterating closely with a designer, I proposed building it as a Progressive Web App — a cost-effective approach that would work seamlessly across mobile and desktop without maintaining separate codebases. From there, I stepped into the role of technical owner, shaping both the frontend experience and the underlying architecture.
+						`],
 						// images:['/works-assets/monytri/Arc_jwNAJXUzVf.gif']
 					},
 					{
-						text: ['test content block 6'],
-						
+						text: ['On the frontend, I developed all interfaces and interactions from the ground up. Every screen was built with responsiveness in mind, ensuring the application feels native across devices. Rather than static layouts, I focused on reusable components, clear hierarchy, and interaction patterns that communicate trust and clarity.',
+								'On the backend, I designed a minimal but scalable infrastructure using Appwrite. This included RESTful endpoints, authentication flows, role management, and a CMS structure to support'
+						],
 					},
 					{
 						images:[
@@ -217,9 +220,15 @@ export async function load() {
 								]
 					},
 					{
-						text: ['test content block 2',
-								'lorem100	0 ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-						],
+						text: [`
+						Beyond core development, I implemented webhooks and service integrations to keep the system resilient. Routine user testing and version testing ensured that each iteration aligned with the intended user stories and evolving market expectations.
+						`],
+						// images:['/works-assets/monytri/Arc_jwNAJXUzVf.gif']
+					},
+					{
+						text: [`
+						Equally important was communication. I maintained documentation that translated technical decisions into language stakeholders could understand — keeping everyone aligned on architecture, scalability, and future potential.
+						`],
 						// images:['/works-assets/monytri/Arc_jwNAJXUzVf.gif']
 					},
 				],
@@ -297,7 +306,7 @@ export async function load() {
 	
 	let works = dataWorks[1].works
 	works = workStatus(works);
-	let delaySimulation = 9000
+	let delaySimulation = 7000
 	// delaySimulation = 0
 	const project = new Promise((resolve,reject)=>{
 		setTimeout(()=>{
