@@ -5,6 +5,7 @@ export { default as Menu } from './sections/Menu.svelte';
 export { default as Footer } from './molecule/Footer.svelte';
 export { default as OrderedList} from './molecule/OrderedList.svelte'
 export {default as Contacts} from './molecule/Contacts.svelte'
+export {default as ContactForm} from './molecule/ContactForm.svelte'
 // bigger components
 export { default as Header } from './system/Header.svelte';
 export {default as Window} from './system/Window.svelte';
