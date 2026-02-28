@@ -128,6 +128,10 @@ onDestroy(() => {
   <!-- the section -->
   <section class="mainContain scroller" bind:this={scroller} >
     <Window role="child" class="contentContain" color="white" style="--hoverC:white" bind:this={sections[0]}>
+      <div class="switch">
+        <button onclick={() => console.log('files')}>files</button>
+        <button onclick={() => console.log('list')}>list</button>
+      </div>
       <Intro2 {data}/>
     </Window>
 
@@ -155,6 +159,23 @@ onDestroy(() => {
 </div>
 
 <style>
+
+.switch {
+    position: absolute;
+    right: 0;
+    top: -3rem;
+    display: flex;
+    flex-flow: row nowrap;
+    gap: 3px;
+  }
+
+  .switch button {
+    flex: 1 0 fit-content;
+    padding: 5px 10px;
+    border: 1px solid;
+    border-radius: 10pc;
+    background-color: transparent;
+  }
   :root, * {
     --scale: 0;
 
