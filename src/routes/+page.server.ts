@@ -306,7 +306,7 @@ export async function load() {
 	
 	let works = dataWorks[1].works
 	works = workStatus(works);
-	let delaySimulation = 7000
+	let delaySimulation = 10000
 	// delaySimulation = 0
 	const project = new Promise((resolve,reject)=>{
 		setTimeout(()=>{

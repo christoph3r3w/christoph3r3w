@@ -371,6 +371,10 @@
 		}
 
 	}
+
+	/* *{
+		touch-action: none;
+	} */
 /* 
 	:global(.mainContain:has(#works details[open])) {
 		background-color: blue;
@@ -389,14 +393,15 @@
 		--_section-height: 80%;
 
 		height: var(--_section-height);
+		/* transform: translateY(calc(100% - var(--_section-height) - 4%)); */
 		top:calc(100% - var(--_section-height) - 4%);
-		bottom: 0;
+		bottom: 0 !important;
 		max-width: 1700px;
 
 		@container (width < 900px){--_section-height: 90%;	}
 	}
 
-	:global(.contentContain:has(#works)):has(details.file[open]:nth-of-type(n)){	--_section-height: 90%;	}
+	/* :global(.contentContain:has(#works)):has(details.file[open]:nth-of-type(n)){	--_section-height: 90%;	} */
 
 	.Orderedlist-container,:global(.Orderedlist-container){
 		position: relative;
@@ -420,8 +425,9 @@
 		will-change: transform,filter,top,left;		
 	}
 
+
 	/* Hover effect for the summary */
-	/* .work-section, */
+	.work-section,
 	.work-section:where(:focus-within,:focus-visible,:hover,.Orderedlist-container:is(:hover,:focus-within)),
 	.work-section:where(:focus-within,:focus) {
 		--move-all:17dvw;
@@ -466,7 +472,7 @@
 			--move:calc(46vh + (-43vh  * (var(--file-index) / var(--total-work,1)))); 
 			--shadow-1-radius:calc(-4px + .5px * (var(--file-index)));
 			--shadow-1-color:color-mix(in oklch, var(--file-primary-hue) , rgba(0, 0, 0, 0.259) 30% );
-			top:calc(var(--move) - var(--hover-file-top,0px)) ;
+			top:calc(var(--move));
 			left:calc(.1dvw * var(--total-work) + 10px * tan(var(--file-index) ) + var(--move-all));
 			
 			color: black;
@@ -475,7 +481,6 @@
 				var(--shadow-1-color) 0px 6px 10px -5px,
 				rgba(0, 0, 0, 0.2) 0px -3px 0px inset
 			  ; */
-			/* transition-property:box-shadow none,filter none,background-color none; */
 			transition-property: color, top, left, rotate;
 			@starting-style {
 				/* --move:calc(46vh + (-9vh  * (var(--file-index) / var(--total-work,1))));  */
@@ -524,9 +529,9 @@
 		backface-visibility: hidden;
   		perspective: 1000px;
 		transition: 
-			top var(--transition-duration) var(--transition-timing) calc(var(--file-index) * var(--delay-factor)),
+			/* top var(--transition-duration) var(--transition-timing) calc(var(--file-index) * var(--delay-factor)),
 			left var(--transition-duration) var(--transition-timing) calc(var(--file-index) * var(--delay-factor)),
-			right var(--transition-duration) var(--transition-timing) calc(var(--file-index) * var(--delay-factor)),
+			right var(--transition-duration) var(--transition-timing) calc(var(--file-index) * var(--delay-factor)), */
 			color 0.32s ease,
 			background-color 0s,
 			translate 0.2s var(--transition-timing);
@@ -703,8 +708,8 @@
 	details.file:nth-of-type(odd) summary::before,
 	details.file summary.experiment::before{
 		/* background-image: url('/works-assets/material-assets/vertical-illustration-orange-graph-paper.jpg'); */
-		background-image: url('/works-assets/material-assets/Chris website1.png');
 		/* background-image: url('/works-assets/material-assets/Chris website20.png'); */
+		/* background-image: url('/works-assets/material-assets/Chris website1.png'); */
 		/* for dark backgrounds */
 		background-blend-mode:lighten;
 		background-blend-mode:soft-light;
@@ -727,11 +732,12 @@
 
 	/* files styling and animation*/
 	details.file:nth-of-type(n):is(:hover,:focus) :is(summary,::details-summary){
-		--hover-file-top:2rem;
+		--hover-file-top:-2rem;
 		--hover-file-right:6svw;
 
-		left: calc(var(--hover-file-right) - (var(--file-index) * 10px)); 
-		transform : rotate(calc(-2deg + .5deg * var(--file-index)));
+		left: calc(var(--hover-file-right) - (var(--file-index) * 2px)); 
+		transform : rotate(calc(-2deg + .5deg * var(--file-index))) translateY(var(--hover-file-top));
+		/* transform : rotate(calc(-2deg + .5deg * var(--file-index))) translateX(var(--hover-file-right)) translateY(var(--hover-file-top)); */
 		transition-property: top,left, transform, height; 
 		transform-origin: top;
 		transition: 100ms var(--transition-timing),box-shadow 0s,filter 0s,background-color 200ms 100ms,transform-origin 0s;
@@ -1007,8 +1013,7 @@
 		background: var(--primary-gray-bg);
 		
 		contain: paint layout;
-		border: 2px solid var(--_line-color2) !important;
-		/* border: unset !important; */
+		border: 2px solid var(--_line-color2) ;
 		mask: 
 			radial-gradient(40% 40%,#0000 50%,#000 3%) round 
 			var(--r) var(--r)/calc(2*var(--r)) calc(2*var(--r)), 
@@ -1146,9 +1151,6 @@
 		a{
 			flex: 1 1 60%;
 			border-radius: 10px ;
-			/* background-color: color-mix(in oklch, var(--file-primary-hue) , rgba(214, 60, 60, 0.722) 20% ); */
-			/* background-color: color-mix(in oklch, var(--file-primary-hue,var(--description-bg)) , var(--_white-toggle,rgba(214, 60, 60, 0.722)) 20% ); */
-			/* background-color: color-mix(in oklch, var(--file-primary-hue,var(--description-bg)) , var(--file-primary-hue,var(--_white-toggle)) 20% ); */
 			background-color: color-mix(in oklch longer hue, var(--file-primary-hue,var(--description-bg)) , color-mix(in hsl longer hue, hsl(calc(var(--hue-number) / var(--file-index)), 45%, 68%) , var(--file-primary-color) 98%) 63% );
 
 			@supports (corner-shape: superellipse(0)){
@@ -1162,9 +1164,6 @@
 		button{
 			flex: 0 1 fit-content;
 			border-radius: 50pc;
-			background-color: color-mix(in oklch, var(--file-primary-hue) , rgba(214, 60, 60, 0.811) 60% );
-			/* background-color: color-mix(in oklch, var(--file-primary-hue) , rgba(227, 220, 21, 0.811) 60% ); */
-			/* background-color: color-mix(in hsl decreasing hue, hsl(calc(797 / var(--file-index)), 99%, 88%) , var(--file-primary-color) 9%); */
 			background-color: color-mix(in oklch, var(--file-primary-hue,var(--description-bg)) , var(--_white-toggle,white) 60% );
 
 			/* color: color-mix(in oklch, var(--file-primary-hue) , rgb(255, 255, 255) 95% ); */
@@ -1194,9 +1193,9 @@
 		grid-column: 1/ -3;
 		grid-row: 1/-1;
 		display: grid;
-		
-		grid-template-columns: subgrid ;
-		grid-template-rows: subgrid;
+		/* this might have been breaking the application */
+		/* grid-template-columns: subgrid ;
+		grid-template-rows: subgrid; */
 		width: 100%;
 		height: 100%;
 		padding-block: 30cqh 7cqh;
@@ -1216,13 +1215,8 @@
 
 		scrollbar-color: color-mix(in oklch, var(--file-primary-color), transparent 55%) transparent;
 		scrollbar-color: color-mix(in oklch, var(--file-assets-background), white 15%) transparent;
-		/* scrollbar-color: white transparent ; */
-		/* scrollbar-width:none; */
-		/* scroll-snap-type: both mandatory; */
-		scroll-margin-bottom: 5rem ;
 
 		scroll-timeline: --work-assets-timeline ;
-		/* scroll-timeline: view(); */
 
 		& .asset-border{
 			position: absolute;
@@ -1231,12 +1225,12 @@
 			backdrop-filter: blur(3px);
 			z-index: 2;
 			pointer-events: none;
+			contain: style paint;
 		}
 
 		& .asset-border.b-left {
 			left: 0;
 			border-radius: 0 var(--wc-radius) var(--wc-radius) 0;
-			contain: style paint;
 			mask: linear-gradient(
 				to right,
 				var(--file-primary-hue) -2% 50%,
@@ -1247,7 +1241,7 @@
 		& .asset-border.b-right {
 			right: 0;
 			border-radius: var(--wc-radius) 0 0 var(--wc-radius);
-			contain: style paint;
+			border-color: yellow;
 			mask: linear-gradient(
 				to left,
 				var(--file-primary-hue) -2% 10%,
@@ -1260,7 +1254,6 @@
 			bottom: 0;
 			height: 10%;
 			width: 100%;
-			contain: style paint;
 			mask: linear-gradient(
 				to top,
 				var(--file-primary-hue) 0% 10%,
@@ -1282,6 +1275,7 @@
 		flex-direction: column;
 		grid-row: auto;
 		margin-bottom : 2rem;
+		contain: layout style paint;
 
 		container-type: inline-size;
 	
@@ -1322,11 +1316,6 @@
 		width: 80ch;
 		margin-bottom: 1rem;
 		transition: background-color 200ms ease 2s;
-
-		/* &:where(:focus-within,:focus-visible,:hover){
-			color: rgb(0, 0, 0);
-			background-color: rgba(255, 255, 255, 0.459);
-		} */
 
 		&::selection{
 			color: rgb(0, 0, 0);
@@ -1420,12 +1409,10 @@
 			background-color: rgb(255, 255, 255);	
 		}
 		&::scroll-button(*):disabled{
-			/* animation-play-state: paused; */
 			z-index: 0;
 			opacity: 0.2 !important;
 			pointer-events: none;
 		}
-
 		&::scroll-button(left){
 			content: ''/"Scroll Left";
 			background-image:url('/works-assets/arrow-left.png') ;
@@ -1447,7 +1434,7 @@
 		@supports not selector(::scroll-button(*)){
 			scroll-snap-type: none;
 			scrollbar-width:thin ;
-			outline: springgreen solid;
+			/* outline: springgreen solid; */
 		}
 	}
 
@@ -1488,7 +1475,6 @@
 			--sticker-rotation: -0.6deg;
 			position: relative;
 			z-index: 0;
-			/* display: none; */
 			font-size: clamp(1rem, 15vw, 1.2rem);
 		}
 
@@ -1638,7 +1624,8 @@
 	@media screen and (max-width: 1000px) {
 		details.file:nth-of-type(n):is(:hover,:focus) :is(summary,::details-summary){
 			--hover-file-top:0px;
-			background-color: color-mix(in oklch, var(--file-primary-hue) , rgba(255, 255, 255, 0.466) 40% );
+			background-color: color-mix(in oklch, var(--file-primary-hue) , rgba(255, 255, 255, 0.466) 40% ); 
+			transform : rotate(calc(-2deg + .5deg * var(--file-index))) translate(0);
 		}
 
 		details.file:nth-of-type(n):is(:focus) :is(summary,::details-summary){
@@ -1763,15 +1750,11 @@
 				var(--file-primary-hue) -2% 7%,
 				transparent 15% 100%
 			);
-			contain: style paint;
 		}
 
-		details[open] .work-assets .b-right.b-right{ 
-			mask: linear-gradient( to left, 
-				var(--file-primary-hue) -2% 2%, 
-				transparent 20% 100% 
-			); 
-			contain: style paint;
+		details[open] .work-assets .b-right.b-right{
+			mask:none; 
+			backdrop-filter: blur(0);
 		}
 
 
