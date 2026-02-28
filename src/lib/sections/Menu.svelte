@@ -25,8 +25,6 @@
 	}
 </script>
 
-
-
 {#snippet headerC()}
 	<ul class="headerUl">
 		<li class="header-logo">
