@@ -35,7 +35,17 @@
 
 	function handleDarkMode(){
 		dark = !dark
-		console.log(dark)
+		modeDark.set(dark)
+		const selectedThemeName = dark ? 'dark' : 'reset';
+		const selectedTheme = themeList.find((theme) => theme.name === selectedThemeName);
+
+		if (!selectedTheme) {
+			return;
+		}
+
+		for (const [property, value] of Object.entries(selectedTheme.properties)) {
+			document.documentElement.style.setProperty(property, value);
+		}
 	}
 
 	$effect(() => {
