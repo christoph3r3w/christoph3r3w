@@ -1,6 +1,19 @@
 <script>
+// import  {next} from '../../routes/work.remote'
+	// import {y} from '../molecule/pagination.svelte'
 	let {pagination} = $props()
+	
 	// let {folders} = data
+
+	//  const handleReset = async () => {
+	// 	// next()
+	// 	console.log('reset');
+	// 	y.value = 'reset y';
+	// 	const x = await y.f();
+	// 	console.log('me',y.value,y.f());
+		
+		
+	// }
 
 
 	let mfolders =  $state([
@@ -44,7 +57,7 @@
 	<!-- or -->
 	<!-- trigger specific showing with svlte and css  -->
 	<div id="ol" class={pagination != 'none'? '' : 'no-pagination'} >
-		<button type="reset" onclick={() => {console.log('recent clicked')}} tabindex={pagination != 'none'? undefined : -1}>Recent</button>
+		<button type="reset" onclick={() => {handleReset()}} tabindex={pagination != 'none'? undefined : -1}>Recent</button>
 
 		{#each mfolders as folder}
 			<ol class="main-list">
@@ -73,6 +86,16 @@
 			--list-color:color-mix(in oklch, var(--hoverC,rgba(255, 255, 255, 0.677)), black);
 			--line-color:color-mix(in oklch, var(--list-color), rgba(200, 196, 123, 0.21) );
 			--line-gap:1svh;
+		}
+
+		:global(.Orderedlist-container){
+			position: relative;
+			width: 100%;
+			max-width: 25dvw;
+			height: 70cqh;
+			max-height: 100%;
+			margin-top: 5dvh;
+			overflow-y: auto;
 		}
 
 		#ol{
@@ -149,14 +172,14 @@
 				stroke: var(--line-color);		
 		}
 	
-	#ol :is(button,a,svg):nth-last-of-type(n):hover{
-		--list-color:color-mix(in oklch, var(--hoverC,rgba(255, 255, 255, 0.677)), black 80%);
-		text-decoration: underline wavy;
-	}
+		#ol :is(button,a,svg):nth-last-of-type(n):hover{
+			--list-color:color-mix(in oklch, var(--hoverC,rgba(255, 255, 255, 0.677)), black 80%);
+			text-decoration: underline wavy;
+		}
 
-	.no-pagination{
-		filter: opacity(.2);
-		pointer-events: none;
-	}
+		.no-pagination{
+			filter: opacity(.4);
+			pointer-events: none;
+		}
 	
 	</style>
