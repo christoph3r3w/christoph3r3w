@@ -1,10 +1,12 @@
 <script lang="ts">
 	import {Header, Footer, Window,Menu} from '$lib';
+	// import '../../static/app.css';
+
 	let {children} = $props();
 
 </script>
 
-<Window role='window' color='#d5d5d5e7'>
+<Window role='window' color='var(--primary-gray)'>
 	<Header />
 	<Menu />
 	{@render children()}
@@ -12,18 +14,21 @@
 
 <Footer class='ftr'/>
 
-<noscript>
-  <div class="noscript-notice">
-    Note: JavaScript is disabled. For the best experience, please enable JavaScript.
-  </div>
-</noscript>
+
 
 <style>
 
 	:root{
+		/* color-scheme: light dark; */
 		--H-top:5cqh;
 		--Padding-genral:2cqh;
 		--primary-gray: #d5d5d5e7;
+		/* --primary-gray: rgb(235, 233, 219); */
+		/* --primary-gray: light-dark(rgb(230, 209, 50),rgb(39, 37, 33)); */
+		--primary-gray: var(--color-bg);
+		/* --primary-gray: light-dark(var(--color-bg),green); */
+		/* --color-bg--mute: light-dark(var(--tan-gray-bg),green); */
+
 	}
 
 	:global(body){
@@ -31,6 +36,7 @@
 		flex-direction: column;
 		height: 100lvh;
 		overflow: hidden;
+		touch-action: none;
 	}
 
 	/* :global(body :nth-child(n):focus-visible){
@@ -58,15 +64,15 @@
 
 	:global(footer){
 		display: block;
-		background-color: rgba(0, 128, 0, 0);
 		flex: 0 1 auto;
 		padding-inline: var(--Padding-genral);
+		/* background-color: rgba(0, 128, 0, 0); */
 		display: none;
 	}
 
-	.noscript-notice {
+	/* .noscript-notice {
 		position: fixed;
-		top: 5%;
+		bottom: 5%;
 		left: 0;
 		right: 0;
 		background: #ffeb3b;
@@ -74,7 +80,7 @@
 		text-align: center;
 		padding: 0.5rem;
 		z-index: 1000;
-	}
+	} */
 
 	@media (width < 900px) {
 		:global(html){
@@ -87,6 +93,20 @@
 		
 		:global(footer){
 			display: none;
+		}
+	}
+
+	@media (height < 350px) {
+
+		:global(body::after){
+			content: 'oops, screen is too small';
+			position: fixed;
+			inset: 0;
+			backdrop-filter: blur(10px);
+			display: grid;
+			place-content: center;
+			font-size: 2rem;
+			z-index: 200;
 		}
 	}
 

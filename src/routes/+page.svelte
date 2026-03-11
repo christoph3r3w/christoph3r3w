@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { goto } from '$app/navigation';
   import { Window,Intro,Intro2,Works, OrderedList } from '$lib';
   import { onMount, onDestroy } from 'svelte';
   import { menuOpen } from '$lib/store';
@@ -127,15 +126,14 @@ onDestroy(() => {
 
   <!-- the section -->
   <section class="mainContain scroller" bind:this={scroller} >
+      <!-- <article>
+	    Blah blah blah blah blah blah blah blah 
+	    </article> -->
     <Window role="child" class="contentContain" color="white" style="--hoverC:white" bind:this={sections[0]}>
-      <div class="switch">
-        <button onclick={() => console.log('files')}>files</button>
-        <button onclick={() => console.log('list')}>list</button>
-      </div>
       <Intro2 {data}/>
     </Window>
 
-    <!-- <Window role="child" class="contentContain" color="red" style="--hoverC:white" bind:this={sections[0]}>
+    <!-- <Window role="child" class="contentContain" color="#e7c75e" style="--hoverC:white" bind:this={sections[0]}>
       <Intro2 {data}/>
     </Window> -->
 
@@ -160,22 +158,6 @@ onDestroy(() => {
 
 <style>
 
-.switch {
-    position: absolute;
-    right: 0;
-    top: -3rem;
-    display: flex;
-    flex-flow: row nowrap;
-    gap: 3px;
-  }
-
-  .switch button {
-    flex: 1 0 fit-content;
-    padding: 5px 10px;
-    border: 1px solid;
-    border-radius: 10pc;
-    background-color: transparent;
-  }
   :root, * {
     --scale: 0;
 
