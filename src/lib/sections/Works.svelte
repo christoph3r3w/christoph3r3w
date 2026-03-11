@@ -1,15 +1,17 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import {OrderedList,ContactForm} from '$lib';
-	import {fade} from 'svelte/transition';
+	import {fade, fly} from 'svelte/transition';
+	// import {y} from '../molecule/pagination.svelte'
 	import QRCode from 'qrcode';	
 	
 	interface Work {
 		title: string;
 		slug: string;
+		published: { is: boolean; date: string };
 		description: string;
 		assets: { image: string[]; icon?: string; color?: string };
-		link: string;
+		link: {src:string,showType:'' | 'mobile' | 'desktop'};
 		dateStart: string;
 		dateEnd: string;
 		status: { is: string; sticker: string };
@@ -20,14 +22,14 @@
 	// throw new Error('test error');
 
 	let {data} = $props();
-	let {dataWorks,project,delay} = $derived(data)
+	let {dataWorks,projects,delay} = $derived(data)
 	let openDetailsIndex = $state<number | null>(null);
 	let m4 = $derived(openDetailsIndex)
 
 	let pagination = $derived(dataWorks[0].pagination)
-	let works = $derived(dataWorks[1]?.works)	
+	let works = $derived(dataWorks[1]?.works.filter((w: Work) => w.published.is === true))	
 	
-	let fileLinks = $derived(works[m4 ?? 0]?.link);
+	let fileLinks = $derived(works[m4 ?? 0]?.link.src);
 	let showQr: boolean = $state(false);
 	let qrTimeout: ReturnType<typeof setTimeout> | null = $state(null);
 	let qrURL = $state('')
@@ -83,7 +85,7 @@
 	}
 
 	onMount(() => {	
-		// let m3 = document.querySelector('.file-1')?.setAttribute('open','');
+		// let m3 = document.querySelector('.file-1')?.setAttribute('open','');		
 		return () => {
 			clearQRTimeoutOnUnmount();
 			works = [];
@@ -93,7 +95,7 @@
 
 	$effect(() => {	
 		// loading animation clear after project is loaded
-		project.then(() => {
+		projects.then(() => {
 			clearLoadAnimation();
 			// let m3 = document.querySelector('.file-4')?.setAttribute('open','');
 		});
@@ -129,7 +131,7 @@
 	<summary class="{work.status.is == 'an experiment'? 'experiment' : ''}" onmouseenter={() => {handleClose}}>
 		{#if work.assets.icon?.trim()}
 			<span class="work-icon-span">
-				<img src={work.assets.icon} alt={work.title}>
+				<img src={work.assets.icon} alt={work.title} width="auto" height="30">
 			</span>
 		{/if}
 		<span class="file-title">{work.title}</span>
@@ -214,12 +216,14 @@
 			{/if}
 		</div> 
 		<div class="description-links">
-			<a class={{disabled:!work.link}} href={work?.link}>
+			<a class={{disabled:!work.link.src}} href={work?.link.src} target="_blank" rel="noopener noreferrer">
 			{showQr ? 'Link' : 'Visit site'}
 			</a>
-			<button class={{disabled:!work.link}} onclick={toggleQR}>
-				{showQr ? 'Hide qr code' : 'QR code'}
-			</button>
+			{#if work.link.showType != 'desktop'}
+				<button class={{disabled:!work.link.src}} onclick={toggleQR}>
+					{showQr ? 'Hide qr code' : 'QR code'}
+				</button>
+			{/if}
 		</div>
 	</article>
 {/snippet}
@@ -296,16 +300,17 @@
 	<details class="work-cover" id="folder-cover">
 		<summary tabindex="-1">
 			<p class="cover-content">Portfolio</p>
-			<p class="cover-content sticker-label">Here are some of the works I have done</p>
-			<span class="cover-content sticker-label"><img src="/chris icon lowlowres.png" alt="chris icon"></span>
-			<p class="cover-content sticker-label">In progress</p>
+			<p class="cover-content sticker-label">Here are some selected projects I have done</p>
+			<!-- <span class="cover-content sticker-label"><img src="/chris icon lowlowres.png" alt="chris icon"></span> -->
+			<!-- <p class="cover-content sticker-label">In progress</p> -->
 		</summary>
 	</details>
-	{#await project}
+	{#await projects}
 		{@render loadingFiles()}
 	{:then dataWorks } 
-	{@const works = dataWorks[1]?.works || []}
-	{#each works.slice(0) as work, i (work.title)}
+	{@const works = dataWorks[1]?.works.slice(0).filter((w: Work) => w.published.is === true) || []}
+	{#each works as work, i (work.title)}
+	{#key i}
 		<details 
 			class="file file-{i+1} {firstLoad? 'jump' : ''}" 
 			style="--file-index:{i + 1}; --work-icon: url('{work.assets.icon}'); {work.assets.color? `--file-primary-color:${work?.assets.color}`:''}"
@@ -320,6 +325,7 @@
 			{@render workDescription(work)}
 			{@render workAssets(work)}
 		</details>
+		{/key}
 		{:else}
 		{@render noFiles()}
 	{/each}
@@ -335,17 +341,17 @@
 </div>
 
 <style>
-	/* Custom variables added */
 	:root{
 		--total-work:0;
 		/* --file-index:1; */
 		--move:0;
 		--file-primary-color:#df3188;
 		/* --file-primary-color:oklab(82.281% -0.10253 0.16777); */
-		--file-primary-color-amount:71%;
+		--file-primary-color-amount:99%;
 		--hue-number:913;
 
 		--file-primary-hue:color-mix(in oklch longer hue, hsl(calc(213 * 700 / var(--file-index)), 55%, 38%) , var(--file-primary-color) 90%);
+		--file-primary-hue:var(---primary-color);
 		
 		--transition-timing: cubic-bezier(0.62, -0.1, 0.36, 1);
 		--transition-timing: cubic-bezier(0.294, -0.291, 0.247, 1.056);
@@ -372,13 +378,7 @@
 
 	}
 
-	/* *{
-		touch-action: none;
-	} */
-/* 
 	:global(.mainContain:has(#works details[open])) {
-		background-color: blue;
-		padding-inline: 1dvw;
 
 		.contentContain.contain{
 			width: 100dvw !important;
@@ -387,34 +387,12 @@
 			width: 100% !important;
 			flex-basis: 100cqw !important;
 		}
-	} */
-
-	:global(.contentContain:has(#works)){
-		--_section-height: 80%;
-
-		height: var(--_section-height);
-		/* transform: translateY(calc(100% - var(--_section-height) - 4%)); */
-		top:calc(100% - var(--_section-height) - 4%);
-		bottom: 0 !important;
-		max-width: 1700px;
-
-		@container (width < 900px){--_section-height: 90%;	}
 	}
 
-	/* :global(.contentContain:has(#works)):has(details.file[open]:nth-of-type(n)){	--_section-height: 90%;	} */
-
-	.Orderedlist-container,:global(.Orderedlist-container){
-		position: relative;
-		width: 100%;
-		max-width: 25dvw;
-		height: 70cqh;
-		max-height: 100%;
-		margin-top: 5dvh;
-		overflow-y: auto;
-	}
+	:global(.contentContain:has(#works)):has(details.file[open]:nth-of-type(n)){	--file-section-height: 90%;max-width: 2000px;}
 
 	.work-section:has(details[open]) .Orderedlist-container{
-		filter: opacity(.2);
+		filter: opacity(.3);
 		pointer-events: none;
 	}
 	
@@ -425,9 +403,8 @@
 		will-change: transform,filter,top,left;		
 	}
 
-
 	/* Hover effect for the summary */
-	.work-section,
+	/* .work-section, */
 	.work-section:where(:focus-within,:focus-visible,:hover,.Orderedlist-container:is(:hover,:focus-within)),
 	.work-section:where(:focus-within,:focus) {
 		--move-all:17dvw;
@@ -439,15 +416,16 @@
 		/* folder cover animation */
 		details.work-cover :is(summary,::details-summary),
 		details.work-cover summary{
-			--transition-duration: 200ms;
+			--transition-duration: 900ms;
 			--move:calc(40dvh + 1dvw * var(--total-work) ); 
 
 			top:var(--move) ;
 			left:calc(var(--move-all) - 2rem) ;
-			color: black;
+			/* color: var(--color-text); */
+			opacity: .5;
 			pointer-events: none;
-			z-index: 11;
 			transition: top var(--transition-duration) 100ms, left var(--transition-duration) 200ms;
+			z-index: 11;
 
 			@container (width < 900px){
 				--move:calc(53vh - var(--total-work)); 
@@ -457,12 +435,15 @@
 			&::after{
 				pointer-events: none;
 			}
+
 		}
 
 		/* content on cover animation */
 		details.work-cover .cover-content:nth-child(1) ~ .sticker-label{
-			filter: blur(2px);
-			transform: translate(-35rem, 11rem) rotate(5deg);
+			/* filter: blur(2px); */
+			filter: opacity(0);
+			/* transform: translate(-35rem, 11rem) rotate(5deg); */
+			transform: translate(-35rem) rotate(0deg);
 		}
 
 		/* files animation */
@@ -475,20 +456,18 @@
 			top:calc(var(--move));
 			left:calc(.1dvw * var(--total-work) + 10px * tan(var(--file-index) ) + var(--move-all));
 			
-			color: black;
-			/* box-shadow: 
-				var(--shadow-1-color) 0px 2px 5px -4px,
-				var(--shadow-1-color) 0px 6px 10px -5px,
+			box-shadow: 
+				var(--shadow-1-color) 0px 5px 8px -5px,
 				rgba(0, 0, 0, 0.2) 0px -3px 0px inset
-			  ; */
+			  ;
 			transition-property: color, top, left, rotate;
 			@starting-style {
-				/* --move:calc(46vh + (-9vh  * (var(--file-index) / var(--total-work,1))));  */
+				--move:calc(46vh + (-9vh  * (var(--file-index) / var(--total-work,1)))); 
 				opacity: 0;
 			}
 
 			@container (width < 900px){
-				--move:calc(53dvh - 45vh * (var(--file-index) / var(--total-work))); 
+				/* --move:calc(53dvh - 45vh * (var(--file-index) / var(--total-work)));  */
 				inset-inline: 2%;
 			}
 		}
@@ -496,6 +475,7 @@
 		details.file summary span > img{
 			opacity:1 ;
 		}
+
 	}
 
 	/* the details component */
@@ -522,16 +502,18 @@
 		background-attachment: fixed;
 		background-origin: border-box;
 		background-repeat: no-repeat;
-		background-position: 100% 100% ;		
+		background-position: 100% 100% ;	
+		background-blend-mode:color-dodge;
+	
 
 		/* Enhanced transitions using the new variables */
 		will-change: top, left,right, color, background-color, translate;
 		backface-visibility: hidden;
   		perspective: 1000px;
 		transition: 
-			/* top var(--transition-duration) var(--transition-timing) calc(var(--file-index) * var(--delay-factor)),
+			top var(--transition-duration) var(--transition-timing) calc(var(--file-index) * var(--delay-factor)),
 			left var(--transition-duration) var(--transition-timing) calc(var(--file-index) * var(--delay-factor)),
-			right var(--transition-duration) var(--transition-timing) calc(var(--file-index) * var(--delay-factor)), */
+			right var(--transition-duration) var(--transition-timing) calc(var(--file-index) * var(--delay-factor)),
 			color 0.32s ease,
 			background-color 0s,
 			translate 0.2s var(--transition-timing);
@@ -548,9 +530,8 @@
 			display: none;
 		}
 
-		&:nth-of-type(n){
+		&:nth-of-type(1n){
 			background-image: url('/works-assets/material-assets/paper 1 black&white transparent cropped (Custom).png');
-			background-blend-mode:color-dodge;
 		}
 
 		&:nth-of-type(n).experiment{
@@ -566,6 +547,7 @@
 			margin-right: 1%;
 			overflow: hidden;
 			color: color-mix(in oklch, var(--file-primary-hue), rgb(14, 14, 14) 45%);
+			color: color-mix(in oklch, var(--file-primary-hue), var(--color-text) 45%);
 			font-size: 2rem;
 			font-weight: 700;
 			text-shadow: 3px 2px 3px rgba(255,255,255,.2);
@@ -594,12 +576,23 @@
 		}
 
 		.work-icon-span{
-			flex: 0 0 auto;
+			flex: 0 1 ;
+			flex-basis: clamp(2.5%, 100%, 30px);
+			position: relative;
+			width: fit-content;
+			max-width: max(30px,3%);
+			height: fit-content;
+			aspect-ratio: 1;
+			/* outline: solid red; */
 		}
 
 		.work-icon-span > img{
+			/* outline: solid rgb(0, 255, 0); */
 			width: 100%;
+			height: 100%;
 			aspect-ratio: 1;
+			object-fit: cover;
+			object-position: start;
 			opacity: 0.3;
 		}
 
@@ -630,8 +623,11 @@
 	/* folder cover */
 	details:is(#folder-cover,.work-cover) summary{
 		font-size: clamp(2rem, 20vw, 10rem);
-		color: black ;
+		color: var(--color-text); ;
 		background-color: color-mix(in oklch longer hue, var(--hoverC,hsl(calc(213 - 90 / var(--file-index)), 55%, 38%)) , rgba(255, 255, 255, 0.466) 30% );
+		background-color: color-mix(in oklch longer hue, var(--hoverC,hsl(calc(213 - 90 / var(--file-index)), 55%, 38%)) , var(--primary-color,rgba(255, 255, 255, 0.466)) 30% );
+		/* background-color: color-mix(in oklch longer hue, var(--hoverC,var(--primary-color,hsl(calc(213 - 90 / var(--file-index)), 55%, 38%))) , rgba(255, 255, 255, 0.466) 30% ); */
+
 		background-image: 
 						url('/works-assets/material-assets/paper 1 black&white transparent cropped (Custom).png')	;
 		background-attachment:fixed  !important ;
@@ -656,6 +652,13 @@
 			cursor: pointer;
 			z-index: 100;
 		} */
+
+		@container (width < 900px){
+			background-size: cover;
+			background-position: 100% 100%;
+			--move:calc(53dvh + 1dvw * var(--total-work) ); 
+			top: var(--move);		
+			}
 	}
 
 	/* initial general animation for files and folder and cover element */
@@ -670,12 +673,6 @@
 		background-color: color-mix(in oklch, var(--file-primary-hue) , rgba(255, 255, 255, 0.466) 10% );
 		border-radius: var(--wc-radius) var(--wc-radius) var(--wc-radius) 0;
 		backdrop-filter: blur(50px);
-
-		/* testing */
-		&:nth-of-type(1){
-		/* box-shadow: rgba(0, 0, 0, 0) 0px 2px 4px, rgba(28, 30, 31, 0.493) 0px -3px 8px -7px, rgba(0, 0, 0, 0.178) 0px -2px 2px inset; */
-			/* box-shadow: rgba(20, 27, 33, 0.126) 0px 2px 4px -28px, rgba(0, 0, 0, 0.207) 0px 7px 13px -7px, rgba(0, 0, 0, 0.075) 0px -3px 0px inset;		 */
-		}
 
 		@container (width < 900px){
 			--move:calc(65vw +  (-8.5vw  * var(--file-index) ) ); 
@@ -745,17 +742,26 @@
 		background-color: color-mix(in oklch, var(--file-primary-hue) , rgba(255, 255, 255, 0.466) 20% );
 
 		@container (width < 900px){
+			--move:calc(46vh + (-43vh  * (var(--file-index) / var(--total-work,1)))); 
+			--hover-file-right: 0vw;
+			--hover-file-top: -1rem;
 			transform-origin: bottom left ;
-			left:calc(3.5dvw - (var(--file-index) * 5px));
+			transform : unset;
+			left:0;
 		}
 	}
 
 	/* when hover or focus stops */
-	details:is(.file,.work-cover):not(:hover,:focus,:active) :is( summary,::details-summary){
+	details.work-cover:not(:hover,:focus,:active) :is( summary,::details-summary){
+		transition: 600ms var(--transition-timing);
+	}
+
+	details.file:not(:hover,:focus,:active) :is( summary,::details-summary){
 		transition: 200ms var(--transition-timing);
 	}
 
 	/* The content of the file - open state */
+	/* /////////////////////////////////// */
 	.work-section:has(details:nth-of-type(n)[open]) details{
 			grid-column: span 10;
 			z-index: 0 ;
@@ -768,7 +774,6 @@
 	}
 
 	.work-section:has(details:nth-of-type(n)[open])	details.file > summary{
-			font-size: 2rem;
 			top: -2%;
 			left: 5%;
 			transform: rotate(0deg);
@@ -833,14 +838,6 @@
 
 	/* where the content of each project is */
 	details[open]::details-content{
-		/* --hue-number: calc(213 * 39 / var(--file-index)); */
-		/* --file-primary-hue:color-mix(in oklch , hsl(calc(var(--hue-number) / var(--file-index)), 55%, 98%) , var(--file-primary-color) 85%); */
-		/* --file-primary-hue:color-mix(in hsl longer hue, hsl(calc(var(--hue-number) / var(--file-index)), 5%, 98%) , var(--file-primary-color) 27%); */
-		/* --file-primary-hue:color-mix(in oklch longer hue, hsl(calc(213 * 700 / var(--file-index)), 55%, 38%) , var(--file-primary-color) 90%); */
-		/* --bg-test:color-mix(in oklch, var(--file-primary-hue) , rgba(255, 255, 255, 0.073) 85% ); */
-		
-		/* --file-primary-hue:color-mix(in oklch, hsl(calc( var(--hue-number,213) / var(--file-index)),25%, 68%) , var(--file-primary-color) var(--file-primary-color-amount)); */
-		/* --bg-test:color-mix(in oklch, var(--file-primary-hue2) 90% , var(--file-primary-hue,var(--primary-gray-bg)) 90%); */
 		--file-primary-hue:color-mix(in oklch, var(--file-primary-hue2) 90% , var(--file-primary-color) 90% );
 		--file-primary-hue2:color-mix(in oklch, hsl(calc( var(--hue-number,213) / var(--file-index)),25%, 68%) , var(--file-primary-color) var(--file-primary-color-amount));
 		--bg-test:color-mix(in oklch, var(--file-primary-hue2) 90% , var(--file-primary-color) 90% );
@@ -855,12 +852,6 @@
 		z-index: 10 !important;
 		overflow-x: hidden;
 		border-radius: 0 0 var(--wc-radius) var(--wc-radius);
-	/* display: none; */
-		/* need to be tested */
-		/* background-color: color-mix(in oklch, hsl(60, 11%, 88%), var(--file-primary-color) 9%); */
-		/* background-color: color-mix(in oklch, hsl(59, 23%, 63%), var(--file-primary-color) 9%); */
-		/* background-color: hsl(60, 11%, 88%); */
-		/* background-color: hsl(59, 23%, 63%); */
 		/* background-color: var(--bg-test); */
 		/* background-color: color-mix(in oklch, var(--file-primary-hue) , rgba(255, 255, 255, 0.466) 50% ); */
 		/* background-color: color-mix(in oklch, var(--file-primary-hue) , white 20% ); */
@@ -963,11 +954,12 @@
 		.collaborator-role{
 			font-size: 0.88rem;
 			font-weight: 200;
+			align-self: center;
 		}
 
 		.collaborator-name{
-		 text-align: end;
-		 font-size: 1rem;
+			text-align: end;
+			font-size: 1rem;
 		}
 
 		.list-line{
@@ -976,8 +968,9 @@
 			background: #b3b39c;
 			background: var(--_line-color);
 			margin-inline: 2%;
-			border-radius: 10pc;
+			border-radius: 5pc;
 			height: 1%;
+			min-width: 10px;
 			align-self: center;
 			justify-self: center;
 		}
@@ -1192,7 +1185,8 @@
 
 		grid-column: 1/ -3;
 		grid-row: 1/-1;
-		display: grid;
+		display: flex;
+		flex-direction: column;
 		/* this might have been breaking the application */
 		/* grid-template-columns: subgrid ;
 		grid-template-rows: subgrid; */
@@ -1262,7 +1256,7 @@
 		}
 
 		& > *{
-			padding-left: 45cqw;
+			padding-left: 43cqw;
 			scrollbar-width:none;
 			animation: content-reveal 0.4s var(--transition-timing);
 		}
@@ -1273,7 +1267,7 @@
 		position: relative;
 		display: flex;
 		flex-direction: column;
-		grid-row: auto;
+		/* grid-row: auto; */
 		margin-bottom : 2rem;
 		contain: layout style paint;
 
@@ -1287,31 +1281,16 @@
 			margin: 0;
 			padding-block: 0;
 		}
-	}
-
-	.work-assets .content-block img{
-		max-width: 500px;
-		width: 100%;
-		border-radius: 1pc;
-		height: auto;
-		aspect-ratio: 16/9;
-		object-fit: fill;
-		object-position: center;
-
-		@supports (corner-shape: superellipse(0)){
-			&{
-				border-radius: 100%;
-				corner-shape: superellipse(3);
-			}	
-		}
 	}	
 
 	.work-assets .content-block h2{
 		font-weight: bold;
 		margin-bottom: 1rem;
 	}
+
 	.work-assets .content-block p{
 		line-height: 1.5;
+		font-size: clamp(0.9rem, 4vw, 1.1rem);
 		max-width: 80cqw;
 		width: 80ch;
 		margin-bottom: 1rem;
@@ -1324,7 +1303,8 @@
 	}	
 
 	/* has no img */
-	.work-assets .content-block:has(p:nth-child(1)):has(p:nth-last-child(1)){
+	.work-assets .content-block:has(p:nth-child(n)):has(p:nth-last-child(1)){
+		/* outline: solid 1px rgba(0, 0, 0, 0.1)	; */
 		p{color: rgb(0, 0, 0);	}
 	} 
 
@@ -1356,16 +1336,51 @@
 		} 
 	}
 
-	/* block has only image */
-	.work-assets .content-block:nth-of-type(n):has(img:nth-child(1)):has(img:nth-last-child(1)){
-		position: relative !important;
+	.work-assets .content-block img{
+		position: relative;
+		min-width: 60cqw;
+		border-radius: 1pc;
+		aspect-ratio: 16/9;
+		/* max-width: 500px; */
+		/* min-height: min(400px,auto); */
+		/* resize:both; */
+
+		object-fit: cover;
+		object-position: bottom;
+
+		@supports (corner-shape: superellipse(0)){
+			&{
+				border-radius: 90%;
+				corner-shape: superellipse(3);
+			}	
+		}
+	}
+
+	/* block has only one image */
+	.work-assets .content-block:nth-of-type(n):has(img:first-child:nth-last-of-type(1)){
+
+		img{
+			max-width: 100%;
+			width: 90cqw;
+			height: auto;
+			outline: #ffffff93 2px solid;
+			outline-offset: -2px;
+			margin-bottom: 3rem;
+			margin-right: 24%;
+			/* outline: solid yellow; */
+		}
+	}
+
+
+	/* block has multiple images */
+	.work-assets .content-block:nth-of-type(n):has(img:nth-child(2n)):has(img:nth-last-child(1)){
+		position: relative;
 		min-height:20cqh ;
-		height: 30cqh;
-		width: auto;
-		flex-flow: row nowrap;;
+		min-height:fit-content;
+		flex-flow: row nowrap;
 	 	gap: 1rem;
 		padding-block: 0;
-		margin-block: 4cqb ;
+		margin-bottom: 4rem ;
     
     	overflow-y: hidden;
     	overflow-x: auto;
@@ -1377,8 +1392,11 @@
 		img{
 			scroll-snap-stop: always;
 			scroll-snap-align: start;
-			outline: #ffffff4a 2px solid;
+			outline: #ffffff93 2px solid;
 			outline-offset: -2px;
+			min-height: 4rem;
+			width: 30cqw;
+			/* outline: springgreen solid; */
 		}
 
 		img:nth-last-of-type(1){
@@ -1401,7 +1419,7 @@
 			z-index: 2;
 			pointer-events: auto;
 			cursor: pointer;
-			animation: work-assets-button linear both;
+			animation: assets-scroll-button linear both;
 			animation-timeline: view();
 			animation-range-start: contain ;
 			animation-range-end: 75cqh;
@@ -1434,11 +1452,11 @@
 		@supports not selector(::scroll-button(*)){
 			scroll-snap-type: none;
 			scrollbar-width:thin ;
-			/* outline: springgreen solid; */
+			padding-bottom: 2rem;
 		}
 	}
 
-	@keyframes work-assets-button{
+	@keyframes assets-scroll-button{
 		from{
 			opacity: 0;
 			transform: translate(0, -50%) scale(0.8);
@@ -1456,7 +1474,7 @@
 	/* sticker styling */
 
 	details.work-cover .cover-content{
-		transition: .4s var(--transition-timing), box-shadow 0s, filter 0s, background-color 0s;
+		transition: .4s var(--transition-timing) 1s, box-shadow 0s, filter .4s, background-color 0s;
 
 		&:nth-child(1){
 			position: absolute;
@@ -1622,17 +1640,36 @@
 	}
 
 	@media screen and (max-width: 1000px) {
-		details.file:nth-of-type(n):is(:hover,:focus) :is(summary,::details-summary){
-			--hover-file-top:0px;
-			background-color: color-mix(in oklch, var(--file-primary-hue) , rgba(255, 255, 255, 0.466) 40% ); 
-			transform : rotate(calc(-2deg + .5deg * var(--file-index))) translate(0);
+
+		:global(.mainContain:has(#works details[open])) {
+			padding-inline: 1dvw;
 		}
 
-		details.file:nth-of-type(n):is(:focus) :is(summary,::details-summary){
-		
-			rotate:calc(-2deg + .1deg * var(--file-index));
+		.work-section:where(:focus-within,:focus,:active) {
+			all: unset;
+		}
+
+		.work-section details.work-cover :is(summary,::details-summary){
+			--move:calc(50dvh + 1dvw * var(--total-work) ); 
+			top: var(--move);
+
+			@starting-style{
+				--move:calc(20dvh + 1dvw * var(--total-work) ); 
+			}
+		}
+
+		.work-section details.file :is(summary,::details-summary){
+			--move:calc(46vh + (-43vh  * (var(--file-index) / var(--total-work,1)))); 
+		}
+
+		details.file:nth-of-type(n):is(:active,:focus) :is(summary,::details-summary){
+			--hover-file-top:0px;
+			background-color: color-mix(in oklch, var(--file-primary-hue) , rgba(255, 255, 255, 0.466) 40% ); 
+			/* rotate:calc(-2deg + .1deg * var(--file-index)); */
+			/* transform : rotate(calc(-2deg + .5deg * var(--file-index))) translate(0); */
+			transform : rotate(0deg) translate(0);
 			transition-property: top,left, rotate, height; 
-			transition: 100ms var(--transition-timing),box-shadow 0s,filter 0s,transform-origin 0s;
+			transition: 300ms var(--transition-timing),box-shadow 0s,filter 0s,transform-origin 0s;
 			cursor: pointer;
 
 			@container (width < 950px){
@@ -1642,10 +1679,9 @@
 		}
 
 		.work-section:has(details:nth-of-type(n)[open]) details.file > summary {
-			top: 0;
+			top: -2%;
 
-			.small-description,
-			.side-description {
+			.small-description,.side-description {
 				display: none;
 			}
 		}
@@ -1657,15 +1693,16 @@
 
 		details[open] .work-description{
 			grid-column: 3/ -3;
-			grid-row: 2/span 12;
+			grid-row: 2/span 10;
 		}
 
 		.work-description h2{
 			text-align: center;
 		}
 
-		details[open] .work-description:not(.note) .description-space{
-			flex: 0 1 5%;
+		.work-description .description-info {
+			padding: 0;
+			flex: 0;
 		}
 
 		.work-description .description-info ul.collaborators li{
@@ -1676,8 +1713,12 @@
 			display: none;
 		}
 
+		details[open] .work-description:not(.note) .description-space{
+			flex: 0 1 5%;
+		}
+
 		details[open] .work-description.note{
-			grid-row: 3/span 12;
+			grid-row: 3/span 10;
 			flex-flow: row;
 			gap: 2%;
 		}
@@ -1740,23 +1781,16 @@
 		}
 
 		.work-assets .content-block img{
-			max-width: 200px;
+			min-width: 100%;
+			width: 400px;
 			height: auto;
+			border-radius:50px ;
 		}
 
-		details[open] .work-assets .b-left.b-left{
-			mask: linear-gradient(
-				to right,
-				var(--file-primary-hue) -2% 7%,
-				transparent 15% 100%
-			);
-		}
-
-		details[open] .work-assets .b-right.b-right{
+		details[open] .work-assets :is(.b-left.b-left, .b-right.b-right){
 			mask:none; 
 			backdrop-filter: blur(0);
 		}
-
 
 		/* utils */
 
