@@ -5,8 +5,9 @@
 	inset-inline: 0;
 	transform-origin: bottom;
 	display: flex;
-	
+	height: auto;
 	background-color: rgba(255, 255, 255, 0.801);
+	background-color: var(--tan-gray-bg);
 	/* background-image: url('/works-assets/material-assets/Chris website12.png'); */
 	background-position: top;
 	background-size: cover;
@@ -18,9 +19,10 @@
 	pointer-events:visible;
 	cursor:progress;
 	z-index: 20000;
+	display: none;
 	backdrop-filter: blur(30px) drop-shadow(rgba(105, 98, 63, 0.181) 0px 28px 10px);
-	/* animation: Blur 2s 5s both, move 2s 3s forwards; */
-	animation: Blur 2s .5s forwards;
+	/* animation: Blur 2s 3s both, move 2s 3s forwards; */
+	/* animation: Blur 2s .5s forwards; */
 
 	&[data-splash-skip="true"] {
     display: none;
@@ -42,10 +44,15 @@
 
 #splash .profile{
 	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
+	/* flex-direction: column; */
+	/* align-items: center; */
+	justify-content: end;
+	width: 28dvw;
+	padding-top: 11rem;
+	/* outline: solid red; */
 	view-transition-name: header-figure;
+	/* animation: Blur 2s 4s forwards; */
+
 }
 
 #splash .profile img{
@@ -54,9 +61,9 @@
 }
 
 @keyframes Blur {
-	13%{backdrop-filter: blur(5px);}
+	13%{backdrop-filter: blur(15px);}
 	23%{backdrop-filter: blur(3px);}
-	53%{backdrop-filter: blur(5px);}
+	53%{backdrop-filter: blur(2px);}
 	90%{backdrop-filter: blur(5px);}
 	98%{ 
 		backdrop-filter: blur(1px);
@@ -75,60 +82,58 @@
 	50%,95%{bottom:95lvh;}
 	100%{
 		z-index: 0;
-		bottom: 95lvh;
+		bottom: 100lvh;
 	}
 }
 
 #splash .profile{
+	position: relative;
+	view-transition-name: header-figure;
+	isolation: isolate;
+
+	picture{
+		border:solid red;
+		width: 250px;
+		height: 250px;
+	}
+
+	& img{
 		position: relative;
-		view-transition-name: header-figure;
-		isolation: isolate;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: center;
+		animation: sway 10s linear infinite .2s backwards ;
+	}
 
-		picture{
-			border:solid red;
-			width: 250px;
-			height: 250px;
-		}
+	.flower{
+		position: relative;
+		aspect-ratio: 1;
+		--g:/25.486% 25.486% radial-gradient(#000 calc(71% - 1px),#0000 71%) no-repeat;
+		mask: 100% 50% var(--g),88.302% 82.139% var(--g),58.682% 99.24% var(--g),25% 93.301% var(--g),3.015% 67.101% var(--g),3.015% 32.899% var(--g),25% 6.699% var(--g),58.682% 0.76% var(--g),88.302% 17.861% var(--g),radial-gradient(100% 100%,#000 35.01%,#0000 calc(35.01% + 1px));
+		scale: 1;
+		transition: .8s cubic-bezier(0.175, 0.885, 0.32, 1.275) ;
+		/* animation: sway 10s linear infinite .5s backwards ; */
+		/* view-transition-name: header-figure; */
+		z-index: 3;
+		
 
-		& img{
-			position: relative;
-			width: 100%;
-			height: 100%;
-			object-fit: cover;
-			object-position: center;
-			animation: sway 10s linear infinite .2s backwards ;
-		}
+		/* &::after{
+			content: '';
+			position: absolute;
+			display: inline-grid;
+			place-content: center;
+			inset: 0%;
+			z-index: 0;
+			isolation: isolate;
+			background-color: #2c5d984f;
+			mix-blend-mode:screen;
 
-		.flower{
-			position: relative;
-			aspect-ratio: 1;
 			--g:/25.486% 25.486% radial-gradient(#000 calc(71% - 1px),#0000 71%) no-repeat;
 			mask: 100% 50% var(--g),88.302% 82.139% var(--g),58.682% 99.24% var(--g),25% 93.301% var(--g),3.015% 67.101% var(--g),3.015% 32.899% var(--g),25% 6.699% var(--g),58.682% 0.76% var(--g),88.302% 17.861% var(--g),radial-gradient(100% 100%,#000 35.01%,#0000 calc(35.01% + 1px));
 			scale: 1;
 			transition: .8s cubic-bezier(0.175, 0.885, 0.32, 1.275) ;
-			/* animation: sway 10s linear infinite .5s backwards ; */
-			/* view-transition-name: header-figure; */
-			z-index: 3;
-
-			
-
-			/* &::after{
-				content: '';
-				position: absolute;
-				display: inline-grid;
-				place-content: center;
-				inset: 0%;
-				z-index: 0;
-				isolation: isolate;
-				background-color: #2c5d984f;
-				mix-blend-mode:screen;
-
-				--g:/25.486% 25.486% radial-gradient(#000 calc(71% - 1px),#0000 71%) no-repeat;
-				mask: 100% 50% var(--g),88.302% 82.139% var(--g),58.682% 99.24% var(--g),25% 93.301% var(--g),3.015% 67.101% var(--g),3.015% 32.899% var(--g),25% 6.699% var(--g),58.682% 0.76% var(--g),88.302% 17.861% var(--g),radial-gradient(100% 100%,#000 35.01%,#0000 calc(35.01% + 1px));
-				scale: 1;
-				transition: .8s cubic-bezier(0.175, 0.885, 0.32, 1.275) ;
-				animation: sway 30s linear .5s backwards ;
-			} */
-
-		}
+			animation: sway 30s linear .5s backwards ;
+		} */
 	}
+}

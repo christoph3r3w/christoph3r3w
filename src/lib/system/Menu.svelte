@@ -52,8 +52,8 @@
 			css: (t:any, u:any) => 
 				`
 				
-				min-height: ${1 * 5}cqh;
-				opacity: ${t};
+				opacity: ${t * .2};
+				blur: ${u * 10}px;
 				
 				`
 			
@@ -99,19 +99,6 @@
 				</span>
 				<p>or find me on:</p>
 				<span >
-					<!-- <a href="/" target="_blank" data-title="Bluesky" aria-label='link to my bluesky'> 
-						<svg width="60" height="53" viewBox="0 0 60 53" fill="none" xmlns="http://www.w3.org/2000/svg">
-							<g clip-path="url(#clip0_1040_188)">
-							<path d="M13.0057 3.56123C19.8846 8.73311 27.2832 19.2197 30 24.8468C32.7168 19.2197 40.1154 8.73311 46.9943 3.56123C51.9577 -0.170512 60 -3.05796 60 6.13006C60 7.96498 58.9495 21.5448 58.3333 23.7496C56.1916 31.4143 48.3874 33.3693 41.4451 32.186C53.5798 34.2543 56.6666 41.1051 50 47.956C37.3387 60.9671 31.8022 44.6915 30.3836 40.5211C30.1235 39.7566 30.0018 39.3989 30 39.703C29.9982 39.3989 29.8765 39.7566 29.6164 40.5211C28.1978 44.6915 22.6613 60.9671 10 47.956C3.33334 41.1051 6.42019 34.2543 18.5549 32.186C11.6126 33.3693 3.80847 31.4143 1.66667 23.7496C1.05055 21.5448 0 7.96498 0 6.13006C0 -3.05796 8.04238 -0.170512 13.0057 3.56123Z" fill="#006AFF" style="fill:#006AFF;fill:color(display-p3 0.0000 0.4157 1.0000);fill-opacity:1;"/>
-							</g>
-							<defs>
-							<clipPath id="clip0_1040_188">
-							<rect width="60" height="53" fill="white" style="fill:white;fill-opacity:1;"/>
-							</clipPath>
-							</defs>
-						</svg>
-						<p>bluesky</p>
-					</a> -->
 					<a href="/" target="_blank" data-title="LinkedIn" aria-label='link to my linkedin'> 
 						<svg width="52" height="53" viewBox="0 0 52 53" fill="none" xmlns="http://www.w3.org/2000/svg">
 							<g clip-path="url(#clip0_1040_190)">
@@ -156,8 +143,7 @@
 							</defs>
 						</svg>
 						<p>instagram</p>
-					</a>
-					
+					</a>					
 				</span>
 			</li>
 {/snippet}
@@ -165,25 +151,27 @@
 {#snippet About()}
 	<li class="head-about {openAboutMore?'read-more':''}" >
 		<p>Hi Christopher here </p>
-		<p>
+		{#key openAboutMore}
+		<p in:whoo={{ duration: 200 }} > 
 			I'm a web developer in Amsterdam, 
 			focused on accessible interfaces and scalable systems that adapt to real user needs.
 		</p>
+		{/key}
 		{#if openAboutMore == true}
-				<p in:whoo={{ duration: 200, delay: 400 }} out:whoo={{ duration: 200 }}>
+				<p in:whoo={{ duration: 300, delay: 400 }} out:whoo={{ duration: 400 }}>
 					Curiosity and experimentation drive my practice. Through studies and client work, I developed a structural approach to applying these principles across different user needs and content.
 				</p>
-				<h2 in:whoo={{ duration: 200, delay: 400 }} out:whoo={{ duration: 200 }}>
+				<h2 in:whoo={{ duration: 300, delay: 400 }} out:whoo={{ duration: 400 }}>
 					Approach
 				</h2>
-				<p in:whoo={{ duration: 200, delay: 400 }} out:whoo={{ duration: 200 }}>
+				<p in:whoo={{ duration: 300, delay: 400 }} out:whoo={{ duration: 400 }}>
 					The projects I've enjoyed most began as thoughtful conversations — with clients, collaborators, or users themselves. These conversations shape how I approach the work: researching new tools and techniques, questioning assumptions about interface design, and building systems flexible enough to adapt to both visual needs and the data that flows through them.
 				</p>
-				<p in:whoo={{ duration: 200, delay: 400 }} out:whoo={{ duration: 200 }}>
+				<p in:whoo={{ duration: 300, delay: 400 }} out:whoo={{ duration: 400 }}>
 					I draw on web fundamentals as a creative material — experimenting with what's possible, staying curious about emerging features, and always thinking about who will actually use what I'm making. Whether it's a custom solution for a specific stakeholder or a system built to scale, the goal remains the same: work that's thoughtful, accessible, and genuinely useful.
 				</p>
-				<!-- <div class="previous-roles" in:whoo={{ duration: 200, delay: 400 }} out:whoo={{ duration: 200 }}>
-					<h2 in:whoo={{ duration: 200, delay: 400 }} out:whoo={{ duration: 200 }}>
+				<!-- <div class="previous-roles" in:whoo={{ duration: 300, delay: 400 }} out:whoo={{ duration: 200 }}>
+					<h2 in:whoo={{ duration: 300, delay: 400 }} out:whoo={{ duration: 200 }}>
 						Stack:
 					</h2>
 					<ul>
@@ -355,6 +343,7 @@
 		width: 100%;
 		height: 100%;
 		bottom: 0;
+		padding-inline: 6rem;
 		container-type: inline-size;
 	}
 
@@ -620,6 +609,9 @@
 		max-width: 900px;
 		min-height: 100%;
 		overflow-y: auto;
+		/* background-color: rgba(255, 255, 255, 0.801); */
+		background-color: color-mix(in hsl, var(--color-bg)60%, transparent );
+
 	}
 
 	/* li.head-about.read-more .asset-border{
