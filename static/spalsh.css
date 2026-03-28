@@ -21,7 +21,7 @@
 	z-index: 20000;
 	display: none;
 	backdrop-filter: blur(30px) drop-shadow(rgba(105, 98, 63, 0.181) 0px 28px 10px);
-	/* animation: Blur 2s 3s both, move 2s 3s forwards; */
+	animation: Blur 2s 3s both, move 2s 3s forwards;
 	/* animation: Blur 2s .5s forwards; */
 
 	&[data-splash-skip="true"] {
@@ -50,8 +50,8 @@
 	width: 28dvw;
 	padding-top: 11rem;
 	/* outline: solid red; */
-	view-transition-name: header-figure;
-	/* animation: Blur 2s 4s forwards; */
+	/* view-transition-name: header-figure; */
+	animation: Blur 2s 4s forwards;
 
 }
 
@@ -88,7 +88,7 @@
 
 #splash .profile{
 	position: relative;
-	view-transition-name: header-figure;
+	/* view-transition-name: header-figure; */
 	isolation: isolate;
 
 	picture{

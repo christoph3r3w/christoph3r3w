@@ -126,16 +126,17 @@ onDestroy(() => {
 
   <!-- the section -->
   <section class="mainContain scroller" bind:this={scroller} >
-      <!-- <article>
-	    Blah blah blah blah blah blah blah blah 
-	    </article> -->
-    <Window role="child" class="contentContain" color="white" style="--hoverC:white" bind:this={sections[0]}>
+    <Window role="child" class="contentContain" color="" style="--hoverC:var(--tritary-color)" bind:this={sections[0]}>
       <Intro2 {data}/>
     </Window>
-
     <!-- <Window role="child" class="contentContain" color="#e7c75e" style="--hoverC:white" bind:this={sections[0]}>
       <Intro2 {data}/>
     </Window> -->
+    
+    <!-- <Window role="child" class="contentContain" color="white" style="--hoverC:white" bind:this={sections[0]}>
+      <Intro2 {data}/>
+    </Window> -->
+
 
     <!-- <Window role="child" class="contentContain" color="white" style="--hoverC:white" bind:this={sections[0]}>
      <Intro/>

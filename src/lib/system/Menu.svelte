@@ -39,7 +39,6 @@
 
 	function handleAboutMore(){
 		aboutMoreOpen.set(!$aboutMoreOpen);
-		console.log('about more', openAboutMore);
 	}
 
 	function whoo(node: HTMLElement, params: { delay?: number, duration?: number, easing?: (t: number) => number }) {
@@ -51,12 +50,9 @@
 			easing: params.easing || elasticOut,
 			css: (t:any, u:any) => 
 				`
-				
 				opacity: ${t * .2};
-				blur: ${u * 10}px;
-				
+				blur: ${u * 10}px;	
 				`
-			
 		};
 	}
 
@@ -78,7 +74,7 @@
 		if(openContacts == true){
 			document.body.style.setProperty('--menu-height','46cqh')
 		}else if(openAbout == true){
-			document.body.style.setProperty('--menu-height','49cqh')
+			document.body.style.setProperty('--menu-height','40cqh')
 		}else{
 			document.body.style.setProperty('--menu-height','56cqh')
 		}
@@ -149,7 +145,7 @@
 {/snippet}
 
 {#snippet About()}
-	<li class="head-about {openAboutMore?'read-more':''}" >
+	<li class="head-about box {openAboutMore?'read-more':''}" >
 		<p>Hi Christopher here </p>
 		{#key openAboutMore}
 		<p in:whoo={{ duration: 200 }} > 
@@ -191,7 +187,7 @@
 						<li>Frontend Engineer</li>
 						<li>UI Designer</li>
 						<li>UI Consultant</li>
-						<li>Junior backend Developer</li>
+						<!-- <li>Junior backend Developer</li> -->
 					</ul>	
 				</div>
 		{/if}
@@ -202,7 +198,6 @@
 			Read less
 			{/if}
 		</button>
-		<!-- <div class="asset-border b-bottom"></div> -->
 	</li>
 {/snippet}
 
@@ -230,8 +225,8 @@
 			{@render About()}
 		{:else}
 			<li class="menu-routes">
-				<span> <button onclick={showAbout}>About</button></span>
-				<span> <button onclick={showContacts}>Contact</button></span>
+				<span> <button onclick={() => showAbout()}>About</button></span>
+				<span> <button onclick={() => showContacts()}>Contact</button></span>
 				<span> <a class="noLink" href="/">Masmesa studio</a></span>
 				<span> <a class="noLink" href="/">Workshops,events</a></span>
 			</li>
@@ -284,8 +279,12 @@
 		position: relative;
 		height:var(--menu-height);
 		padding-inline: var(--Padding-genral);
-		background-color: rgba(255, 255, 255, 0.342);
+		/* background-color: rgba(255, 255, 255, 0.342);
 		background-color: color-mix(in srgb, var(--color-bg, rgba(255, 255, 255, 0.781)), rgba(255, 255, 255, 0.342) 80%);
+		background-color: color-mix(in srgb, var(--tritary-color, rgba(255, 255, 255, 0.781)), rgba(255, 255, 255, 0.342) 20%);
+		background-color: color-mix(in srgb, var(--tritary-color, rgba(255, 255, 255, 0.781)),color-mix(in srgb, var(--color-bg), rgba(255, 255, 255, 0.595) 50% ) 90%); */
+		background-color: inherit;
+
 		backdrop-filter: blur(5px);
 		z-index: 1;
 		
@@ -311,8 +310,11 @@
 		inset: 0;
 		top: calc(0 - .1%);
 		box-shadow: rgba(27, 21, 14, 0.041) 0px 50px 50px -20px, rgba(0, 0, 0, 0.15) 0px 10px 60px -30px, rgba(10, 37, 64, 0.35) 0px -1.7px 3px 0px inset;
-		background-color: rgba(255, 255, 255, 0.801);
-		background-color: color-mix(in srgb, var(--color-bg, rgba(255, 255, 255, 0.781)), rgba(255, 255, 255, 0.384) 80%);
+		/* background-color: rgba(255, 255, 255, 0.801);
+		background-color: color-mix(in hsl, var(--color-bg)60%, transparent );
+		background-color: color-mix(in srgb, var(--color-bg, rgba(255, 255, 255, 0.511)) 60%, rgba(255, 255, 255, 0.199) 80%);
+		background-color: color-mix(in srgb, var(--tritary-color, rgba(255, 255, 255, 0.781)), rgba(255, 255, 255, 0.595) 60%); */
+		background-color: color-mix(in srgb, var(--tritary-color, rgba(255, 255, 255, 0.781)),color-mix(in srgb, var(--color-bg), rgba(255, 255, 255, 0.595) 50% ) 90%);
 
 		z-index: 1;
 		animation: block .65s linear 100ms alternate both;
@@ -374,7 +376,8 @@
 		overflow: visible;
 	}
 
-	/* make the flower face a component that has a custom event, when theis event is triggered then moved it to the menu   */
+	/* make the flower face a component that has a custom event,
+	 when theis event is triggered then moved it to the menu   */
 	li.header-logo .profile{
 		flex: 0 1 auto;
 		position: relative;
@@ -384,7 +387,7 @@
 		height: 100%;
 		min-height: 5rem;
 		aspect-ratio: 1;
-		view-transition-name: header-figure;
+		/* view-transition-name: header-figure; */
 		isolation: isolate;
 
 		& img{
@@ -417,7 +420,6 @@
 				transition: .8s cubic-bezier(0.175, 0.885, 0.32, 1.275) ;
 				animation: sway 30s linear 9s backwards ;
 			}
-
 		}
 	}
 
@@ -468,7 +470,7 @@
 		gap: 4cqw;
 	}
 
-	 li.head-contacts span a{
+	li.head-contacts span a{
 		display: flex;
 		flex-direction: column;
 		justify-content:center;
@@ -559,6 +561,7 @@
 
 	:global(.menu-container:has(.read-more)){
 		--menu-height: 100cqh;
+		background-color: color-mix(in hsl, var(--color-bg)60%, transparent );
 
 		.read-more{
 			/* position: absolute;
@@ -574,7 +577,7 @@
 			max-width: 55cqw;
 			min-height: 20cqh;
 			animation: none;
-			view-transition-name: header-figure;
+			/* view-transition-name: header-figure; */
 		}
 
 		.header-logo a .profile::after{
@@ -594,6 +597,7 @@
 
 	li.head-about{
 		/* position: relative; */
+		/* display: none; */
 		font-size: clamp(1.2rem, -0.3006rem + 2.8522cqw, var(--text-size-l));
 		padding: unset !important;
 		max-width: 700px;
@@ -603,15 +607,16 @@
 		scrollbar-color: color-mix(in srgb, #2c5d98, var(--primary-color,var(--black)) 40%) transparent;
 	}
 
+
 	li.head-about.read-more{
 		position: relative;
 		font-size: clamp(1.2rem, -0.3006rem + 2.8522cqw, 2rem);
 		max-width: 900px;
 		min-height: 100%;
 		overflow-y: auto;
+		/* outline: solid red; */
 		/* background-color: rgba(255, 255, 255, 0.801); */
-		background-color: color-mix(in hsl, var(--color-bg)60%, transparent );
-
+		/* background-color: color-mix(in hsl, var(--color-bg)60%, transparent ); */
 	}
 
 	/* li.head-about.read-more .asset-border{
@@ -645,15 +650,20 @@
 
 	li.head-about button.read-more-btn{
 		display: grid;
+		display: none;
 		place-content: center;
 		justify-self: end;
 		padding-inline: 10px;
 		margin-bottom: 1rem;
 
 		border: solid 1px currentColor;
+		border: none;
 		border-radius: 25px;
 		color:color-mix(in hsl,var(--color-text),var(--color-bg) 30%);
 		background-color: color-mix(in srgb,var(--color-bg,#ffffff) , rgba(255, 255, 255, 0.466) 10% );
+		color: color-mix(in srgb,var(--color-bg,#ffffff) , var(--primary-color ,rgba(255, 255, 255, 0.466)) 10% );
+		color: color-mix(in srgb,var(--color-text,#ffffff) , var(--primary-color ,rgba(255, 255, 255, 0.466)) 10% );
+		background-color: color-mix(in srgb, #2c5d98, var(--primary-color,var(--black)) 40%) ;
 
 		max-width: fit-content;
 		min-height: 3rem;
@@ -786,12 +796,13 @@
 		.menu-container{
 			--menu-height:70cqh;
 			min-height: var(--menu-height);
-			background-color: rgba(255, 255, 255, 0.37);
+			/* background-color: rgba(255, 255, 255, 0.37); */
 		}
 
 		.headerUl{
 			flex-direction: column;
 			height: 100%;
+			padding-inline:2% ;
 		}
 
 		.headerUl li.header-logo {
@@ -821,6 +832,16 @@
 			padding-top: 7cqh;
 			padding-inline: var(--Padding-genral);
 			gap: 2cqh;
+		}
+
+		:global(.menu-container:has(.head-contacts)){
+			.head-contacts{
+				max-height: fit-content;
+				margin: 0;
+				padding-top: 5%;
+				align-items: top;
+				justify-content: start;
+			}
 		}
 
 		:global(.menu-container:has(.head-about)){
@@ -865,7 +886,7 @@
 		.headerUl .profile.flower{
 			animation: sway 10s linear infinite .5s, flip 12s ease-out 3s both;
 			isolation: isolate;
-			view-transition-name: header-figure;
+			/* view-transition-name: header-figure; */
 		}
 
 		.headerUl:has(li:nth-of-type(n) a:hover) .flower{
@@ -892,7 +913,6 @@
 			width: 50%;
 			width: clamp(1rem , 0.5vw + 100cqw ,40%);
 			height: fit-content;
-			/* height: clamp(1rem , 0.2vw + 100cqw ,60%); */
 			max-height: 10dvh;
 		}
 	}

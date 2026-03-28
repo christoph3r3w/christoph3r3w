@@ -69,11 +69,11 @@ let {title,context,role,children, class: CLASS,color, style, ...props} : Props =
 
 <style>
 :root{
-	--wc-radius:clamp(0.5rem, 2vw, 1.8pc);
-	--wc-bg:rgb(108, 108, 255);
+	/* --wc-bg:rgb(108, 108, 255); */
 	/* --wc-bg:var(--D-base-bk); */
 	--wc-bg:var(--D-t-support);
 	--cc-bg:rgb(250, 255, 114);
+	--wc-radius:clamp(0.5rem, 2vw, 1.8pc);
 	--cc-radius:var(--wc-radius);
 }
 

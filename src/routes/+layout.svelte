@@ -14,8 +14,6 @@
 
 <Footer class='ftr'/>
 
-
-
 <style>
 
 	:root{
@@ -24,10 +22,7 @@
 		--Padding-genral:2cqh;
 		--primary-gray: #d5d5d5e7;
 		/* --primary-gray: rgb(235, 233, 219); */
-		/* --primary-gray: light-dark(rgb(230, 209, 50),rgb(39, 37, 33)); */
 		--primary-gray: var(--color-bg);
-		/* --primary-gray: light-dark(var(--color-bg),green); */
-		/* --color-bg--mute: light-dark(var(--tan-gray-bg),green); */
 
 	}
 

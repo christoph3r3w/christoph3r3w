@@ -93,19 +93,31 @@
 
 		dark = nextTheme.name === 'dark';
 		modeDark.set(dark);
-		console.log('Active theme:', nextTheme.name);
+		// console.log('Active theme:', nextTheme.name);
 	}
+
+	function handleAboutMore(){
+		aboutMoreOpen.set(!$aboutMoreOpen);
+	}
+
+	$effect(() => {
+		if(openMenu == false){
+			contactsOpen.set(false);
+			aboutOpen.set(false);
+			aboutMoreOpen.set(false);
+		}
+	})
+
 </script>
 
 {#snippet headerLogo()}
-			<li class="header-logo">
+		<li class="header-logo">
 			<a href="/" data-sveltekit-reload>
 				{#if openMenu === false}
+				{#key openMenu}
 					<figure class=" flower" >
 						<picture>
-						{#key openMenu}
 							<img src="./25acb22a-22a3-41d5-a0eb-c91529c4c6c8 (Custom).jpg" alt="icon of me" width="10" height="10" loading="lazy">
-						{/key}
 							<!-- {#if openAbout == true}
 								<img src="./photos/2533cde4-1781-47d6-a605-089cc54dfa8e2.JPG" alt="me">
 							{:else}
@@ -113,6 +125,7 @@
 							{/if} -->
 						</picture>
 					</figure>
+				{/key}
 				{/if}
 			</a>
 		</li>
@@ -152,6 +165,15 @@
 		{@render headerLogo()}
 		{@render buttonNav()}
 		<li class="head-extra">
+		{#if openAbout == true}
+			<button class="read-more-btn" onclick={handleAboutMore}>
+				{#if $aboutMoreOpen == false}
+				Read more
+				{:else}
+				Read less
+				{/if}
+			</button>
+		{/if}
 			<noscript>
 				<button title="warning" aria-label="warning" interestfor="noscript-notice" >
 					<svg xmlns="http://www.w3.org/2000/svg" width="20" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-triangle-alert-icon lucide-triangle-alert"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
@@ -242,7 +264,7 @@
 		height: 100%;
 		max-height: 50px;
 		margin-inline: 20px;
-		view-transition-name: header-figure;
+		/* view-transition-name: header-figure; */
 
 		@starting-style{
 			flex: 0 1 auto;
@@ -306,7 +328,7 @@
 	}
 
 	/* button styling */
-	li.D-menu button{
+	li:is(.D-menu,.head-extra) button{
 		--_btn-shadow-color: color-mix(in srgb, var(--color-bg,#ffffff), rgba(65, 60, 39, 0.181) 70%);
 		position: relative;
 		display: grid;
@@ -402,20 +424,35 @@
 		display: flex;
 		justify-content: end;
 		width: 60%;
+
+		button{
+			border-radius: 50%;
+			cursor: help;
+		}
 	}
 
 	li.head-extra button{
-		border-radius:50%;
-		transition: .5s ease-out;
-		transform: translate( 0,0rem);
-		cursor: help;
+		/* transition: .5s ease-out; */
+		transform: translate( 0,-5rem);
+		animation: readMoreAnim 0.5s ease-out both;
 		@starting-style{
-			translate: 0 -5rem;
+			transform: translate( 0,-5rem);
 		}
 
 		svg path{
 				fill: rgba(192, 158, 24, 0.9);	
 		}
+	}
+
+	li.head-extra button.read-more-btn{
+		color: color-mix(in srgb,var(--color-text,#ffffff) 70% , var(--primary-color ,var(--black)) 90% );
+		/* background-color: color-mix(in srgb, #2c5d98, var(--primary-color,var(--black)) 40%) ; */
+		/* background-color: color-mix(in srgb, var(--color-bg,#ffffff), var(--primary-color,var(--white)) 10%) ; */
+		/* background-color: color-mix(in srgb, var(--color-bg,#ffffff), var(--primary-color,var(--color-text)) 10%) ; */
+		/* background-color: color-mix(in srgb, var(--tritary-color, rgba(255, 255, 255, 0.781)),color-mix(in srgb, var(--color-bg), rgba(255, 255, 255, 0.595) 50% ) 90%); */
+		background-color: color-mix(in srgb, var(--primary-color, rgba(255, 255, 255, 0.781)),color-mix(in srgb, var(--color-bg), rgba(255, 255, 255, 0.595) 50% ) 90%);
+		border: solid 2px;
+		border-color:color-mix(in srgb, var(--primary-color, rgba(255, 255, 255, 0.781)),color-mix(in srgb, var(--color-bg), rgba(255, 255, 255, 0.595) 50% ) 90%) ;
 	}
 
 	li.head-extra #noscript-notice{
@@ -446,6 +483,13 @@
 	
 	@keyframes sway {
 		50%{rotate: 15deg;}
+	}
+
+	@keyframes readMoreAnim {
+		to{
+			opacity: 1;
+			transform: translate(0, 0);
+		}
 	}
 
 	@media (max-width: 1000px){
