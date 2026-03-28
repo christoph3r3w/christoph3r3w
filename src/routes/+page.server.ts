@@ -24,9 +24,9 @@ export async function load() {
 			{
 				title: 'tile shifting',
 				slug: 'Grid experiment',
-				published:{is:false,date:''},
+				published:{is:true,date:''},
 				description: 'An experimentation I did to test out grid animation that in the future was used as an animatable grid layout. The idea was to have a grid of tiles that shift their position when hovered, creating a dynamic and interactive visual effect. The shifting is achieved through CSS transitions, allowing the tiles to smoothly move to new positions within the grid when the user interacts with them.',
-				assets:{image: [''], icon: '',color:''},
+				assets:{image: [''], icon: '',color:'pink'},
 				contentBlock:[{}],
 				collaborators: {
 					owner:'Christopher',
@@ -36,7 +36,7 @@ export async function load() {
 				link: {src:'https://www.google.com',showType:''},
 				dateStart: '2023',
 				dateEnd: '2023',
-				status: {is:'an experiment',sticker:''}
+				status: {is:'experiment',sticker:''}
 			},
 			{
 				title: 'windows',
@@ -49,7 +49,7 @@ export async function load() {
 						'chris icon lowlowres.png',
 						'works-assets/chris landing page portfolio ideas-02.jpg'
 					],
-					icon: '/works-assets/windows/Windows_XP_Logo2.png',
+					icon: '/works-assets/windows/pngwing.com.png',
 					color:'skyblue',
 					// color:'#c0c0d7',
 				},
@@ -62,8 +62,19 @@ export async function load() {
 					},
 					{
 						images:[
+								'/works-assets/windows/Recording 2026-03-02 022626.gif',
 								'/works-assets/windows/chrome_hh5Wv4h7nO.gif',
-								'/works-assets/windows/Recording 2026-03-02 022626.gif'
+								
+								]
+					},
+					{
+						images:[
+								'/works-assets/windows/Screenshot 2024-02-11 174708.png',
+								'/works-assets/windows/Screenshot 2024-03-01 001326.png',
+								'/works-assets/windows/Screenshot 2024-02-11 174723.png',
+								'/works-assets/windows/Screenshot 2024-03-01 125947.png',
+								'/works-assets/windows/pngwing.com.png',
+
 								]
 					}
 
@@ -75,9 +86,9 @@ export async function load() {
 				},
 				tags:['Svelte','NodeJS','Responsive ui','UI/UX','popover'],
 				link: {src:'https://brilletjes-squad-page.vercel.app/',showType:''},
-				dateStart: '',
+				dateStart: '2023',
 				dateEnd: '',
-				status:{is:'',sticker:''}
+				status:{is:'experiment',sticker:''}
 			},	
 			{
 				title: 'monytri-3',
@@ -156,16 +167,19 @@ export async function load() {
 						'works-assets/8a92efbb8245058d9558606619b4ba46.jpg'
 					],
 					icon: '/works-assets/merlin/m-black2.png',
-					// color:'orange',
-					color:'#f7eab5'
+					color:'orange',
+					// color:'#f7eab5'
 				},
 				contentBlock:[
-				{
-					text:[`During a final school sprint, we've gotten a project to create a game using web fundamentals for Merlin Studio you.They wanted to test out alternative ways for user interfaces, and it took the opportunity to build an interactive game that runs fully on the server.`]
-				},
-				{
-					images:['/works-assets/merlin/chrome_fXsSOsVsKm.gif']
-				}
+					{
+						text:[`During a final school sprint, we've gotten a project to create a game using web fundamentals for Merlin Studio you.They wanted to test out alternative ways for user interfaces, and it took the opportunity to build an interactive game that runs fully on the server.`]
+					},
+					{
+						images:['/works-assets/merlin/chrome_fXsSOsVsKm.gif']
+					},
+					{
+						video:['/works-assets/merlin/Recording 2024-06-21 014548.mp4']
+					}
 				],
 				collaborators: {
 					studio:'Merlin studios',
@@ -208,77 +222,85 @@ export async function load() {
 						icon: '/pwa-64x64.png', 	
 						color:'#497951',	
 						// color:'#b2b857',	
-										},
-										contentBlock:[
-											{
-												h2:'intro',
-												text: [`
-														Monytri is a cross-platform MVP built to communicate a financial concept clearly — not just to users, but to investors and stakeholders. The goal wasn't to ship a full-scale product, but to translate an idea into something tangible, testable, and convincing.								
-														`],
-												
-											},
-											{
-												images:[
-														'/works-assets/monytri/Figma_Mjt7uPPekq.png',
-														]
-											},
-											{
-												images:[
-														'/works-assets/monytri/Arc_jwNAJXUzVf.gif',
-														'/works-assets/monytri/monytri 2233 2026-01-18 025839 (Custom).png',
-														'/works-assets/monytri/Vector 6.png',
-														'/works-assets/monytri/Screenshot 2026-01-23 224045.jpg'
-														]
-											},
-											{
-												images:[
-														'/works-assets/monytri/Figma_CjbI66L49B.png',
-														'/works-assets/monytri/Figma_CX2Bw1aPrY.png',
-														// '/works-assets/monytri/Figma_GnlpxVwyMj.png',
-														// '/works-assets/monytri/Figma_KXONJf5GRc.png',
-														'/works-assets/monytri/Figma_Mjt7uPPekq.png',
-														'/works-assets/monytri/Figma_nImAExFQh3.png',
-														'/works-assets/monytri/Figma_qpFdozyYcm.png',
-														'/works-assets/monytri/Figma_SYUhIpEj2X.png',
-														'/works-assets/monytri/Screenshot 2026-03-09 2349322.png',
-														'/works-assets/monytri/Arc_jwNAJXUzVf.gif',
-														'/works-assets/monytri/monytri 2233 2026-01-18 025839 (Custom).png',
-														'/works-assets/monytri/Vector 6.png',
-														'/works-assets/monytri/Screenshot 2026-01-23 224045.jpg'
-														]
-											},
-											{
-												text: [`
-												After iterating closely with a designer, I proposed building it as a Progressive Web App — a cost-effective approach that would work seamlessly across mobile and desktop without maintaining separate codebases. From there, I stepped into the role of technical owner, shaping both the frontend experience and the underlying architecture.
-												`],
-											
+				},
+				contentBlock:[
+					{
+						h2:'intro',
+						text: [`
+								The Monytri app is a cross-platform MVP built to communicate and illustarte a stock gifting concept clearly to investors and stakeholders. The goal was to translate <a>their</a> idea into something tangible and testable.								
+								`],
+										
+					},
+					{
+						images:[
+								'/works-assets/monytri/Figma_Mjt7uPPekq.png',
+								]
+					},
+					
+					{
+						text: [
+								`After some iterating with a designer, I proposed building it as a Progressive Web App, A cost-effective approach that would work seamlessly across mobile and desktop without maintaining separate codebases. 
+								`,
+								`From there, I stepped into the role of technical owner, shaping both the frontend experience and the underlying architecture.`
+								],
+				
 						// images:['/works-assets/monytri/Arc_jwNAJXUzVf.gif']
 					},
 					{
-						text: ['On the frontend, I developed all interfaces and interactions from the ground up. Every screen was built with responsiveness in mind, ensuring the application feels native across devices. Rather than static layouts, I focused on reusable components, clear hierarchy, and interaction patterns that communicate trust and clarity.',
-								'On the backend, I designed a minimal but scalable infrastructure using Appwrite. This included RESTful endpoints, authentication flows, role management, and a CMS structure to support'
+						text: ['On the frontend, I developed all interfaces and interactions from the ground up. Every screen was built with responsiveness in mind, ensuring the application feels native across devices. I focused on reusable components, clear hierarchy, and interaction patterns that communicate trust and clarity.'
+									,
 						],
 					},
 					{
 						images:[
-								// '/works-assets/monytri/Arc_jwNAJXUzVf.gif',
+								'/works-assets/monytri/Figma_CjbI66L49B.png',
+								'/works-assets/monytri/Figma_CX2Bw1aPrY.png',
+								// '/works-assets/monytri/Figma_GnlpxVwyMj.png',
+								// '/works-assets/monytri/Figma_KXONJf5GRc.png',
+								'/works-assets/monytri/Figma_Mjt7uPPekq.png',
+								'/works-assets/monytri/Figma_nImAExFQh3.png',
+								'/works-assets/monytri/Figma_qpFdozyYcm.png',
+								'/works-assets/monytri/Figma_SYUhIpEj2X.png',
+								'/works-assets/monytri/Screenshot 2026-03-09 2349322.png',
+								'/works-assets/monytri/Arc_jwNAJXUzVf.gif',
 								'/works-assets/monytri/monytri 2233 2026-01-18 025839 (Custom).png',
 								'/works-assets/monytri/Vector 6.png',
 								'/works-assets/monytri/Screenshot 2026-01-23 224045.jpg'
 								]
 					},
 					{
-						text: [`
-						Beyond core development, I implemented webhooks and service integrations to keep the system resilient. Routine user testing and version testing ensured that each iteration aligned with the intended user stories and evolving market expectations.
-						`],
-						// images:['/works-assets/monytri/Arc_jwNAJXUzVf.gif']
+						images:[
+								'/works-assets/monytri/Arc_jwNAJXUzVf.gif',
+								'/works-assets/monytri/monytri 2233 2026-01-18 025839 (Custom).png',
+								'/works-assets/monytri/Vector 6.png',
+								'/works-assets/monytri/Screenshot 2026-01-23 224045.jpg'
+								]
 					},
 					{
-						text: [`
-						Equally important was communication. I maintained documentation that translated technical decisions into language stakeholders could understand — keeping everyone aligned on architecture, scalability, and future potential.
-						`],
-						// images:['/works-assets/monytri/Arc_jwNAJXUzVf.gif']
+						text: [
+						'On the backend, I designed a minimal but scalable infrastructure using Appwrite. This included RESTful endpoints, authentication flows, role management, and a CMS structure to support'
+						,
+						`						
+						Beyond core development, I implemented webhooks and service integrations to keep the system resilient. Routine user testing and version testing ensured that each iteration aligned with the intended user stories and evolving market expectations.
+						`
+						],
 					},
+					// {
+					// 	text: [
+					// 	`<h2>bo mama</h2>`,
+					// 	`<ul>
+					// 	<li>
+					// 	1233
+					// 	</li>
+					// 	<li>
+					// 	3456
+					// 	</li>
+					// 	<li>
+					// 	6789
+					// 	</li>
+					// 	</ul> `
+					// 	],
+					// },
 				],
 				collaborators: {
 					employer:'David Dick, Chiara lung',
@@ -299,16 +321,43 @@ export async function load() {
 				assets:{
 					image: [''], 
 					icon: '/works-assets/redpers/Group 1.png',
+					// icon: '/works-assets/redpers/logo.svg',
 					// color:'#e85340',
 					color:'#971b1e',
 						},
 				contentBlock:[
 					{
-					text:[
-					'Red Bears is an online journalistic platform that provides a platform for young and upcoming journalists to write and to collaborate on stories happening within Holland. ',
-					'For one of our sprints during the study, we got the opertunity to do a redesign of the user interface for redpers. The task was to think of alternative ways of how the user interface can be and to find creative solutions to enrich how red bars present themselves. '
-					]
+						text:[
+						'Red Bears is an online journalistic platform that provides a platform for young and upcoming journalists to write and to collaborate on stories happening within Holland. ',
+						'For one of our sprints during the study, we got the opertunity to do a redesign of the user interface for redpers. The task was to think of alternative ways of how the user interface can be and to find creative solutions to enrich how red bars present themselves. '
+						],
+						// video:['/works-assets/redpers/Recording 2024-05-24 105739.mp4']
 					},
+					{
+						images:['/works-assets/redpers/ezgif-2-71870b8477.gif'],
+					},
+					{
+						images:[
+						'/works-assets/redpers/ezgif-2-71870b8477.gif',
+						'/works-assets/redpers/Screenshot 2024-04-24 142200.png',
+						'/works-assets/redpers/Screenshot 2024-04-19 001126.png',
+						'/works-assets/redpers/Screenshot 2024-03-18 1543318.png',
+						'/works-assets/redpers/redpers css.gif',
+						],
+					},
+					{
+						html:[
+						`<a href="https://github.com/christoph3r3w/user-experience-enhanced-website/wiki/Iteration-1">
+						https://github.com/christoph3r3w/user-experience-enhanced-website/wiki/Iteration-1
+						</a>`,
+						`<a href="https://github.com/christoph3r3w/pleasurable-ui/wiki/Team%E2%80%90Ontwerp">
+						https://github.com/christoph3r3w/pleasurable-ui/wiki/Team%E2%80%90Ontwerp
+						</a>`,
+					
+						]
+					},{
+						video:['/works-assets/redpers/Recording 2024-05-24 105739.mp4']
+					}
 				
 				],
 				collaborators: {
@@ -317,7 +366,7 @@ export async function load() {
 					developer:'Christopher Willems',
 				},
 				tags:['Svelte','NodeJS','Express','Directus','Figma','Mobile first PWA','Contentfull','UI/UX','Progressive enhancement'],
-				link: {src:'https://www.google.com',showType:''},
+				link: {src:'https://redpers.nl',showType:''},
 				dateStart: '2024',
 				dateEnd: '2024',
 				status: {is:'',sticker:''}
@@ -329,7 +378,7 @@ export async function load() {
 				description: '',
 				assets:{
 					image: [''], 
-					icon: '',
+					icon: '/portfolio icon/apple-touch-icon.png',
 					// color:'green',
 					color:'#b2b857',	
 
@@ -342,7 +391,7 @@ export async function load() {
 				link: {src:'https://www.google.com',showType:''},
 				dateStart: '2026',
 				dateEnd: '2026',
-				status: {is:'an experiment',sticker:''}
+				status: {is:'experiment',sticker:''}
 			},
 		]}
 	]
@@ -366,7 +415,7 @@ export async function load() {
 						updatedWork.status.is = 'planned';
 					}
 				}else{
-					updatedWork.status.is = 'an experiment';
+					updatedWork.status.is = 'experiment';
 					updatedWork.status.sticker = '🧪'; 
 				}
 				return updatedWork;
@@ -376,7 +425,8 @@ export async function load() {
 	let works = dataWorks[1].works
 	works = workStatus(works);
 	let delaySimulation = 9000
-	delaySimulation = 0
+	// delaySimulation = 0
+	// delaySimulation = 5000
 
 	// Timeout and Retry System
 	const TIMEOUT_MS = 10000; // 10 seconds

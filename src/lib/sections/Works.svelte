@@ -2,7 +2,6 @@
 	import { onMount } from 'svelte';
 	import {OrderedList,ContactForm,StickerBed} from '$lib';
 	import {fade, fly} from 'svelte/transition';
-	// import {y} from '../molecule/pagination.svelte'
 	import QRCode from 'qrcode';	
 	
 	interface Work {
@@ -15,25 +14,26 @@
 		dateStart: string;
 		dateEnd: string;
 		status: { is: string; sticker: string };
-		contentBlock?: Array<{ text?: string[]; images?: string[]; h2?: string }>;
+		contentBlock?: Array<{ text?: string[]; images?: string[]; h2?: string; html?: string ;video?: string}>;
 		collaborators?: Record<string, string>;
 		tags?: string[];
 	}
-	// throw new Error('test error');
 
+	// throw new Error('test error');
 	let {data} = $props();
 	let {dataWorks,projects,delay} = $derived(data)
+	let firstLoad:boolean = $state(true);
+	
+	let pagination = $derived(dataWorks[0].pagination)
 	let openDetailsIndex = $state<number | null>(null);
 	let m4 = $derived(openDetailsIndex)
-
-	let pagination = $derived(dataWorks[0].pagination)
 	let works = $derived(dataWorks[1]?.works.filter((w: Work) => w.published.is === true))	
-	
 	let fileLinks = $derived(works[m4 ?? 0]?.link.src);
-	let showQr: boolean = $state(false);
+
 	let qrTimeout: ReturnType<typeof setTimeout> | null = $state(null);
 	let qrURL = $state('')
-	let firstLoad:boolean = $state(true);
+	let showQr: boolean = $state(false);
+	let showDescription: boolean = $state(false);
 	
 	const toggleQR = () => {
 		showQr = !showQr;
@@ -76,6 +76,29 @@
         }
 
         detailsElement.open = false;
+   }
+
+	function moveDescription(e: MouseEvent) {
+        const parentDetails = (e.currentTarget as HTMLElement).closest('details');
+        
+        if (parentDetails) {
+            const descriptions = parentDetails.querySelectorAll('.work-description');
+            descriptions.forEach(desc => {
+                desc.classList.toggle('move-description');
+            });
+
+				// Only toggle the description in the current details element
+				const currentDetails = (e.currentTarget as HTMLElement).closest('details');
+				if (currentDetails) {
+					const currentDescription = currentDetails.querySelector('.work-description');
+					if (currentDescription && currentDescription.classList.contains('move-description')) {
+						showDescription = true;
+					} else {
+						showDescription = false;
+					}
+				}
+		  }
+		  return showDescription
    }
 
 	function clearLoadAnimation() {
@@ -128,7 +151,7 @@
 </script>
 
 {#snippet summaryContent(work: Work)}
-	<summary class="{work.status.is == 'an experiment'? 'experiment' : ''}" onmouseenter={() => {handleClose}}>
+	<summary class="{work.status.is == 'experiment'? 'experiment' : ''}" onmouseenter={() => {handleClose}}>
 		{#if work.assets.icon?.trim()}
 			<span class="work-icon-span">
 				<img src={work.assets.icon} alt={work.title} width="auto" height="30">
@@ -138,7 +161,7 @@
 		<span class="small-description">{work.slug}</span> 
 		<div class="side-description">
 			<span class="date-start">{work.dateEnd ||work.dateStart || ''}</span> 
-			<span class="status">{work.status.sticker || work.status.is}</span> 
+			<span class="status">{work.status.sticker ||`an ${work.status.is}`}</span> 
 		</div>
 		<div class="close-file-icon">
 			<svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -159,21 +182,40 @@
 				<p>{work.description}</p>
 			</article>
 			{/if}
-		{#each work.contentBlock as block}
-		<article class="content-block">
+		{#each work.contentBlock as block, i}
+		<article class="content-block block-{i}">
 			{#if block.text && block.text.length > 1}
 				<h2>{block?.h2}</h2>
 				{#each block.text as textLine}
-					<p>{textLine}</p>			
+					<p>{@html textLine}</p>			
 				{/each}
 			{:else if block.text}
-				<p>{block.text}</p>	
+				<p>{@html block.text}</p>	
 			{/if}
 			{#if block.images}
 				{#each block.images as img}
-					<img src={img} alt='' />
+				<button class="asset-img-ctnr" onclick={(e)=>{
+					const parentBlock = e.currentTarget.closest(`.block-${i}`);
+						parentBlock?.querySelectorAll(".asset-img-ctnr").forEach(btn => {
+							btn.classList.toggle("big-asset");
+						});				
+				}}>
+					<img  src={img} alt='' />
+				</button>
 				{/each}
 			{/if}
+			{#if block.video}
+				<video class="asset-video" autoplay muted loop poster="/works-assets/redpers/Group.png">
+					<source src={block.video} type="video/mp4">
+					Your browser does not support the video tag.
+				</video>
+			{/if}
+			{#if block.html}
+				{@html block.html}
+			{/if}
+				<!-- {#each block.images as img}
+					<input type="radio" name="toggle" id="toggle-{i}" style="position:absolute;">
+				{/each} -->
 		</article>
 		{/each}
 		{/if}
@@ -204,24 +246,42 @@
 	</article>
 
 	<article class="work-description note stamp {showQr? 'show-qr-qr' : ''}">
-		<div class="description-space"></div> 
+		<div class="description-space">
+			<button onclick={moveDescription}>
+			{#if showDescription }
+				<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path d="M3 18V16H21V18H3ZM3 13V11H21V13H3ZM3 8V6H21V8H3Z" fill="#1D1B20" style="fill:#1D1B20;fill:color(display-p3 0.1137 0.1059 0.1255);fill-opacity:1;"/>
+				</svg>
+			{:else}
+				<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path d="M3 18V16H16V18H3ZM19.6 17L14.6 12L19.6 7L21 8.4L17.4 12L21 15.6L19.6 17ZM3 13V11H13V13H3ZM3 8V6H16V8H3Z" fill="#1D1B20" style="fill:#1D1B20;fill:color(display-p3 0.1137 0.1059 0.1255);fill-opacity:1;"/>
+				</svg>
+			{/if}
+			</button>
+		</div> 
 		<div class="qr-container">
 			{#if work.link}
 				{#if showQr}
 				<p>Scan the QR code to visit the site</p>
 				{/if}
 				<img src='{qrURL}' alt="QR Code" class="qr-code" />
+				{#if work.link.showType != 'desktop'}
+					<button class='{{disabled:!work.link.src}} qr-btn' onclick={toggleQR}>
+						{showQr ? 'Hide QR' : 'QR'}
+					</button>
+				{/if}
 			{:else}
 				<p>No link available for this project</p>
 			{/if}
 		</div> 
 		<div class="description-links">
-			<a class={{disabled:!work.link.src}} href={work?.link.src} target="_blank" rel="noopener noreferrer">
-			{showQr ? 'Link' : 'Visit site'}
+			<a class='{{disabled:!work.link.src}} link-btn' href={work?.link.src} target="_blank" rel="noopener noreferrer">
+				{showQr ? 'Link →' : 'Visit site'}
 			</a>
 			{#if work.link.showType != 'desktop'}
-				<button class={{disabled:!work.link.src}} onclick={toggleQR}>
-					{showQr ? 'Hide qr code' : 'QR code'}
+				<button class='{{disabled:!work.link.src}} qr-btn' onclick={toggleQR}>
+					<!-- {showQr ? 'Hide QR' : 'QR'} -->
+					{showQr ? 'X' : 'QR'}
 				</button>
 			{/if}
 		</div>
@@ -283,17 +343,16 @@
 
 {#snippet noFiles()}
 	<details class="work-cover " style="--file-index:4">
-			<summary tabindex="-1" class="experiment">
-				<p class="cover-content ">it seems quite here</p>
+		<summary tabindex="-1" class="experiment">
+			<p class="cover-content ">it seems quite here</p>
 			<span class="cover-content sticker-label"><img src="/chris icon lowlowres.png" alt="chris icon"></span>
 		</summary>
 	</details>
 {/snippet}
 
 <div class="work-section pad" id="works" style="--file-index:0; --total-work:{works.length};">
-
 	<section class="Orderedlist-container" >
-		<OrderedList {pagination} />
+		<OrderedList {pagination} {works} />
 	</section>
 
 	<!-- onclick it will close all details -->
@@ -307,7 +366,7 @@
 		{@render loadingFiles()}
 	{:then dataWorks } 
 	{@const works = dataWorks[1]?.works.slice(0).filter((w: Work) => w.published.is === true) || []}
-	{#each works as work, i (work.title)}
+	{#each works as work, i}
 	{#key i}
 		<details 
 			class="file file-{i+1} {firstLoad? 'jump' : ''}" 
@@ -343,13 +402,16 @@
 		--total-work:0;
 		/* --file-index:1; */
 		--move:0;
-		--file-primary-color:#df3188;
+		/* --file-primary-color:#df3188; */
 		/* --file-primary-color:oklab(82.281% -0.10253 0.16777); */
 		--file-primary-color-amount:99%;
 		--hue-number:913;
 
 		--file-primary-hue:color-mix(in oklch longer hue, hsl(calc(213 * 700 / var(--file-index)), 55%, 38%) , var(--file-primary-color) 90%);
 		--file-primary-hue:var(---primary-color);
+		--file-cover-color:color-mix(in oklch , #f5e5b9 , rgba(255, 255, 255, 0.466) 30% );
+		--file-cover-color:rgba(255, 255, 255, 0.834);
+		--file-cover-color:var(--tritary-color);
 		
 		--transition-timing: cubic-bezier(0.62, -0.1, 0.36, 1);
 		--transition-timing: cubic-bezier(0.294, -0.291, 0.247, 1.056);
@@ -387,10 +449,8 @@
 		}
 	}
 
-	:global(.contentContain:has(#works)):has(details.file[open]:nth-of-type(n)){	--file-section-height: 90%;max-width: 2000px;}
-
 	.work-section:has(details[open]) .Orderedlist-container{
-		filter: opacity(.3);
+		filter: opacity(.3) blur(1px);
 		pointer-events: none;
 	}
 	
@@ -404,7 +464,8 @@
 	/* Hover effect for the summary */
 	/* .work-section, */
 	.work-section:where(:focus-within,:focus-visible,:hover,.Orderedlist-container:is(:hover,:focus-within)),
-	.work-section:where(:focus-within,:focus) {
+	.work-section:where(:focus-within,:focus) 
+	{
 		--move-all:17dvw;
 
 		.Orderedlist-container:is(:hover,:focus-within){
@@ -413,14 +474,15 @@
 
 		/* folder cover animation */
 		details.work-cover :is(summary,::details-summary),
-		details.work-cover summary{
+		details.work-cover summary
+		{
 			--transition-duration: 900ms;
 			--move:calc(40dvh + 1dvw * var(--total-work) ); 
 
 			top:var(--move) ;
 			left:calc(var(--move-all) - 2rem) ;
-			/* color: var(--color-text); */
-			opacity: .5;
+			color: var(--color-text);
+			filter: blur(3px) opacity(.45);
 			pointer-events: none;
 			transition: top var(--transition-duration) 100ms, left var(--transition-duration) 200ms;
 			z-index: 11;
@@ -430,18 +492,7 @@
 				inset-inline: 2%;
 			}
 
-			&::after{
-				pointer-events: none;
-			}
-
-		}
-
-		/* content on cover animation */
-		details.work-cover .cover-content:nth-child(1) ~ .sticker-label{
-			/* filter: blur(2px); */
-			filter: opacity(0);
-			/* transform: translate(-35rem, 11rem) rotate(5deg); */
-			transform: translate(-35rem) rotate(0deg);
+			&::after{pointer-events: none;}
 		}
 
 		/* files animation */
@@ -470,10 +521,19 @@
 			}
 		}
 
+			/* content on cover animation */
+		:global(details.work-cover .cover-content:nth-child(1) ~ .sticker-label){
+			filter: saturate(0.3);
+			scale: 1.5;
+			opacity: 0;
+			/* transform: translate(0, 3rem ) rotate(4deg); */
+			/* transform: translate(0) rotate(4deg); */
+			transition: all 500ms ease ;
+		}
+
 		details.file summary span > img{
 			opacity:1 ;
 		}
-
 	}
 
 	/* the details component */
@@ -483,6 +543,11 @@
 
 		&[open]{
 			display: none;
+		}
+
+		&::selection{
+			color: var(--color-text);
+			background-color: yellow;
 		}
 	}
 
@@ -496,13 +561,12 @@
 		list-style-position: outside;
 		z-index: calc(10 - var(--file-index));
 
-		background-size: 100% 100%;
 		background-attachment: fixed;
 		background-origin: border-box;
 		background-repeat: no-repeat;
+		background-size: 100% 100%;
 		background-position: 100% 100% ;	
 		background-blend-mode:color-dodge;
-	
 
 		/* Enhanced transitions using the new variables */
 		will-change: top, left,right, color, background-color, translate;
@@ -545,7 +609,7 @@
 			margin-right: 1%;
 			overflow: hidden;
 			color: color-mix(in oklch, var(--file-primary-hue), rgb(14, 14, 14) 45%);
-			color: color-mix(in oklch, var(--file-primary-hue), var(--color-text) 45%);
+			color: color-mix(in oklch, var(--file-primary-hue), var(--color-text-mute,var(--color-text)) 45%);
 			font-size: 2rem;
 			font-weight: 700;
 			text-shadow: 3px 2px 3px rgba(255,255,255,.2);
@@ -554,6 +618,9 @@
 		.file-title{
 			flex: 2 1 auto;
 			text-wrap: nowrap;
+			/* color: color-mix(in oklch, var(--file-primary-hue), rgb(14, 14, 14) 55%); */
+			/* color: color-mix(in oklch, var(--file-primary-hue), var(--color-text) 95%); */
+
 		}
 
 		.close-file-icon{
@@ -622,9 +689,11 @@
 	details:is(#folder-cover,.work-cover) summary{
 		font-size: clamp(2rem, 20vw, 10rem);
 		color: var(--color-text); ;
-		background-color: color-mix(in oklch longer hue, var(--hoverC,hsl(calc(213 - 90 / var(--file-index)), 55%, 38%)) , rgba(255, 255, 255, 0.466) 30% );
-		background-color: color-mix(in oklch longer hue, var(--hoverC,hsl(calc(213 - 90 / var(--file-index)), 55%, 38%)) , var(--primary-color,rgba(255, 255, 255, 0.466)) 30% );
+		/* background-color: color-mix(in oklch longer hue, var(--hoverC,hsl(calc(213 - 90 / var(--file-index)), 55%, 38%)) , var(--primary-color,rgba(255, 255, 255, 0.466)) 30% ); */
 		/* background-color: color-mix(in oklch longer hue, var(--hoverC,var(--primary-color,hsl(calc(213 - 90 / var(--file-index)), 55%, 38%))) , rgba(255, 255, 255, 0.466) 30% ); */
+		/* background-color: var(--file-cover-color, color-mix(in oklch longer hue, var(--hoverC,var(--primary-color,hsl(calc(213 - 90 / var(--file-index)), 55%, 38%))) , rgba(255, 255, 255, 0.466) 30% )); */
+		/* background-color: var(--file-cover-color); */
+		background-color: color-mix(in oklch , var(--hoverC,var(--primary-color,hsl(calc(213 - 90 / var(--file-index)), 55%, 38%))) 60% , rgba(255, 255, 255, 0.466) 33% );
 
 		background-image: 
 						url('/works-assets/material-assets/paper 1 black&white transparent cropped (Custom).png')	;
@@ -669,6 +738,8 @@
 		color: black;
 
 		background-color: color-mix(in oklch, var(--file-primary-hue) , rgba(255, 255, 255, 0.466) 10% );
+		background-color: color-mix(in lab, var(--file-primary-hue) , var(--color-bg) 30% );
+		/* background-color: var(--tan-light); */
 		border-radius: var(--wc-radius) var(--wc-radius) var(--wc-radius) 0;
 		backdrop-filter: blur(50px);
 
@@ -677,7 +748,6 @@
 			border-radius: var(--wc-radius) ;
 			inset-inline: 2%;
 		}
-
 	}
 
 		/* files background overlay */
@@ -692,7 +762,7 @@
 		inset: 1rem;
 		top: 4rem;
 		left: 3rem;
-		background-color: rgba(238, 130, 238, 0.462);
+		/* background-color: rgba(238, 130, 238, 0.462); */
 		background-color: color-mix(in oklch, var(--file-primary-hue) , hsla(204, 93%, 33%, 0.566) 60% );
 		border-radius: inherit;
 		z-index: 100;
@@ -716,7 +786,7 @@
 	}
 
 	details.file:nth-of-type(even) summary::before{
-		background-image: url('/works-assets/material-assets/27e9691d-e326-425b-a06f-f7efc3dc8a2f.jpg');
+		/* background-image: url('/works-assets/material-assets/27e9691d-e326-425b-a06f-f7efc3dc8a2f.jpg'); */
 
 		/* for dark backgrounds */
 		background-blend-mode:lighten;
@@ -725,7 +795,7 @@
 		filter:opacity(.5) contrast(150%) grayscale(.8);
 	}
 
-	/* files styling and animation*/
+	/* files styling and animation - hover or focus*/
 	details.file:nth-of-type(n):is(:hover,:focus) :is(summary,::details-summary){
 		--hover-file-top:-2rem;
 		--hover-file-right:6svw;
@@ -740,7 +810,7 @@
 		background-color: color-mix(in oklch, var(--file-primary-hue) , rgba(255, 255, 255, 0.466) 20% );
 
 		@container (width < 900px){
-			--move:calc(46vh + (-43vh  * (var(--file-index) / var(--total-work,1)))); 
+			--move:calc(46vh + (-43vh * (var(--file-index) / var(--total-work,1)))); 
 			--hover-file-right: 0vw;
 			--hover-file-top: -1rem;
 			transform-origin: bottom left ;
@@ -775,8 +845,9 @@
 			top: -2%;
 			left: 5%;
 			transform: rotate(0deg);
-			background-color: var(--file-primary-hue);
 			color: var(--file-primary-hue,black);
+			background-color: var(--file-primary-hue);
+			background-color: color-mix(in lab, var(--file-primary-hue) , var(--color-bg) 10% );
 			border-radius: var(--wc-radius) 30px var(--wc-radius) 0;
 			transition: 0.3s var(--transition-timing), border-radius 100ms,box-shadow none,filter none,background-color none;
 			
@@ -819,8 +890,8 @@
 				right: 0;
 				width: 2.5rem;
 				height: 2.7rem;
-				background-color: burlywood;
 				border-radius: 10px 40px 10px var(--wc-radius);
+				background-color: burlywood;
 				background-color: color-mix(in oklch,var(--file-primary-hue),rgba(25, 25, 31, 0.503) 10%);
 				filter:drop-shadow(rgba(50, 47, 30, 0.921) 0px 2px 1px);
 				z-index: -1;
@@ -834,10 +905,16 @@
 
 	}
 
-	/* where the content of each project is */
+	/* ////////////////////////////// */
+	/* The content of each project is */
+	/* ////////////////////////////// */
 	details[open]::details-content{
 		--file-primary-hue:color-mix(in oklch, var(--file-primary-hue2) 90% , var(--file-primary-color) 90% );
 		--file-primary-hue2:color-mix(in oklch, hsl(calc( var(--hue-number,213) / var(--file-index)),25%, 68%) , var(--file-primary-color) var(--file-primary-color-amount));
+		--file-line-color:color-mix(in oklch, var(--file-primary-hue,black) , rgb(0, 0, 0) 40% );
+		--file-line-color2:color-mix(in oklch, var(--file-primary-hue,var(--primary-gray-bg)) , rgb(206, 44, 44) 15% );
+
+		--bg-test:color-mix(in oklch, var(--file-primary-hue2) 90% , var(--file-primary-color) 90% );
 		--bg-test:color-mix(in oklch, var(--file-primary-hue2) 90% , var(--file-primary-color) 90% );
 
 		position: absolute;
@@ -851,38 +928,42 @@
 		overflow-x: hidden;
 		border-radius: 0 0 var(--wc-radius) var(--wc-radius);
 		/* background-color: var(--bg-test); */
-		/* background-color: color-mix(in oklch, var(--file-primary-hue) , rgba(255, 255, 255, 0.466) 50% ); */
+		
+		background-color: color-mix(in oklch, var(--file-primary-hue) , rgba(255, 255, 255, 0.466) 50% );
 		/* background-color: color-mix(in oklch, var(--file-primary-hue) , white 20% ); */
 		
-		background-color: color-mix(in oklch, var(--bg-test) 90% , rgba(255, 255, 255, 0.719) 70% );
+		background-color: color-mix(in lab, var(--file-primary-hue) , var(--color-bg) 30% );
+		/* background-color: color-mix(in oklch, var(--bg-test) 90% , rgba(255, 255, 255, 0.719) 70% ); */
 	}
+
+	details[open]:has(.experiment)::details-content{
+		background-color: transparent ;
+	}
+
 		
 	/* work description section */
 	details[open] .work-description{
-		--description-bg:#e5e5f7f4;
-		--_line-color:color-mix(in oklch, var(--file-primary-hue,black) , rgb(0, 0, 0) 40% );
-		--_line-color2:color-mix(in oklch, var(--file-primary-hue,var(--primary-gray-bg)) , rgb(206, 44, 44) 15% );
+		--_description-bg:#e5e5f7f4;
+		
 		grid-column: 5/ 18;
 		grid-row: 5/-3;
-		overflow-y: auto;
-		overflow-x: hidden;
 		display: flex;
-		/* test */
-		/* display: none; */
 		flex-direction: column;
 		width: 100%;
 		height: 80%;
 		padding: 1rem;
 		border-radius: 5px;
+		overflow-y: auto;
+		overflow-x: hidden;
 		z-index: 4;
 		resize:both;
-		background-color: var(--description-bg);
 		box-shadow: rgba(68, 63, 43, 0.064) 0px 22px 10px;
 
 		transition:	transform 200ms linear(0, 0.297 6.8%, 0.515 13.8%, 0.686 22%, 0.812 31.6%, 0.895 42.6%, 0.949 56.4%, 1);
 		animation: content-reveal 0.4s var(--transition-timing);
 		container-type: inline-size;
 
+		background-color: var(--_description-bg);
 		background-blend-mode:overlay;
 		background-position:center;
 		background-repeat: repeat,no-repeat, repeat;
@@ -893,10 +974,10 @@
 		/* background-size: 14px 14px , 100% 100%, 14px 14px; */
 		/* background-size: 14px 14px , 100% 100%, contain; */
 		/* background-image:  
-			linear-gradient(var(--_line-color) 0.7000000000000001px, transparent 0.7000000000000001px), 
+			linear-gradient(var(--file-line-color) 0.7000000000000001px, transparent 0.7000000000000001px), 
 			url('/works-assets/material-assets/Chris website16.png') ,
 			url('/works-assets/material-assets/Chris website10.png'),
-			linear-gradient(to right, var(--_line-color2) 0.7000000000000001px, #e5e5f700 0.7000000000000001px)
+			linear-gradient(to right, var(--file-line-color2) 0.7000000000000001px, #e5e5f700 0.7000000000000001px)
 			; */
 
 		@supports (corner-shape: superellipse(0)){
@@ -914,6 +995,7 @@
 	}
 
 	.work-description .description-space{
+		position:relative;
 		flex: 1 1 30%;
 		outline: solid 9px rgba(131, 131, 131, 0.045);
 		outline-style: double;
@@ -933,7 +1015,7 @@
 		display: flex;
 		flex-direction: column;
 		width: 100%;
-		border-bottom: 1px solid var(--_line-color) ;
+		border-bottom: 1px solid var(--file-line-color) ;
 		container-type: inline-size;
 		max-width: 400px;
 	}
@@ -964,7 +1046,7 @@
 			flex: 1 1 auto;
 			background-color: #000;
 			background: #b3b39c;
-			background: var(--_line-color);
+			background: var(--file-line-color);
 			margin-inline: 2%;
 			border-radius: 5pc;
 			height: 1%;
@@ -997,17 +1079,17 @@
 	}
 
 	.description-info .tools.stamp {
-		--r: 20px; 
+		--stamp-radius: 20px; 
 
 		height: fit-content;
-		padding: var(--r);
+		padding: var(--stamp-radius);
 		background: var(--primary-gray-bg);
 		
 		contain: paint layout;
-		border: 2px solid var(--_line-color2) ;
+		border: 2px solid var(--file-line-color2) ;
 		mask: 
 			radial-gradient(40% 40%,#0000 50%,#000 3%) round 
-			var(--r) var(--r)/calc(2*var(--r)) calc(2*var(--r)), 
+			var(--stamp-radius) var(--stamp-radius)/calc(2*var(--stamp-radius)) calc(2*var(--stamp-radius)), 
 			conic-gradient(#000 0 0) content-box
 	}
 
@@ -1019,7 +1101,7 @@
 		width: fit-content;
 		white-space: nowrap;
 		font-size: 0.88rem;
-		color: color-mix(in oklch, var(--_line-color)60%, black 45%);
+		color: color-mix(in oklch, var(--file-line-color)60%, black 45%);
 		padding: 0.3rem 0.8rem;
 		border-radius: 50px;
 		background-color: color-mix(in oklch, var(--file-primary-hue) , rgba(255, 255, 255, 0.566) 60% );
@@ -1030,6 +1112,8 @@
 			background-color: color-mix(in oklch, var(--file-primary-hue) , rgba(214, 60, 60, 0.566) 80% );
 			background-color: color-mix(in oklch longer hue, var(--file-primary-hue) , color-mix(in hsl longer hue, hsl(calc(var(--hue-number) / var(--file-index)), 45%, 28%) , var(--file-primary-color) 98%) 96% );
 			background-color: var(--file-primary-hue);
+			color: color-mix(in oklch, var(--file-primary-hue), var(--color-text) 70% );
+			border: solid 2px color-mix(in oklch, var(--file-primary-hue) , rgba(255, 255, 255, 0.566) 60% );
 		}
 	}
 
@@ -1038,17 +1122,30 @@
 		min-height: 89% ;
 	}
 
-	details[open] .work-description:where(.note){
+	details[open]:has(.work-description:not(.description-links):hover, .move-description) .work-description.note{
+		translate: .5rem;
+		overflow: visible;
+		contain: none;
+		transition: 200ms linear(0, 0.297 6.8%, 0.515 13.8%, 0.686 22%, 0.812 31.6%, 0.895 42.6%, 0.949 56.4%, 1);
+		.description-space {	
+			transform: translateX(4.5rem); 
+			outline: none;
+			/* transition:	transform 250ms linear(0, 0.297 6.8%, 0.515 13.8%, 0.686 22%, 0.812 31.6%, 0.895 42.6%, 0.949 56.4%, 1); */
+		}
+	}
+
+	details[open] .work-description.note{
 		--description-bg:#c9c9e3c9;
-		/* --description-bg:#c9c9e34e; */
 		grid-column: 5/ 18;
 		grid-row: 5/-5;
 		display: flex;
 		width: 100%;
-		height: 100% !important;
+		height: 100%;
 		border-radius: 5px;
 		overflow: visible;
 		z-index: 3;
+		transition:	translate 200ms linear(0, 0.297 6.8%, 0.515 13.8%, 0.686 22%, 0.812 31.6%, 0.895 42.6%, 0.949 56.4%, 1);
+
 		animation: content-reveal 0.4s var(--transition-timing);
 		container-type: inline-size;
 		/* testting */
@@ -1061,15 +1158,36 @@
 					corner-shape: superellipse(-2);
 				}
 			}
-
 	}	
+	
+	.work-description.note .description-space{
+		transition:	transform 250ms linear(0, 0.297 6.8%, 0.515 13.8%, 0.686 22%, 0.812 31.6%, 0.895 42.6%, 0.949 56.4%, 1);
+	}
+
+	.work-description.note .description-space button{
+		position: absolute;
+		top:0;
+		right:0;
+		display: grid;
+		place-items: center;
+		background-color: color-mix(in oklch, var(--file-primary-hue,var(--primary-gray-bg)) , rgba(255, 255, 255, 0.566) 80% );
+		color: currentColor;
+		width:2rem;
+		height: 2rem;
+		border:none;
+		border-radius: 50%;
+		cursor: pointer;
+		&:hover{
+			background-color: color-mix(in oklch, var(--file-primary-hue,var(--primary-gray-bg)) , rgba(255, 255, 255, 0.566) 60% );
+		}
+	}
 
 	.work-description:where(.note).stamp {
-		--r: 11px; 
+		--stamp-radius: 11px; 
 		position: relative;
 		height: fit-content;
 		z-index: 3;
-		padding: var(--r);
+		padding: var(--stamp-radius);
 		contain: paint layout;
 				
 		&::after{
@@ -1083,27 +1201,29 @@
 			padding: 1px;
 			mask: 
 				radial-gradient(50% 50%,#0000 46%,#000 27%) round 
-				var(--r) var(--r)/calc(2*var(--r)) calc(2*var(--r)), 
+				var(--stamp-radius) var(--stamp-radius)/calc(2*var(--stamp-radius)) calc(2*var(--stamp-radius)), 
 				conic-gradient(#000 0 0) content-box;
 			mask-composite: intersect;
 		}
 	}
 
-	details[open] .work-description:where(.note):has(.disabled).stamp::after {
+	.work-description:where(.note):has(.disabled).stamp::after {
 		pointer-events: none;
 		background-color: color-mix(in oklch, var(--file-primary-hue,black) , var(--description-bg) 80% );
 	}
 
 	.work-description.note .qr-container{
-		flex: 0 1 fit-content;
+ 		flex: 0 1 fit-content;
 		display: flex;
 		align-items: end;
 		justify-content: end;
-		height: 1rem;
+		height: auto;
 		gap: 1rem;
+		min-width: fit-content;
 		padding: 1%;
-		margin-bottom: 2px;
-		border-radius: 10px;
+		margin-bottom: calc(var(--stamp-radius) / 2);
+		border: solid 1px rgba(0, 0, 0, 0.179);
+		border-radius: var(--stamp-radius) var(--stamp-radius) 0 var(--stamp-radius);
 		background-color: color-mix(in oklch, var(--file-primary-hue,var(--primary-gray-bg)) , rgba(255, 255, 255, 0.566) 60% );
 
 		img{
@@ -1116,9 +1236,11 @@
 			font-size: 0.88rem;
 			padding: 2%;
 		}
+
+		.qr-btn{display:none;}
 	}
 
-	details[open] .work-description:where(.note) .description-links{
+	.work-description:where(.note) .description-links{
 		--_white-toggle:color-mix(in oklch, white 100%, var(--file-primary-hue,white) 100%);
 		flex: 0 1 10%;
 		display: flex;
@@ -1126,7 +1248,13 @@
 		align-items: end;
 		justify-content: end;
 
-		& > * {
+		@container (width < 200px){
+			flex-direction: column-reverse;
+			justify-content: start;
+		}
+
+		& :nth-child(n) {
+			/* outline:solid red; */
 			display: flex;
 			align-items: center;
 			justify-content: center;
@@ -1135,12 +1263,12 @@
 			text-wrap: nowrap;
 			color: color-mix(in oklch, var(--file-primary-hue) 10% , rgba(33, 15, 15, 0.932) 100% );
 			border: solid 1px rgba(0, 0, 0, 0.179);
-			height: 100%;
 			padding: 0.5rem 1rem;
 		}
 
-		a{
+		a.link-btn{
 			flex: 1 1 60%;
+			height: 100%;
 			border-radius: 10px ;
 			background-color: color-mix(in oklch longer hue, var(--file-primary-hue,var(--description-bg)) , color-mix(in hsl longer hue, hsl(calc(var(--hue-number) / var(--file-index)), 45%, 68%) , var(--file-primary-color) 98%) 63% );
 
@@ -1152,16 +1280,21 @@
 			}
 		}
 
-		button{
+		button.qr-btn{
 			flex: 0 1 fit-content;
-			border-radius: 50pc;
+			border-radius:  0 0 var(--stamp-radius) var(--stamp-radius);
 			background-color: color-mix(in oklch, var(--file-primary-hue,var(--description-bg)) , var(--_white-toggle,white) 60% );
-
+			background-color: color-mix(in oklch, var(--file-primary-hue,var(--primary-gray-bg)) , rgba(255, 255, 255, 0.566) 60% );
+			height:111.5%;
+			min-width:20%;
+			border-top: none;
 			/* color: color-mix(in oklch, var(--file-primary-hue) , rgb(255, 255, 255) 95% ); */
 			cursor: pointer;
+			z-index: 4;
 
 			@supports (corner-shape: superellipse(0)){
 				&{
+					border-radius:  0 0 10pc 10pc;
 					corner-shape: superellipse(2.5);
 				}
 			}
@@ -1173,30 +1306,33 @@
 		}
 	}
 
-
+	/* /////////// */
 	/* work assets */
 	/* large content scroll section */
+	/* /////////// */
+	
 	details[open] .work-assets {
 		--file-primary-hue:color-mix(in oklch, hsl(calc(213 * 680 / var(--file-index)), 0%, 80%) , var(--file-primary-color) 20%);
 		--file-primary-hue2:color-mix(in oklch , hsl(calc(213 * 701 / var(--file-index)), 55%, 98%) , var(--file-primary-color) 75%);
 		--file-assets-background: color-mix(in oklch, var(--file-primary-hue) , rgba(255, 255, 255, 0.073) 85% );
+		--s: 60px;  /* control the size of the grid */
+		--t: 2px;   /* the thickness */
+		--grid-line-color:color-mix(in oklch, var(--file-line-color2),var(--color-text) 20%	);
+		--grid-color:transparent 25%,color-mix(in oklch, var(--grid-line-color) 10%,transparent 70%) 0%;
 
 		grid-column: 1/ -3;
 		grid-row: 1/-1;
 		display: flex;
 		flex-direction: column;
-		/* this might have been breaking the application */
-		/* grid-template-columns: subgrid ;
-		grid-template-rows: subgrid; */
 		width: 100%;
 		height: 100%;
 		padding-block: 30cqh 7cqh;
 		overflow-y: auto;
 		overflow-x: hidden;
 		container-type: inline-size;
-		/* testing */
-		/* background-color: var(--file-assets-background); */
 		background: 
+			conic-gradient(from 90deg at var(--t) var(--t),var(--grid-color))
+				0 0/var(--s) var(--s),
 			linear-gradient( 	
 				90deg, 
 				transparent 25%,
@@ -1207,51 +1343,7 @@
 
 		scrollbar-color: color-mix(in oklch, var(--file-primary-color), transparent 55%) transparent;
 		scrollbar-color: color-mix(in oklch, var(--file-assets-background), white 15%) transparent;
-
 		scroll-timeline: --work-assets-timeline ;
-
-		& .asset-border{
-			position: absolute;
-			inset-block:0;
-			height: 100%;
-			backdrop-filter: blur(3px);
-			z-index: 2;
-			pointer-events: none;
-			contain: style paint;
-		}
-
-		& .asset-border.b-left {
-			left: 0;
-			border-radius: 0 var(--wc-radius) var(--wc-radius) 0;
-			mask: linear-gradient(
-				to right,
-				var(--file-primary-hue) -2% 50%,
-				transparent 70% 100%
-			);
-		}
-		
-		& .asset-border.b-right {
-			right: 0;
-			border-radius: var(--wc-radius) 0 0 var(--wc-radius);
-			border-color: yellow;
-			mask: linear-gradient(
-				to left,
-				var(--file-primary-hue) -2% 10%,
-				transparent 30% 100%
-			);
-		}
-
-		& .asset-border.b-bottom {
-			inset-block: unset;
-			bottom: 0;
-			height: 10%;
-			width: 100%;
-			mask: linear-gradient(
-				to top,
-				var(--file-primary-hue) 0% 10%,
-				transparent 30% 100%
-			);
-		}
 
 		& > *{
 			padding-left: 43cqw;
@@ -1259,16 +1351,90 @@
 			animation: content-reveal 0.4s var(--transition-timing);
 		}
 	}
-	
+
+	details[open] .asset-border{
+		position: absolute;
+		inset-block:0;
+		height: 100%;
+		backdrop-filter: blur(3px);
+		z-index: 2;
+		pointer-events: none;
+		contain: style paint;
+
+		&.b-left {
+			left: 0;
+			backdrop-filter: blur(6px);
+
+			border-radius: 0 var(--wc-radius) var(--wc-radius) 0;
+			border-color:peru;
+			mask: linear-gradient(
+				to right,
+				var(--file-primary-hue) -2% 50%,
+				transparent 70% 100%
+			);
+		}
+
+		&.b-right {
+			right: 0;
+			border-radius: var(--wc-radius) 0 0 var(--wc-radius);
+			border-color: yellow;
+			left:70dvw;
+			mask: linear-gradient(
+				to left,
+				var(--file-primary-hue) -2% 70%,
+				transparent 85% 100%
+			);
+		}
+
+		&.b-bottom {
+			inset-block: unset;
+			bottom: 0;
+			height: 10%;
+			width: 100%;
+			border-color:blue;
+			mask: linear-gradient(
+				to top,
+				var(--file-primary-hue) -2% 10%,
+				transparent 50% 100%
+			);
+		}
+	}
+
+	details[open]:has(.move-description) .b-left{
+		transition: inherit;
+		mask: linear-gradient(
+				to right,
+				var(--file-primary-hue) -2% 10%,
+				transparent 25% 100%
+		);
+	}
+
+	details[open]:has(.experiment) .work-assets{
+		--s: 110px;  /* control the size of the grid */
+		--n: 2;     /* control the granularity */
+		--t: 1.6px;   /* the thickness */
+		--g: 20px;
+		--grid-color:color-mix(in oklch, var(--grid-line-color) 20%,transparent 70%) 25%,transparent 25%;
+
+		background: 
+			conic-gradient(at var(--g) var(--t),var(--grid-color))
+				calc((var(--s)/var(--n) - var(--g) + var(--t))/2) 0/
+				calc(var(--s)/var(--n)) var(--s),
+				conic-gradient(from 180deg at var(--t) var(--g),var(--grid-color))
+				0 calc((var(--s)/var(--n) - var(--g) + var(--t))/2)/
+				var(--s) calc(var(--s)/var(--n));
+	}
+
+	/* ///////////////////// */
 	/* content block styling */
+	/* //////////////////// */
 	.work-assets .content-block:nth-of-type(n){
 		position: relative;
 		display: flex;
 		flex-direction: column;
-		/* grid-row: auto; */
 		margin-bottom : 2rem;
+		
 		contain: layout style paint;
-
 		container-type: inline-size;
 	
 		scroll-snap-align: center;
@@ -1288,13 +1454,15 @@
 
 	.work-assets .content-block p{
 		line-height: 1.5;
+		font-size: clamp(0.9rem, 4vw, var(--text-size-s));
 		font-size: clamp(0.9rem, 4vw, 1.1rem);
+		
 		max-width: 80cqw;
 		width: 80ch;
 		margin-bottom: 1rem;
 		transition: background-color 200ms ease 2s;
 
-		&::selection{
+		&:not(a)::selection{
 			color: rgb(0, 0, 0);
 			background-color: rgba(255, 255, 255, 0.459);
 		}
@@ -1302,12 +1470,11 @@
 
 	/* has no img */
 	.work-assets .content-block:has(p:nth-child(n)):has(p:nth-last-child(1)){
-		/* outline: solid 1px rgba(0, 0, 0, 0.1)	; */
-		p{color: rgb(0, 0, 0);	}
+		p{color:var(--color-text);	}
 	} 
 
 	/* block has text and image */
-	.work-assets .content-block:has(p ~ img){
+	.work-assets .content-block:has(p ~ .asset-img-ctnr){
 		width: 100%;
 		padding-block: 2%;
 		flex-direction: unset !important;
@@ -1323,28 +1490,47 @@
 			margin-right: 1%;
 		}
 
-		p ~ img{
+		p ~ .asset-img-ctnr{
 			flex-basis:90% ;
 			align-self: end;
 			justify-self: end;
 		}
 
-		p:nth-of-type(n) + p ~ img{
+		p:nth-of-type(n) + p ~ .asset-img-ctnr{
 			flex: 1 2 100%;
 		} 
 	}
 
-	.work-assets .content-block img{
+	/* block withimage container */
+	.work-assets .content-block .asset-img-ctnr{
 		position: relative;
+		display:flex;
+		place-content:center;
+		justify-content:center;
+		align-items:center;
 		min-width: 60cqw;
+		min-height: 40cqh;
 		border-radius: 1pc;
 		aspect-ratio: 16/9;
-		/* max-width: 500px; */
-		/* min-height: min(400px,auto); */
-		/* resize:both; */
+		background: transparent;
+		border:none;
+		transition:.4s linear(0, 1.098 20.8%, 0.99 54.8%, 1); 
 
-		object-fit: cover;
-		object-position: bottom;
+		overflow: hidden;
+		container-type:inline-size;
+
+		img{
+			object-fit: cover;
+			object-position: 100% 100%;		
+			width:100cqw;
+			/* max-width:fit-content; */
+			/* max-width:700px; */
+
+			height:auto;
+			/* outline:solid yellow; */
+		}
+
+	
 
 		@supports (corner-shape: superellipse(0)){
 			&{
@@ -1355,9 +1541,9 @@
 	}
 
 	/* block has only one image */
-	.work-assets .content-block:nth-of-type(n):has(img:first-child:nth-last-of-type(1)){
+	.content-block:nth-of-type(n):has(.asset-img-ctnr:first-child:nth-last-of-type(1)){
 
-		img{
+		.asset-img-ctnr{
 			max-width: 100%;
 			width: 90cqw;
 			height: auto;
@@ -1365,15 +1551,13 @@
 			outline-offset: -2px;
 			margin-bottom: 3rem;
 			margin-right: 24%;
-			/* outline: solid yellow; */
 		}
 	}
 
-
 	/* block has multiple images */
-	.work-assets .content-block:nth-of-type(n):has(img:nth-child(2n)):has(img:nth-last-child(1)){
+	.content-block:nth-of-type(n):has(.asset-img-ctnr:nth-child(2n)):has(.asset-img-ctnr:nth-last-child(1)){
 		position: relative;
-		min-height:20cqh ;
+		min-height:50cqh ;
 		min-height:fit-content;
 		flex-flow: row nowrap;
 	 	gap: 1rem;
@@ -1386,18 +1570,23 @@
 
     	/* scroll-snap-type: x proximity; */
 		/* overscroll-behavior-x: contain; */
+		/* outline: solid red; */
 
-		img{
+		.asset-img-ctnr{
 			scroll-snap-stop: always;
 			scroll-snap-align: start;
 			outline: #ffffff93 2px solid;
 			outline-offset: -2px;
 			min-height: 4rem;
 			width: 30cqw;
+			width: 20cqw;
+			cursor:nw-resize;
+			cursor:zoom-in;
+			
 			/* outline: springgreen solid; */
 		}
 
-		img:nth-last-of-type(1){
+		.asset-img-ctnr:nth-last-of-type(1){
 			/* scroll-snap-align: start; */
 			margin-right: 24%;
 		}
@@ -1471,8 +1660,14 @@
 
 	/* sticker styling */
 
-	details.work-cover .cover-content{
+	.cover-content{
 		transition: .4s var(--transition-timing) 1s, box-shadow 0s, filter .4s, background-color 0s;
+
+		&:not(.text){
+			display: grid;
+			place-content: center;
+			padding: 0;
+		}
 
 		&:nth-child(1){
 			position: absolute;
@@ -1484,77 +1679,35 @@
 			right: 5%;
 		}
 
-		&:nth-child(2){
-			--sticker-color: hsl(201, 100%, 59%);
-			--sticker-width: 30cqw;
-			--sticker-height: 20cqh;
-			--sticker-rotation: -0.6deg;
-			position: relative;
-			z-index: 0;
-			font-size: clamp(1rem, 15vw, 1.2rem);
-		}
-
-		&:nth-child(3){
-			--sticker-color: hsla(84, 75%, 50%, 0.897);
-			--sticker-width: 8rem;
-			--sticker-height: 8rem;
-			--sticker-rotation: -15deg;
-			display: grid;
-			place-content: center;
-			border-radius: 50%;
-			outline: 1.5px inset color-mix(in oklab, var(--sticker-color) 10% , rgba(0, 0, 0, 0.707) );
-			top: 30%;
-			left: 3%;
-
-			@supports (corner-shape: superellipse(0)){
-				&{
-					corner-shape: scoop;
-				}
-			}
-		}
-
-		&:nth-child(4){
-			--sticker-color: hsla(61, 75%, 50%, 0.945);
-			--sticker-width: 8rem;
-			--sticker-height: 8rem;
-			--sticker-rotation: 12deg;
-			display: grid;
-			font-size: 1.2rem;
-			place-content: center;
-			border-radius: 50% 50% 5px 5px;
-			outline: 8px solid color-mix(in oklab, var(--sticker-color) 80% , rgba(0, 0, 0, 0.579) );
-			outline-offset: -5px;
-			outline-style: double ;
-			top: 20%;
-			left: 23%;
-
-			@supports (corner-shape: superellipse(0)){
-				&{
-					corner-shape: superellipse(0.2);
-				}
-			}
-
-		}
 	}
 
-	/* ///// */
-	/* utils */
-	/* //// */
+	/* //////////////// */
+	/* utility classes */
+	/* /////////////// */
 
 	.sticker-label{
+		--sticker-shadow-color: color-mix(in oklab, var(--tritary-color) 30% , rgba(21, 20, 20, 0.501) 80% );
+		--sticker-shadow-color2: color-mix(in oklab, var(--tritary-color) 60% , rgba(21, 20, 20, 0.216) 50% );
+
+		position: absolute;
 		font-size: 1rem;
+		font-weight: lighter;
 		color: color-mix(in oklch, rgb(0, 0, 0), var(--sticker-color,transparent) 10%);
-		border-radius: 15px;
 		background-color: var(--sticker-color);
+		border-radius: 15px;
 		padding: 3ex 2ex;
 		margin: 10px 30px;
 		min-width: var(--sticker-width, 30cqw);
 		min-height: var(--sticker-height, 20cqh);
-		height: var(--sticker-height, 20cqh);
+		/* height: var(--sticker-height, 20cqh); */
+		top: var(--sticker-top, 5%);
 		transform: rotate(var(--sticker-rotation, 0deg));
-		position: absolute;
-		top: 5%;
-		font-weight: lighter;
+		transform-origin: top center;
+		filter: drop-shadow(.5px 12px 10px var(--sticker-shadow-color));
+		filter: drop-shadow(.5px .5px 1px black);
+		filter: drop-shadow(.5px .5px 1px var(--sticker-shadow-color)) drop-shadow(.5px 12px 10px var(--sticker-shadow-color2));
+
+
 
 			@supports (corner-shape: superellipse(0)){
 				&{
@@ -1603,6 +1756,49 @@
 				animation-name: none;
 			}
 	}
+
+	.big-asset.big-asset{
+		min-width:80cqh !important;
+		border-color:gold;
+
+		.asset-img-ctnr{
+			cursor:zoom-out !important;
+		}
+
+		:nth-child(1){
+			/* opacity:0.5; */
+			/* scale: 2; */
+		}
+	}
+
+	.move-description{
+		transform:translate( -25cqw, 0 ) rotate(-5deg) !important;
+	}
+
+	.grid-lines {
+		--s: 40px;  /* control the size of the grid */
+		--t: 2px;   /* the thickness */
+
+		background:  
+			conic-gradient(from 90deg at var(--t) var(--t),#0000 25%,#556270 0)
+			0 0/var(--s) var(--s) !important;
+	}
+
+	.grid-dotted-lines {
+		--s: 80px;  /* control the size of the grid */
+		--n: 4;     /* control the granularity */
+		--t: 2px;   /* the thickness */
+		--g: 10px;  /* the gap between dashes */
+		
+		--grid-color:#556270 25%,#0000 0;
+		background: 
+			conic-gradient(at var(--g) var(--t),var(--grid-color))
+			calc((var(--s)/var(--n) - var(--g) + var(--t))/2) 0/
+			calc(var(--s)/var(--n)) var(--s),
+			conic-gradient(from 180deg at var(--t) var(--g),var(--grid-color))
+			0 calc((var(--s)/var(--n) - var(--g) + var(--t))/2)/
+			var(--s) calc(var(--s)/var(--n));
+	}
 	
 	/* Animation for content reveal */
 	@keyframes content-reveal {
@@ -1615,6 +1811,7 @@
 			transform: translateY(0);
 		}
 	}
+
 	@keyframes jump {
 		0%,30% {
 			opacity: 0;
@@ -1628,6 +1825,7 @@
 			z-index: calc(10 - var(--file-index));
 		}
 	}
+
 	@keyframes loading {
 		0%,50%{
 			opacity: 1;
@@ -1637,7 +1835,7 @@
 		}
 	}
 
-	@media screen and (max-width: 1000px) {
+	@media screen and (max-width: 950px) {
 
 		:global(.mainContain:has(#works details[open])) {
 			padding-inline: 1dvw;
@@ -1678,6 +1876,7 @@
 
 		.work-section:has(details:nth-of-type(n)[open]) details.file > summary {
 			top: -2%;
+			left: 0%;
 
 			.small-description,.side-description {
 				display: none;
@@ -1722,36 +1921,61 @@
 		}
 
 		.work-description.note.stamp .description-space{
-			display: none;
+			/* display: none; */
+			flex-basis: 100%;
+			order: 0;
 		}
 
 		.work-description.note.stamp .description-links{
 			flex: 1 1 5rem;
 			align-self: end;
+			flex-direction: row-reverse;
 			gap: 2%;
 			min-height: fit-content;
 			height: 20%;
 			margin-top: 1cqh;
-			:is(a, button){flex: 0 1 100%;	}
+			:is(a, button){
+				flex: 0 1 100%;
+				max-width: 30cqw;
+			}
+			.qr-btn{
+				border-radius:var(--stamp-radius);
+				display: none;
+			}
+
+			.link-btn{
+				min-width: fit-content;
+			}
 		}
 
 		.work-description.note.stamp::after{
-			--r:5px;
-			padding: var(--r);
+			--stamp-radius:5px;
+			padding: var(--stamp-radius);
 		}
 
 		.work-description.note .qr-container {
 			flex: 1 2 20%;
-			width: 100%;
-			height: fit-content;
 			justify-self: end;
 			align-self: end;
 			justify-content: start;
-			align-items: center;
-			img{		
-				width: 12cqh;
-			}
+			align-items: bottom;
+			width: 10%;
+			max-width: 250px;
+			height: fit-content;
+			padding-right:0;
+			translate: 0% 12px;
+			img{width: 12cqh;	}
 			p{display: none;}
+		}
+
+		.work-description.note .qr-container .qr-btn{
+			display: flex;
+			font-size: 1.125rem;
+			text-wrap: nowrap;
+			border: none;
+			padding: 0.5rem 1rem;
+			color: color-mix(in oklch, var(--file-primary-hue) 10% , rgba(33, 15, 15, 0.932) 100% );
+			background-color: transparent;
 		}
 
 		/* main content */
