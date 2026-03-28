@@ -524,7 +524,7 @@
 			/* content on cover animation */
 		:global(details.work-cover .cover-content:nth-child(1) ~ .sticker-label){
 			filter: saturate(0.3);
-			scale: 1.5;
+			scale: 1.1;
 			opacity: 0;
 			/* transform: translate(0, 3rem ) rotate(4deg); */
 			/* transform: translate(0) rotate(4deg); */
@@ -939,7 +939,6 @@
 	details[open]:has(.experiment)::details-content{
 		background-color: transparent ;
 	}
-
 		
 	/* work description section */
 	details[open] .work-description{
@@ -1139,7 +1138,7 @@
 		grid-column: 5/ 18;
 		grid-row: 5/-5;
 		display: flex;
-		width: 100%;
+		/* width: 100%; */
 		height: 100%;
 		border-radius: 5px;
 		overflow: visible;
@@ -1707,8 +1706,6 @@
 		filter: drop-shadow(.5px .5px 1px black);
 		filter: drop-shadow(.5px .5px 1px var(--sticker-shadow-color)) drop-shadow(.5px 12px 10px var(--sticker-shadow-color2));
 
-
-
 			@supports (corner-shape: superellipse(0)){
 				&{
 					corner-shape: superellipse(3);
@@ -1885,7 +1882,9 @@
 
 		details[open]::details-content{
 			top: 6%;
+			right: 2%;
 			overflow: visible;
+			/* background-color: transparent ; */
 		}
 
 		details[open] .work-description{
@@ -1915,15 +1914,28 @@
 		}
 
 		details[open] .work-description.note{
+			grid-column:3/ -3;
 			grid-row: 3/span 10;
 			flex-flow: row;
 			gap: 2%;
 		}
+			details[open]:has(.work-description:not(.description-links):hover, .move-description) .work-description.note{
+				translate: 0;
+				overflow: visible;
+				contain: none;
+				transition: 200ms linear(0, 0.297 6.8%, 0.515 13.8%, 0.686 22%, 0.812 31.6%, 0.895 42.6%, 0.949 56.4%, 1);
+				.description-space {	
+					transform: none; 
+					outline: none;
+					/* transition:	transform 250ms linear(0, 0.297 6.8%, 0.515 13.8%, 0.686 22%, 0.812 31.6%, 0.895 42.6%, 0.949 56.4%, 1); */
+				}
+			}
+
 
 		.work-description.note.stamp .description-space{
 			/* display: none; */
 			flex-basis: 100%;
-			order: 0;
+			order: 3;
 		}
 
 		.work-description.note.stamp .description-links{

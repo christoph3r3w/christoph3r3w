@@ -649,21 +649,17 @@
 	}
 
 	li.head-about button.read-more-btn{
-		display: grid;
 		display: none;
 		place-content: center;
 		justify-self: end;
 		padding-inline: 10px;
 		margin-bottom: 1rem;
 
-		border: solid 1px currentColor;
-		border: none;
+		background-color: color-mix(in srgb, var(--primary-color, rgba(255, 255, 255, 0.781)),color-mix(in srgb, var(--color-bg), rgba(255, 255, 255, 0.595) 50% ) 90%);
+		color: color-mix(in srgb,var(--color-text,#ffffff) 70% , var(--primary-color ,var(--black)) 90% );
+		border: solid 2px;
+		border-color:color-mix(in srgb, var(--primary-color, rgba(255, 255, 255, 0.781)),color-mix(in srgb, var(--color-bg), rgba(255, 255, 255, 0.595) 50% ) 90%) ;
 		border-radius: 25px;
-		color:color-mix(in hsl,var(--color-text),var(--color-bg) 30%);
-		background-color: color-mix(in srgb,var(--color-bg,#ffffff) , rgba(255, 255, 255, 0.466) 10% );
-		color: color-mix(in srgb,var(--color-bg,#ffffff) , var(--primary-color ,rgba(255, 255, 255, 0.466)) 10% );
-		color: color-mix(in srgb,var(--color-text,#ffffff) , var(--primary-color ,rgba(255, 255, 255, 0.466)) 10% );
-		background-color: color-mix(in srgb, #2c5d98, var(--primary-color,var(--black)) 40%) ;
 
 		max-width: fit-content;
 		min-height: 3rem;
@@ -671,6 +667,12 @@
 		font-size: var(--text-size-s);
 		cursor: pointer;
 		z-index: 3;
+		transition: 500ms ease;
+
+		@starting-style{
+			opacity: 0;
+			scale: 0.8;
+		}
 	}
 
 	li.head-about >:nth-child(1){
@@ -791,7 +793,13 @@
 	}
 
 
-	@media (width < 600px) {
+	@media (width < 1000px) {
+		li.head-about button.read-more-btn{
+			display: grid;
+		}
+	}
+
+	@media (width < 650px) {
 
 		.menu-container{
 			--menu-height:70cqh;

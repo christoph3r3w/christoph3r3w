@@ -10,6 +10,7 @@ import {fade, fly} from 'svelte/transition';
 		type: 'image' | 'text' | 'shape';
 		alt?: string;
 		visible: boolean;
+		canMove: boolean;
 		offsetX?: number;
 		offsetY?: number;
 		rotation?: number;
@@ -18,18 +19,19 @@ import {fade, fly} from 'svelte/transition';
 	let {total} : Props = $props()
 
 	let stickerList: StickerListItem[] = [
-		{id: 'hero', visible: false, content: '/stickers/stickerrr-light.png', type: 'image', alt: 'tutorial sticker'},
-		{id: 'chris-icon', visible: false, content: '/chris icon lowlowres.png', type: 'shape', alt: 'chris icon'},
-		{id: 'hero2', visible: false, content: 'Here are some selected projects I have done', type: 'text'},
-		{id: 'triangle', visible: false, content: 'In progress', type: 'text', alt: 'in progress'},	
-		{id: 'pixel-c',visible: false, content: '/stickers/pixel-c-star.png', type: 'image', alt: 'pixel sticker'},	
-		{id: 'in-progress', visible: true, content: '/stickers/in progress-texture.png', type: 'image', alt: 'tutorial sticker'},
-		{id: 'flag', visible: true, content: '/stickers/korsou sticker.png', type: 'image', alt: 'tutorial sticker'},
-		{id: 'vue', visible: true, content: '/stickers/vue.png', type: 'image', alt: 'tutorial sticker'},
-		{id: 'JS', visible: true, content: '/stickers/js sticker (2).png', type: 'image', alt: 'tutorial sticker'},
-		{id: 'figma', visible: true, content: '/stickers/figma sticker.png', type: 'image', alt: 'tutorial sticker'},
-		{id: 'svelte', visible: true, content: '/stickers/svelte.png', type: 'image', alt: 'tutorial sticker'},
-		{id: 'c-name', visible: true, content: '/stickers/c-name free.png', type: 'image', alt: 'tutorial sticker'},
+		{id: 'hero', visible: false, content: '/stickers/stickerrr-light.png', type: 'image', alt: 'tutorial sticker', canMove: true},
+		{id: 'chris-icon', visible: false, content: '/chris icon lowlowres.png', type: 'shape', alt: 'chris icon', canMove: true},
+		{id: 'hero2', visible: false, content: 'Here are some selected projects I have done', type: 'text', canMove: true},
+		{id: 'triangle', visible: false, content: 'In progress', type: 'text', alt: 'in progress', canMove: true},	
+		{id: 'pixel-c',visible: false, content: '/stickers/pixel-c-star.png', type: 'image', alt: 'pixel sticker', canMove: true},	
+		{id: 'flag', visible: true, content: '/stickers/korsou sticker.png', type: 'image', alt: 'tutorial sticker', canMove: true},
+		{id: 'vue', visible: true, content: '/stickers/vue.png', type: 'image', alt: 'tutorial sticker', canMove: true},
+		{id: 'JS', visible: true, content: '/stickers/js sticker (2).png', type: 'image', alt: 'tutorial sticker', canMove: true},
+		{id: 'figma', visible: true, content: '/stickers/figma sticker.png', type: 'image', alt: 'tutorial sticker', canMove: true},
+		{id: 'svelte', visible: true, content: '/stickers/svelte.png', type: 'image', alt: 'tutorial sticker', canMove: true},
+		{id: 'c-name', visible: true, content: '/stickers/c-name free.png', type: 'image', alt: 'tutorial sticker', canMove: false},
+		{id: 'in-progress 2', visible: false, content: '/stickers/in progresss-texture-clear.png', type: 'image', alt: 'in progress', canMove: true},
+		{id: 'in-progress', visible: true, content: '/stickers/in progress-texture.png', type: 'image', alt: 'tutorial sticker', canMove: true},
 	];
 
 	let visibleStickers = $state(stickerList.filter(sticker => sticker.visible).slice(0,total?total: stickerList.length));
@@ -40,35 +42,39 @@ import {fade, fly} from 'svelte/transition';
 	function shuffleStickers(){
 		visibleStickers = visibleStickers.map(sticker => ({
 			...sticker,
-			offsetX: (Math.random() - 0.5) * 100,
-			offsetY: (Math.random() - 0.9) * 200,
-			rotation:  50
+			...(
+				sticker.canMove ? {
+					offsetX: (Math.random() - 0.6) * 120,
+					offsetY: (Math.random() - 0.5) * 70,
+					rotation:  50 * (Math.random() - 0.5)
+				} : {}
+			)
 		}));
 	}
 
 	onMount(() => {
-		const handleMouseMove = (event: MouseEvent) => {
-			moveX = event.clientX;
-			moveY = event.clientY;
-			visibleStickers = visibleStickers.map((sticker, index) => {
-				// add slight variation per sticker based on its index
-				const variationX = (index % 3) * 0.01 + 0.02;
-				const variationY = (index % 3) * 0.01 + 0.09;
-				return {
-					...sticker,
-					offsetX: (moveX - window.innerWidth / 2) * Math.random() * variationX,
-					offsetY: (moveY - window.innerHeight / 2) * Math.random() * variationY,
-					rotation: (Math.random() - 0.5) * 20
-				};
-			});
-		};
+		// const handleMouseMove = (event: MouseEvent) => {
+		// 	moveX = event.clientX;
+		// 	moveY = event.clientY;
+		// 	visibleStickers = visibleStickers.map((sticker, index) => {
+		// 		// add slight variation per sticker based on its index
+		// 		const variationX = (index % 3) * 0.01 + 0.02;
+		// 		const variationY = (index % 3) * 0.01 + 0.09;
+		// 		return {
+		// 			...sticker,
+		// 			offsetX: (moveX - window.innerWidth / 2) * Math.random() * variationX,
+		// 			offsetY: (moveY - window.innerHeight / 2) * Math.random() * variationY,
+		// 			rotation: (Math.random() - 0.5) * 20
+		// 		};
+		// 	});
+		// };
 
 		shuffleStickers();
 
-		window.addEventListener('mousemove', handleMouseMove);
+		// window.addEventListener('mousemove', handleMouseMove);
 
 		return () => {
-			window.removeEventListener('mousemove', handleMouseMove);
+			// window.removeEventListener('mousemove', handleMouseMove);
 		};
 	});
 
@@ -76,13 +82,13 @@ import {fade, fly} from 'svelte/transition';
 
 {#each  visibleStickers as sticker}
 	{#if sticker.type === 'text'}
-		<p class="cover-content sticker-label {sticker.id} text" style=" transform: translate({sticker.offsetX || 0}px, {sticker.offsetY || 0}px);--sticker-rotation: {sticker.rotation || 0}deg;">{sticker.content}</p>
+		<p class="cover-content sticker-label {sticker.id} text" style=" transform: translate({sticker.offsetX || 0}px, {sticker.offsetY || 0}px) rotate({sticker.rotation || 0}deg);">{sticker.content}</p>
 	{:else if sticker.type === 'shape'}
-		<span class="cover-content sticker-label {sticker.id}" style="transform: translate({sticker.offsetX || 0}px, {sticker.offsetY || 0}px); --sticker-rotation: {sticker.rotation || 0}deg;">
+		<span class="cover-content sticker-label {sticker.id}" style="transform: translate({sticker.offsetX || 0}px, {sticker.offsetY || 0}px) rotate({sticker.rotation || 0}deg);">
 			<img src={sticker.content} alt={sticker.alt}>
 		</span>
 	{:else}
-		<img src={sticker.content} alt={sticker.alt} class="cover-content sticker-label {sticker.id}" style="transform: translate({sticker.offsetX || 0}px, {sticker.offsetY || 0}px); --sticker-rotation: {sticker.rotation || 0}deg;">
+		<img src={sticker.content} alt={sticker.alt} class="cover-content sticker-label {sticker.id}" style="transform: translate({sticker.offsetX || 0}px, {sticker.offsetY || 0}px) rotate({sticker.rotation || 0}deg);">
 	{/if}
 {/each}
 	<!-- {#key total}
@@ -181,7 +187,7 @@ import {fade, fly} from 'svelte/transition';
 			--sticker-width: auto;
 			--sticker-height: 6rem;
 			--sticker-rotation: 3deg;
-			--sticker-top:-4%;
+			--sticker-top:0%;
 			right: 5%;
 			/* filter: drop-shadow(.5px .5px 1px black); */
 		}

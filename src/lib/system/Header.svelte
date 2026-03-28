@@ -445,12 +445,8 @@
 	}
 
 	li.head-extra button.read-more-btn{
-		color: color-mix(in srgb,var(--color-text,#ffffff) 70% , var(--primary-color ,var(--black)) 90% );
-		/* background-color: color-mix(in srgb, #2c5d98, var(--primary-color,var(--black)) 40%) ; */
-		/* background-color: color-mix(in srgb, var(--color-bg,#ffffff), var(--primary-color,var(--white)) 10%) ; */
-		/* background-color: color-mix(in srgb, var(--color-bg,#ffffff), var(--primary-color,var(--color-text)) 10%) ; */
-		/* background-color: color-mix(in srgb, var(--tritary-color, rgba(255, 255, 255, 0.781)),color-mix(in srgb, var(--color-bg), rgba(255, 255, 255, 0.595) 50% ) 90%); */
 		background-color: color-mix(in srgb, var(--primary-color, rgba(255, 255, 255, 0.781)),color-mix(in srgb, var(--color-bg), rgba(255, 255, 255, 0.595) 50% ) 90%);
+		color: color-mix(in srgb,var(--color-text,#ffffff) 70% , var(--primary-color ,var(--black)) 90% );
 		border: solid 2px;
 		border-color:color-mix(in srgb, var(--primary-color, rgba(255, 255, 255, 0.781)),color-mix(in srgb, var(--color-bg), rgba(255, 255, 255, 0.595) 50% ) 90%) ;
 	}
@@ -500,7 +496,7 @@
 			}
 		}
 
-		li button:is(.contact-btn,.about-btn){
+		li button:is(.contact-btn,.about-btn,.read-more-btn){
 			display: none;
 		}
 	}
