@@ -1,22 +1,30 @@
 <script>
 // import  {next} from '../../routes/work.remote'
 	// import {y} from '../molecule/pagination.svelte'
-	let {pagination} = $props()
+	let {pagination,works} = $props()
 	
-	// let {folders} = data
+	let tFolders = $derived(
+		works.map(({title, published,dateStart,dateEnd}) => ({
+			year: dateStart.split('-')[0] || dateEnd.split('-')[0] || 'on going',
+			title,
+			published: published
+		}))
+	) 
 
-	//  const handleReset = async () => {
-	// 	// next()
-	// 	console.log('reset');
-	// 	y.value = 'reset y';
-	// 	const x = await y.f();
-	// 	console.log('me',y.value,y.f());
-		
-		
-	// }
+	const grouped = Object.values(
+		tFolders.reduce((acc, {title, published, year }) => {
 
+			if (!acc[year]) {
+				acc[year] = { year, files: [], published };
+			}
 
-	let mfolders =  $state([
+			acc[year].files.push(title);
+
+			return acc;
+		}, {})
+	);
+
+	let mfolders = $state(grouped.reverse() ||[
 		{
 			year: 2026,
 			files: [	'zuza']
@@ -48,17 +56,36 @@
 			]
 		},
 	]);
+	const minYear = mfolders.reduce((min, item) => item.year < min.year && item.year !== '' ? item : min);
+	let maxPagination = $state(()=>{
+		let max = 7;
+		return typeof pagination === 'number' && pagination > max ? pagination : max
+	});
+	const paginationToggle = $derived(()=>{
+		if(tFolders.length <= maxPagination()){
+			return ''
+		} 
+		if(pagination != 'none'){
+			return ''
+		}
+		return 'no-pagination'
+	});
 
-	let folderLength = $derived(mfolders.length);
-
+	const handleReset = async () => {
+		// next()
+		// y.value = 'reset y';
+		// const x = await y.f();
+		// console.log('me',y.value,y.f());	
+		return('reset');
+	}
 
 </script>
 	<!-- needs to send a post to the server na dupdtae the works component -->
 	<!-- or -->
 	<!-- trigger specific showing with svlte and css  -->
-	<div id="ol" class={pagination != 'none'? '' : 'no-pagination'} >
-		<button type="reset" onclick={() => {handleReset()}} tabindex={pagination != 'none'? undefined : -1}>Recent</button>
 
+	{#snippet mList()}
+		<button type="reset" onclick={() => {handleReset()}} tabindex={pagination != 'none'? undefined : -1}>Recent</button>
 		{#each mfolders as folder}
 			<ol class="main-list">
 				<li>
@@ -73,12 +100,42 @@
 								<path d="M0.5 0.5L4.5 0.5" stroke="black" stroke-linecap="round"/>
 							</svg>
 						</li>
-					{/each }
+					{/each}
 				</ol>
 			
 			</ol> 	
 		{/each}
 		<button onclick={()=> {console.log('all has been clicked')}} tabindex={pagination != 'none'? undefined : -1}>All</button>
+	{/snippet}
+
+	{#snippet sList()}
+		<p>Now</p>
+		<ol class="main-list">
+			{#each mfolders as folder}
+				{#each folder.files as _}				
+					<li>
+						<svg width="5" height="1" viewBox="0 0 5 1" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path d="M0.5 0.5L4.5 0.5" stroke="black" stroke-linecap="round"/>
+						</svg>
+					</li>
+					<!-- <hr> -->
+					<!-- <br> -->
+				{/each}
+					<!-- <br> -->
+			{/each}
+				<br>
+			<li>
+				<p>{minYear.year}</p>
+			</li>
+		</ol> 			
+	{/snippet}
+
+	<div id="ol" class={paginationToggle()} >
+		{#if tFolders.length > maxPagination()}
+			{@render mList()}
+		{:else}
+			{@render sList()}
+		{/if}
 	</div>
 
 	<style>
@@ -102,7 +159,7 @@
 			display: flex;
 			flex-direction: column;
 			gap: 1dvh;
-			z-index: 4;
+			z-index: auto;
 			text-shadow: 0px 3px 3px rgba(255,255,255,0.5);
 			padding-left: 1rem;
 		}
@@ -120,16 +177,6 @@
 			border-radius: 50%;
 			corner-shape:superellipse(3);
 			cursor: pointer;
-
-			/* &::after{
-				content: '';
-				position: absolute;
-				bottom: 0;
-				height: 1px;
-				width: 100%;
-				background-color:rgb(0, 58, 128);
-				right: 30%;
-			} */
 		}
 
 		ol.main-list{
@@ -137,22 +184,23 @@
 			margin-block: 1svh;
 			max-width: fit-content;
 			
-			&:nth-of-type(1)::after{
+			&:nth-last-of-type(1){
+				min-width:1.8rem ;
+			}
+			&:nth-of-type(n)::after{
 				content: '';
 				position: absolute;
-				top: calc(-1 * var(--line-gap));
-				inset-inline: -30%;
-				width: 160%;
+				inset-inline: -50%;
 				height: 1px;
+				width: 180%;
+			}
+			&:nth-of-type(1)::after{
+				top: calc(-1 * var(--line-gap));
 				background-color: var(--line-color);
 			}
 			&:nth-last-of-type(1)::after{
-				content: '';
-				position: absolute;
 				bottom: calc(-1 * var(--line-gap));
-				inset-inline: -30%;
-				width: 160%;
-				height: 1px;
+				/* width: 180%; */
 				background-color: var(--line-color);
 			}
 		}
@@ -166,10 +214,16 @@
 			display: flex;
 			flex-direction: column;
 			align-items: end;
+
+			li {
+				display: flex;
+				height: 10px;
+				padding-top:5px ;
+			}
 		}
 
 		.main-list ol li svg path{
-				stroke: var(--line-color);		
+			stroke: var(--line-color);		
 		}
 	
 		#ol :is(button,a,svg):nth-last-of-type(n):hover{
@@ -178,8 +232,12 @@
 		}
 
 		.no-pagination{
-			filter: opacity(.4);
+			filter: opacity(.3);
 			pointer-events: none;
+
+			&::selection{
+				background: transparent;
+			}
 		}
 	
 	</style>
