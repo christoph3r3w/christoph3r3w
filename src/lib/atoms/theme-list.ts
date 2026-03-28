@@ -7,15 +7,16 @@ export const themeList: Theme[] = [
 {
 		name: 'reset',
 		properties: {
-			'--color-bg': 'var(--tan-gray-bg)',
+			'--color-bg': '',
 			'--color-bg-muted': 'var(--gray-bg)',
 			'--color-text': 'var(--black)',
-			'--primary-color': 'inherit',
-			'--secondary-color': 'inherit',
-			'--accent-color': 'inherit',
-			'--color-border': 'inherit',
+			'--primary-color': '',
+			'--secondary-color': '',
+			'--tritary-color': '',
+			'--accent-color': '',
+			'--color-border': '',
 			// '--color-border-hover': '#fff',
-			'--color-heading': 'inherit',
+			'--color-heading': '',
 			
 		}
 	},
@@ -36,12 +37,17 @@ export const themeList: Theme[] = [
 	{
 		name: 'dark',
 		properties: {
-			'--color-bg': '#1a0a00',
+			// '--color-bg': '#1a0a00',
+			'--color-bg': 'var(--dark-subtle)',
 			'--color-bg-muted': 'rgb(39, 37, 33)',
 			'--color-text': '#ffffff',
-			'--primary-color': '#ffe91e',
+			'--color-text-mute': '#000000',
+			'--primary-color': '#ffe91e9e',
 			'--secondary-color': '#6c757d',
-			'--accent-color': '#17a2b8',
+			// '--tritary-color': '#A8A390',
+			'--tritary-color': 'var(--tan-light)',
+			// '--accent-color': '#17a2b8',
+			'--accent-color': '#e7c75e',
 			'--color-border': '#495057',
 			'--color-border-hover': '#fff',
 			'--color-heading': '#dee2e6',
@@ -73,6 +79,21 @@ export const themeList: Theme[] = [
 			'--color-border': '#023e8a',
 			'--color-border-hover': '#90e0ef',
 			'--color-heading': '#caf0f8',
+		}
+	},
+	{
+		name: 'forest',
+		properties: {
+			'--color-bg': '#1E2B10',
+			'--color-bg-muted': '#1e2b10cc',
+			'--color-text': '#f5f5f5',
+			'--primary-color': '#FFF000',
+			'--secondary-color': '#544B47',
+			'--tritary-color': '#FBFAF0',
+			'--accent-color': '#FFF000',
+			'--color-border': '#023e8a',
+			'--color-border-hover': '#90e0ef',
+			'--color-heading': '#1e2b10cc',
 		}
 	},
 	

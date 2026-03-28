@@ -51,6 +51,12 @@
   a:hover{
     color: red;
     color: hsl(46, 79%, 57%);
+    color: #ffe91e;
+  }
+
+  a:selection{
+    background-color: #ffe91e;
+    color: var(--color-text);
   }
 
   .letter-style {
@@ -75,15 +81,22 @@
     --gray-bg2:#d5d5d5e7;
     --gray-bg:#d5d5d5e7;
     --tan-gray-bg:rgb(235, 233, 219);
+    --tan-soft:#F5E5B9;
+    --tan-light:#A8A390;
+    /* --tan-light:#ccc9be; */
+    --dark-subtle:#262624;
 
 
-    --color-bg: var(--tan-gray-bg);
+    --color-bg: var(--gray-bg);
+    --color-bg: var(--tan-light);
+    --color-bg: #cacaca;
     --color-bg-muted: var(--gray-bg);
 		--color-text: var(--inherit,var(--black));
-		--primary-color: #e3f0ff7a;
+		/* --primary-color: #e3f0ffd7; */
 		/* --primary-color: none; */
 		--secondary-color: #6c757d;
-		--accent-color: #17a2b8;
+		--tritary-color: var(--tan-soft);
+		/* --accent-color: #17a2b8; */
 
 
     --color-border: var(--vt-c-divider-light-2);
@@ -104,7 +117,7 @@
   /* @media (prefers-color-scheme: dark) {
     :root {
       --color-bg: rgb(39, 37, 33);
-      --color-bg-muted: #121212;
+      --color-bg: #121212;
       --color-bg-muted: rgb(39, 37, 33);
       --color-text: #ffffff;
       --primary-color: #ffe91e;
@@ -113,9 +126,7 @@
       --color-border: #495057;
       --color-border-hover: #fff;
       --color-heading: #dee2e6;
-    }
-
-    
+    }    
   } */
 
 
