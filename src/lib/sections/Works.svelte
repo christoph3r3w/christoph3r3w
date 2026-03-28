@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import {OrderedList,ContactForm} from '$lib';
+	import {OrderedList,ContactForm,StickerBed} from '$lib';
 	import {fade, fly} from 'svelte/transition';
 	// import {y} from '../molecule/pagination.svelte'
 	import QRCode from 'qrcode';	
@@ -299,10 +299,8 @@
 	<!-- onclick it will close all details -->
 	<details class="work-cover" id="folder-cover">
 		<summary tabindex="-1">
-			<p class="cover-content">Portfolio</p>
-			<p class="cover-content sticker-label">Here are some selected projects I have done</p>
-			<!-- <span class="cover-content sticker-label"><img src="/chris icon lowlowres.png" alt="chris icon"></span> -->
-			<!-- <p class="cover-content sticker-label">In progress</p> -->
+			<p class="cover-content">Portfolio</p>	
+			<StickerBed />
 		</summary>
 	</details>
 	{#await projects}
