@@ -126,7 +126,7 @@ onDestroy(() => {
 
   <!-- the section -->
   <section class="mainContain scroller" bind:this={scroller} >
-    <Window role="child" class="contentContain" color="" style="--hoverC:var(--tritary-color)" bind:this={sections[0]}>
+    <Window role="child" class="contentContain" color="var(--tritary-color-muted)" style="--hoverC:var(--tritary-color)" bind:this={sections[0]}>
       <Intro2 {data}/>
     </Window>
     <!-- <Window role="child" class="contentContain" color="#e7c75e" style="--hoverC:white" bind:this={sections[0]}>

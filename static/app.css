@@ -96,6 +96,7 @@
 		/* --primary-color: none; */
 		--secondary-color: #6c757d;
 		--tritary-color: var(--tan-soft);
+    --tritary-color-muted:color-mix(in oklch, var(--tritary-color) 95%,var(--color-text));
 		/* --accent-color: #17a2b8; */
 
 

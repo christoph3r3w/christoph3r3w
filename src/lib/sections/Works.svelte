@@ -469,7 +469,7 @@
 		--move-all:17dvw;
 
 		.Orderedlist-container:is(:hover,:focus-within){
-			--move:calc(46vh + (-43vh  * var(--file-index) / var(--total-work,1) ) ); 
+			--move:calc(46vh + (-43vh * var(--file-index) / var(--total-work,1))); 
 		}
 
 		/* folder cover animation */
@@ -477,12 +477,13 @@
 		details.work-cover summary
 		{
 			--transition-duration: 900ms;
-			--move:calc(40dvh + 1dvw * var(--total-work) ); 
+			--move:calc(40dvh + 1dvw * var(--total-work)); 
 
 			top:var(--move) ;
 			left:calc(var(--move-all) - 2rem) ;
 			color: var(--color-text);
-			filter: blur(3px) opacity(.45);
+			filter: blur(0) opacity(.45);
+			backdrop-filter: blur(9px);
 			pointer-events: none;
 			transition: top var(--transition-duration) 100ms, left var(--transition-duration) 200ms;
 			z-index: 11;
@@ -508,7 +509,7 @@
 			box-shadow: 
 				var(--shadow-1-color) 0px 5px 8px -5px,
 				rgba(0, 0, 0, 0.2) 0px -3px 0px inset
-			  ;
+			;
 			transition-property: color, top, left, rotate;
 			@starting-style {
 				--move:calc(46vh + (-9vh  * (var(--file-index) / var(--total-work,1)))); 
@@ -1100,6 +1101,8 @@
 		width: fit-content;
 		white-space: nowrap;
 		font-size: 0.88rem;
+		font-weight: 500;
+		color: color-mix(in oklch, var(--file-line-color)60%, var(--color-text) 45%);
 		color: color-mix(in oklch, var(--file-line-color)60%, black 45%);
 		padding: 0.3rem 0.8rem;
 		border-radius: 50px;
@@ -1108,25 +1111,32 @@
 		margin-bottom: 2%;
 
 		&:nth-child(-n + 3){
+			/* mix-blend-mode: multiply; */
+			mix-blend-mode:overlay;
+			/* mix-blend-mode:hard-light; */
 			background-color: color-mix(in oklch, var(--file-primary-hue) , rgba(214, 60, 60, 0.566) 80% );
 			background-color: color-mix(in oklch longer hue, var(--file-primary-hue) , color-mix(in hsl longer hue, hsl(calc(var(--hue-number) / var(--file-index)), 45%, 28%) , var(--file-primary-color) 98%) 96% );
 			background-color: var(--file-primary-hue);
-			color: color-mix(in oklch, var(--file-primary-hue), var(--color-text) 70% );
+			color: color-mix(in oklch, var(--file-primary-hue), var(--color-text) 80% );
 			border: solid 2px color-mix(in oklch, var(--file-primary-hue) , rgba(255, 255, 255, 0.566) 60% );
 		}
 	}
 
+	/* ////////////////////////////////////// */
 	/* the section behind the work description */
+	/* /////////////////////////////////////// */
 	details[open]:has(.note .disabled) .work-description:not(.note){
 		min-height: 89% ;
+		overflow: visible;
 	}
 
 	details[open]:has(.work-description:not(.description-links):hover, .move-description) .work-description.note{
 		translate: .5rem;
-		overflow: visible;
+		/* overflow: visible; */
 		contain: none;
 		transition: 200ms linear(0, 0.297 6.8%, 0.515 13.8%, 0.686 22%, 0.812 31.6%, 0.895 42.6%, 0.949 56.4%, 1);
 		.description-space {	
+			overflow: visible;
 			transform: translateX(4.5rem); 
 			outline: none;
 			/* transition:	transform 250ms linear(0, 0.297 6.8%, 0.515 13.8%, 0.686 22%, 0.812 31.6%, 0.895 42.6%, 0.949 56.4%, 1); */
@@ -1187,7 +1197,7 @@
 		height: fit-content;
 		z-index: 3;
 		padding: var(--stamp-radius);
-		contain: paint layout;
+		contain: layout;
 				
 		&::after{
 			content: '';

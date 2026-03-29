@@ -349,8 +349,9 @@ export async function load() {
 						html:[
 						`<a href="https://github.com/christoph3r3w/user-experience-enhanced-website/wiki/Iteration-1">
 						https://github.com/christoph3r3w/user-experience-enhanced-website/wiki/Iteration-1
-						</a>`,
-						`<a href="https://github.com/christoph3r3w/pleasurable-ui/wiki/Team%E2%80%90Ontwerp">
+						</a>
+						<br>
+						<a href="https://github.com/christoph3r3w/pleasurable-ui/wiki/Team%E2%80%90Ontwerp">
 						https://github.com/christoph3r3w/pleasurable-ui/wiki/Team%E2%80%90Ontwerp
 						</a>`,
 					
