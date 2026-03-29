@@ -1315,10 +1315,10 @@
 		}
 	}
 
-	/* /////////// */
+	/* //////////// */
 	/* work assets */
 	/* large content scroll section */
-	/* /////////// */
+	/* //////////////////////////// */
 	
 	details[open] .work-assets {
 		--file-primary-hue:color-mix(in oklch, hsl(calc(213 * 680 / var(--file-index)), 0%, 80%) , var(--file-primary-color) 20%);

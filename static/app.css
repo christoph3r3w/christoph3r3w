@@ -71,7 +71,6 @@
     --LD-text:light-dark(var(--D-black),var(--D-white));
     --LD-background:light-dark(var(--D-white),var(--D-black));
 
-
     /* new design background */
     --inherit:inherit;
     --black:black;
@@ -97,8 +96,7 @@
 		--secondary-color: #6c757d;
 		--tritary-color: var(--tan-soft);
     --tritary-color-muted:color-mix(in oklch, var(--tritary-color) 95%,var(--color-text));
-		/* --accent-color: #17a2b8; */
-
+		--accent-color: var(--tan-light);
 
     --color-border: var(--vt-c-divider-light-2);
     --color-border-hover: var(--vt-c-divider-light-1);

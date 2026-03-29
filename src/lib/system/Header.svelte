@@ -338,6 +338,7 @@
 		border: none;
 		border-radius: 25px;
 		width: auto;
+		min-width: fit-content;
 		height: 3rem;
 		font-size: clamp(var(--text-size-s),50dvw - 1rem , 1.3rem );
 		line-height: 1rem;
