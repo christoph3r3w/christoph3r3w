@@ -13,12 +13,12 @@ interface Props {
 	role: string;
 	class?: string;
 	color?:string;
-	style?: HTMLAreaAttributes ['style'];
+	styleOn?: HTMLAreaAttributes ['style'] | string;
 	
 	children?: import('svelte').Snippet<[]>; 
 }
 // props
-let {title,context,role,children, class: CLASS,color, style, ...props} : Props = $props(); 
+let {title,context,role,children, class: CLASS,color, styleOn, ...props} : Props = $props(); 
 
 </script>
 
@@ -56,12 +56,12 @@ let {title,context,role,children, class: CLASS,color, style, ...props} : Props =
 <!-- logic for all the types of containers  -->
 {#if role == 'window'}
 	<!-- window container -->
-	<main class="contain {CLASS}" style="background-color:{color}; {style}" {...props} >
+	<main class="contain {CLASS}" style="background-color:{color}; {styleOn}" {...props} >
 		{@render B()}
 	</main>
 {:else if role == 'child'}
 	<!-- any container inside the main container -->
-	<div class="contain child-container {CLASS}" style="background-color:{color}; {style}" {...props}>
+	<div class="contain child-container {CLASS}" style="background-color:{color}; {styleOn}" {...props}>
 		{@render A()}
 	</div>
 {/if}

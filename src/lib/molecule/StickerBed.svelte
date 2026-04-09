@@ -3,6 +3,7 @@ import {onMount} from 'svelte';
 import {fade, fly} from 'svelte/transition';
 	interface Props {
 		total?: number;
+		patern?: 'random' | 'grid';
 	}
 	interface StickerListItem {
 		id: string;
@@ -16,7 +17,7 @@ import {fade, fly} from 'svelte/transition';
 		rotation?: number;
 	}
 
-	let {total} : Props = $props()
+	let {total, patern} : Props = $props()
 
 	let stickerList: StickerListItem[] = [
 		{id: 'hero', visible: false, content: '/stickers/stickerrr-light.png', type: 'image', alt: 'tutorial sticker', canMove: true},
@@ -24,17 +25,18 @@ import {fade, fly} from 'svelte/transition';
 		{id: 'hero2', visible: false, content: 'Here are some selected projects I have done', type: 'text', canMove: true},
 		{id: 'triangle', visible: false, content: 'In progress', type: 'text', alt: 'in progress', canMove: true},	
 		{id: 'pixel-c',visible: false, content: '/stickers/pixel-c-star.png', type: 'image', alt: 'pixel sticker', canMove: true},	
-		{id: 'flag', visible: true, content: '/stickers/korsou sticker.png', type: 'image', alt: 'tutorial sticker', canMove: true},
+		{id: 'flag', visible: false, content: '/stickers/korsou sticker.png', type: 'image', alt: 'tutorial sticker', canMove: true},
 		{id: 'vue', visible: true, content: '/stickers/vue.png', type: 'image', alt: 'tutorial sticker', canMove: true},
 		{id: 'JS', visible: true, content: '/stickers/js sticker (2).png', type: 'image', alt: 'tutorial sticker', canMove: true},
 		{id: 'figma', visible: true, content: '/stickers/figma sticker.png', type: 'image', alt: 'tutorial sticker', canMove: true},
 		{id: 'svelte', visible: true, content: '/stickers/svelte.png', type: 'image', alt: 'tutorial sticker', canMove: true},
 		{id: 'c-name', visible: true, content: '/stickers/c-name free.png', type: 'image', alt: 'tutorial sticker', canMove: false},
-		{id: 'in-progress 2', visible: false, content: '/stickers/in progresss-texture-clear.png', type: 'image', alt: 'in progress', canMove: true},
+		{id: 'c-pixel-icon', visible: true, content: '/stickers/c-icon-pixeled.png', type: 'image', alt: 'c-pixel-icon', canMove: false},
+		{id: 'in-progress clear', visible: true, content: '/stickers/in progresss-texture-clear.png', type: 'image', alt: 'in progress', canMove: true},
 		{id: 'in-progress', visible: true, content: '/stickers/in progress-texture.png', type: 'image', alt: 'tutorial sticker', canMove: true},
 	];
 
-	let visibleStickers = $state(stickerList.filter(sticker => sticker.visible).slice(0,total?total: stickerList.length));
+	let visibleStickers = $derived(stickerList.filter(sticker => sticker.visible).slice(0,total?total: stickerList.length));
 	let moveX = $state(0);
 	let moveY = $state(0);
 	let rotate = $state(0);
@@ -80,6 +82,8 @@ import {fade, fly} from 'svelte/transition';
 
 </script>
 
+<!-- for later add a patern option, it will toggle a pattern based on a selected sticker or all in a specific grid area -->
+
 {#each  visibleStickers as sticker}
 	{#if sticker.type === 'text'}
 		<p class="cover-content sticker-label {sticker.id} text" style=" transform: translate({sticker.offsetX || 0}px, {sticker.offsetY || 0}px) rotate({sticker.rotation || 0}deg);">{sticker.content}</p>
@@ -117,7 +121,6 @@ import {fade, fly} from 'svelte/transition';
 			bottom: 5%;
 			right: 5%;
 		}
-
 		&.hero2{
 			--sticker-color: hsl(201, 100%, 59%);
 			--sticker-width: 30cqw;
@@ -180,7 +183,19 @@ import {fade, fly} from 'svelte/transition';
 			--sticker-top: 6%;
 			left: 5%;
 			/* filter: drop-shadow(.5px .5px 1px black); */
-			z-index: 2;
+			z-index: 0;
+		}
+		&.clear{
+			--sticker-color: hsla(0, 75%, 50%, 0);
+			--sticker-width: auto;
+			--sticker-height: 12rem;
+			--sticker-rotation: 107deg !important;
+			--sticker-top: auto;
+			left: auto;
+			right: 28%;
+			bottom: -11%;
+			/* filter: drop-shadow(.5px .5px 1px black); */
+			z-index: 0;
 		}
 		&.flag{
 			--sticker-color: hsla(0, 75%, 50%, 0);
@@ -212,10 +227,12 @@ import {fade, fly} from 'svelte/transition';
 		&.JS{
 			--sticker-color: hsla(0, 75%, 50%, 0);
 			--sticker-width: auto;
-			--sticker-height: 6rem;
+			--sticker-height: 8rem;
 			--sticker-rotation: -6deg;
-			--sticker-top: 58%;
-			left: 7%;
+			--sticker-top: 3%;
+			/* left: 7%; */
+						right: 5%;
+
 			/* filter: drop-shadow(.5px .5px 1px black); */
 		}
 		&.figma{
@@ -240,6 +257,16 @@ import {fade, fly} from 'svelte/transition';
 			--sticker-color: hsla(0, 75%, 50%, 0);
 			--sticker-width: auto;
 			--sticker-height: 12rem;
+			--sticker-rotation: -0deg;
+			--sticker-top: auto;
+			bottom: 0;
+			left: 0%;
+			/* opacity: 0; */
+		}
+		&.c-pixel-icon{
+			--sticker-color: hsla(0, 75%, 50%, 0);
+			--sticker-width: auto;
+			--sticker-height: 2rem;
 			--sticker-rotation: -0deg;
 			--sticker-top: auto;
 			bottom: 0;

@@ -25,11 +25,8 @@
 			{/if}
 		</button>
    </div>
-   {#if fType === 'files'}
-      <Works {data}/>
-   {:else if fType === 'list'}
-      <WorksList {data} />
-   {/if}
+
+	<svelte:component this={fType === 'files' ? Works : WorksList} {data}/>
 
 <style>
 
@@ -53,7 +50,6 @@
 		transition: 800ms linear(0, 0.012 0.9%, 0.05 2%, 0.411 9.2%, 0.517 11.8%, 0.611 14.6%, 0.694 17.7%, 0.765 21.1%, 0.824 24.8%, 0.872 28.9%, 0.91 33.4%, 0.939 38.4%, 0.977 50.9%, 0.994 68.4%, 1);
 
 		&:hover{
-			opacity: 1;
 			pointer-events:fill;
 			transform: translateY(calc(var(--menu-height, 0) - 2rem)) scale(.83);
 		}

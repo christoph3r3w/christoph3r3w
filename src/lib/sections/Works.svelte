@@ -107,7 +107,8 @@
 		}, delay ?? 2000);
 	}
 
-	onMount(() => {	
+	onMount(() => {
+		
 		// let m3 = document.querySelector('.file-1')?.setAttribute('open','');		
 		return () => {
 			clearQRTimeoutOnUnmount();
@@ -438,16 +439,6 @@
 
 	}
 
-	:global(.mainContain:has(#works details[open])) {
-
-		.contentContain.contain{
-			width: 100dvw !important;
-			align-self: center !important;
-			max-width: 2000px !important;
-			width: 100% !important;
-			flex-basis: 100cqw !important;
-		}
-	}
 
 	.work-section:has(details[open]) .Orderedlist-container{
 		filter: opacity(.3) blur(1px);

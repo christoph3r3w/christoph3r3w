@@ -1,8 +1,10 @@
 // place files you want to import through the `$lib` alias in this folder.
 export { default as Buttons } from './atoms/Buttons.svelte';
 export { default as Themes } from './atoms/Themes.svelte';
+export { default as CuttingBoard} from './atoms/CuttingBoard.svelte'
 // simple components 
 export { default as Menu } from './system/Menu.svelte';
+export { default as Menu2 } from './system/Menu2.svelte';
 export { default as Footer } from './molecule/Footer.svelte';
 export { default as OrderedList} from './molecule/OrderedList.svelte'
 export {default as Contacts} from './molecule/Contacts.svelte'

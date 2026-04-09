@@ -24,7 +24,7 @@ export async function load() {
 			{
 				title: 'tile shifting',
 				slug: 'Grid experiment',
-				published:{is:true,date:''},
+				published:{is:false,date:''},
 				description: 'An experimentation I did to test out grid animation that in the future was used as an animatable grid layout. The idea was to have a grid of tiles that shift their position when hovered, creating a dynamic and interactive visual effect. The shifting is achieved through CSS transitions, allowing the tiles to smoothly move to new positions within the grid when the user interacts with them.',
 				assets:{image: [''], icon: '',color:'pink'},
 				contentBlock:[{}],
@@ -42,7 +42,7 @@ export async function load() {
 				title: 'windows',
 				slug: 'School project',
 				published:{is:true,date:''},
-				description: 'For one of these prints for school, I had to create a profile card that showcases my current understanding of the web fundamentals while highlighting where I am at in my studies and ways that I can be found. I took this opportunity to be creative and redesigned this card to resemble the Windows XP. The card features a profile picture, a brief description, and links to my social media profiles, all styled to evoke the nostalgic look and feel of the Windows XP interface.',
+				// description: 'I got to create a profile card that showcased my understanding of the web fundamentals in the form of a profilecard. I took this opportunity to experiemnt with toen die tijd the new popover api and styled it in the look and feel of the Windows XP interface.',
 				assets:{
 					image: [
 						'25acb22a-22a3-41d5-a0eb-c91529c4c6c8.jpg',
@@ -55,7 +55,8 @@ export async function load() {
 				},
 				contentBlock:[
 					{
-						text: ['For one of these prints for school, I had to create a profile card that showcases my current understanding of the web fundamentals while highlighting where I am at in my studies and ways that I can be found. I took this opportunity to be creative and redesigned this card to resemble the Windows XP. The card features a profile picture, a brief description, and links to my social media profiles, all styled to evoke the nostalgic look and feel of the Windows XP interface. '	]	
+						h2:['intro'],
+						text:[ 'I got to create a profile card that showcased my understanding of the web fundamentals in the form of a profilecard. I took this opportunity to experiemnt with toen die tijd the new <a target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/API/Popover_API">popover api</a> and styled it in the look and feel of the Windows XP interface.'],
 					},
 					{
 						images:['./works-assets/windows/chrome_KDKznicEhK.gif']
@@ -64,8 +65,14 @@ export async function load() {
 						images:[
 								'/works-assets/windows/Recording 2026-03-02 022626.gif',
 								'/works-assets/windows/chrome_hh5Wv4h7nO.gif',
-								
+								'/works-assets/windows/pngwing.com.png',
 								]
+					},
+					{
+						text:['The popover API seemed to be really reliable for such a project. The ability to toggle components without having to use JavaScript, and also the ability to drag and save the coordinates of the window without having to use JavaScript, made styling and the layout more approachable and accessible. ',
+						'Me and some other schoolmates decided to to use concept as the fundation for a game based on our classmates That resembled a Pokemon card game. '
+						
+						]
 					},
 					{
 						images:[
@@ -73,7 +80,6 @@ export async function load() {
 								'/works-assets/windows/Screenshot 2024-03-01 001326.png',
 								'/works-assets/windows/Screenshot 2024-02-11 174723.png',
 								'/works-assets/windows/Screenshot 2024-03-01 125947.png',
-								'/works-assets/windows/pngwing.com.png',
 
 								]
 					}
@@ -210,7 +216,7 @@ export async function load() {
 				status:{is:'',sticker:''}
 			},
 			{
-				title: 'monytri',
+				title: 'Monytri',
 				slug: 'PWA MVP',
 				published:{is:true,date:''},
 				// description: `An MVP designed to showcase the services, capabilities, and adaptability of the Monytri financial platform to stakeholders and investors. `,
@@ -314,7 +320,7 @@ export async function load() {
 				status:{is:'',sticker:''}
 			},
 			{
-				title: 'redpers',
+				title: 'Redpers',
 				slug: 'UI overhaul',
 				published:{is:true,date:''},
 				description: 'School project',
@@ -426,7 +432,7 @@ export async function load() {
 	let works = dataWorks[1].works
 	works = workStatus(works);
 	let delaySimulation = 9000
-	// delaySimulation = 0
+	delaySimulation = 0
 	// delaySimulation = 5000
 
 	// Timeout and Retry System

@@ -440,7 +440,7 @@
 	}
 
 	/* :global(main:has(button.close-btn:is(:active,:focus-within)) article.active) { */
-	:global(main:has(button:is(.close-btn,.about-btn,.contact-btn):is(:active)) article.active) {
+	/* :global(main:has(button:is(.close-btn,.about-btn,.contact-btn):is(:active)) article.active) {
 		height: calc(var(--menu-height) + 18px);
 		transition: .4s cubic-bezier(0.375, 0.685, 0.32, 1.275);
 	}
@@ -449,7 +449,7 @@
 		translate: 0 -175vh !important;
 		filter: blur(1px);
 		transition: translate .8s 1s !important ;
-	}
+	} */
 
 	
 	@keyframes sway {

@@ -1,18 +1,21 @@
 <script lang="ts">
-	import {Header, Footer, Window,Menu} from '$lib';
-	// import '../../static/app.css';
+	import {Header, Footer, Window,Menu,Menu2,StickerBed,CuttingBoard} from '$lib';
+	let svg = CuttingBoard
 
 	let {children} = $props();
-
 </script>
 
-<Window role='window' color='var(--primary-gray)'>
+<Window role='window' styleOn="">
 	<Header />
-	<Menu />
+	<Menu2 />
+	<!-- <section>
+		<StickerBed />
+	</section> -->
+	<!-- <CuttingBoard/> -->
 	{@render children()}
 </Window>
-
 <Footer class='ftr'/>
+
 
 <style>
 
@@ -23,7 +26,6 @@
 		--primary-gray: #d5d5d5e7;
 		/* --primary-gray: rgb(235, 233, 219); */
 		--primary-gray: var(--color-bg);
-
 	}
 
 	:global(body){
@@ -50,6 +52,21 @@
 		margin: 0;
 		padding: 0;
 		overflow: hidden;
+		background-attachment: fixed, fixed;
+		background:url('cuttingmat55-33-2.svg'),
+		radial-gradient(circle,rgba(42, 123, 155, 0) 62%, var(--color-bg) 100%) ;
+		background-size: cover, cover;
+		background-repeat: no-repeat;
+		background-position: center, center;
+		background-blend-mode:color-dodge;
+		 &::after{
+			/* content: ""; */
+			position: fixed;
+			inset: 0;
+			background:	radial-gradient(circle,rgba(42, 123, 155, 0) 62%, var(--color-bg) 100%) ;
+			pointer-events: none;
+			z-index: -1;
+		}
 	}
 
 	:global(main.contain){
