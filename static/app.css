@@ -77,37 +77,50 @@
     --white:white;
     --cream-bk:light-dark(blanchedalmond, rgb(91, 83, 72));
     --cream-bk:light-dark( hsl(36, 48%, 94%), hsl(36, 14%, 14%));
-    --gray-bg2:#d5d5d5e7;
+    --dark-brown:hsla(36, 14%, 14%, 0.43);
+    --gray-bg2:#e6e6e6e7;
     --gray-bg:#d5d5d5e7;
+    --gray-bg3:#f0f0f0;
+    --kindabrown:#544b47;
     --tan-gray-bg:rgb(235, 233, 219);
     --tan-soft:#F5E5B9;
     --tan-light:#A8A390;
     /* --tan-light:#ccc9be; */
     --dark-subtle:#262624;
+    --vibrant-blue:hsl(240, 100%, 50%);
+    --bob-blue:#375ab2;
+    --bob-blue:#0a5dc7;
+    --soft-green:#c0cab0;
 
 
     --color-bg: var(--gray-bg);
     --color-bg: var(--tan-light);
     --color-bg: #cacaca;
-    --color-bg-muted: var(--gray-bg);
+    --color-bg: var(--gray-bg2);
+    /* --color-bg: var(--kindabrown); */
+    --color-bg-muted: var(--gray-bg3);
 		--color-text: var(--inherit,var(--black));
-		/* --primary-color: #e3f0ffd7; */
+		--color-text-invert: var(--inherit,var(--white));
+		/* --primary-color: var(--vibrant-blue); */
 		/* --primary-color: none; */
 		--secondary-color: #6c757d;
 		--tritary-color: var(--tan-soft);
     --tritary-color-muted:color-mix(in oklch, var(--tritary-color) 95%,var(--color-text));
 		--accent-color: var(--tan-light);
+		--accent-color: var(--vibrant-blue);
+		--accent-color: var(--bob-blue);
 
     --color-border: var(--vt-c-divider-light-2);
     --color-border-hover: var(--vt-c-divider-light-1);
     --color-heading: #262729;
+    --color-heading: var(--bob-blue);
 
     /* box shadowing op componenten */
     --bottom-shadow: 0px 9px 12px -2px var(--D-mid-bk);	
 
     --text-size-s:1rem;
 		--text-size-m:1.5rem;
-		--text-size-l:2.2rem;
+		--text-size-l:2.025rem;
 
     --section-gap: 160px;
     --letter-total: 0; /* This will be updated dynamically */
@@ -135,16 +148,16 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  /* vector-effect: non-scaling-stroke; */
 
   @supports (interpolate-size: allow-keywords){
 	  interpolate-size: allow-keywords;
 	  transition-behavior: allow-discrete;
 	  scroll-behavior: smooth;
     font-size-adjust: 0.5;
-    @view-transition {
-      navigation: auto;
-    }
-
+  }
+  @view-transition {
+    navigation: auto;
   }
 }
 

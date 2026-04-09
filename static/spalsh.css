@@ -6,8 +6,8 @@
 	transform-origin: bottom;
 	display: flex;
 	height: auto;
-	background-color: rgba(255, 255, 255, 0.801);
-	background-color: var(--tan-gray-bg);
+	/* background-color: rgba(255, 255, 255, 0.801); */
+	/* background-color: var(--tan-gray-bg); */
 	/* background-image: url('/works-assets/material-assets/Chris website12.png'); */
 	background-position: top;
 	background-size: cover;
@@ -19,10 +19,10 @@
 	pointer-events:visible;
 	cursor:progress;
 	z-index: 20000;
-	display: none;
 	backdrop-filter: blur(30px) drop-shadow(rgba(105, 98, 63, 0.181) 0px 28px 10px);
 	animation: Blur 2s 3s both, move 2s 3s forwards;
 	/* animation: Blur 2s .5s forwards; */
+	display: none;
 
 	&[data-splash-skip="true"] {
     display: none;
@@ -37,8 +37,18 @@
 	/* border: solid salmon 3px; */
 
 	&:nth-child(2){
-		flex: 1 1 70dvw;
+		flex: 1 1 40dvw;
 		/* background-color: red; */
+	}
+}
+
+
+@keyframes move {
+	20%{bottom:5lvh;}
+	/* 20%,99%{bottom:5lvh;} */
+	to{
+		/* z-index: 0; */
+		bottom: 100lvh;
 	}
 }
 
@@ -50,45 +60,11 @@
 	width: 28dvw;
 	padding-top: 11rem;
 	/* outline: solid red; */
-	/* view-transition-name: header-figure; */
-	animation: Blur 2s 4s forwards;
+	/* animation: Blur 2s 4s forwards; */
+	animation: move 1.9s 3s forwards;
 
-}
-
-#splash .profile img{
-	width: 100%;
-	height: auto;
-}
-
-@keyframes Blur {
-	13%{backdrop-filter: blur(15px);}
-	23%{backdrop-filter: blur(3px);}
-	53%{backdrop-filter: blur(2px);}
-	90%{backdrop-filter: blur(5px);}
-	98%{ 
-		backdrop-filter: blur(1px);
-		opacity: 0;
-		background-color: #00000000;
-		}
-	100%{ 
-		backdrop-filter: blur(0px);
-		opacity: 0;
-		display: none;
-		background-color: #00000000;
-		}
-}
-
-@keyframes move {
-	50%,95%{bottom:95lvh;}
-	100%{
-		z-index: 0;
-		bottom: 100lvh;
-	}
-}
-
-#splash .profile{
 	position: relative;
-	/* view-transition-name: header-figure; */
+	view-transition-name: header-figure;
 	isolation: isolate;
 
 	picture{
@@ -137,3 +113,25 @@
 		} */
 	}
 }
+
+@keyframes Blur {
+	/* 13%{backdrop-filter: blur(15px);}
+	23%{backdrop-filter: blur(3px);}
+	53%{backdrop-filter: blur(2px);}
+	90%{backdrop-filter: blur(5px);}
+	98%{ 
+		backdrop-filter: blur(1px);
+		opacity: 0;
+		background-color: #00000000;
+	}
+	100%{ 
+		backdrop-filter: blur(0px);
+		opacity: 0;
+		display: none;
+		background-color: #00000000;
+	} */
+	to{
+		display: none;
+	}
+}
+
