@@ -8,21 +8,25 @@
 	let dark = $state(false)
 	let currentThemeIndex = $state(0)
 
-	function handleViewTransition(callback: () => void) {
-		if (!document.startViewTransition) {
+	function handleViewTransition(callback: () => void, target?: HTMLElement) {
+		const transitionTarget = target || document;
+		
+		if (!('startViewTransition' in transitionTarget)) {
 			// Fallback for browsers that don't support View Transitions
 			callback();
 			return;
 		}
 		
-		// Start a view transition
-		document.startViewTransition(callback);
+		// Start a view transition on the target element or document
+		(transitionTarget as any).startViewTransition(callback);
 	}
 
 	function toggleMenu()  {
 		if( openContacts == true || openAbout == true){
-			contactsOpen.set(false)
-			aboutOpen.set(false)
+			handleViewTransition(() => {
+				contactsOpen.set(false)
+				aboutOpen.set(false)
+			})
 			return
 		}
 		handleViewTransition(() => {
@@ -31,33 +35,38 @@
 			aboutMoreOpen.set(false)
 			aboutOpen.set(false);
 		})
+		return
 	}
 
 	function toggleContacts(){
 		if(openMenu == true && openContacts == true){
+		handleViewTransition(() => {
 			menuOpen.set(false)
 			contactsOpen.set(false)
+		})
 			return
 		}
 		handleViewTransition(() => {
-			menuOpen.set(true);
 			aboutOpen.set(false);
-			contactsOpen.set(true);
 			aboutMoreOpen.set(false)
+			menuOpen.set(true);
+			contactsOpen.set(true);
 		})
 		return
 	}
 
 	function toggleAbout(){
 		if(openMenu == true && openAbout == true){
-			menuOpen.set(false)
-			aboutOpen.set(false)
+			handleViewTransition(() => {
+				menuOpen.set(false)
+				aboutOpen.set(false)
+			})
 			return
 		}
 		handleViewTransition(() => {
-			menuOpen.set(true);
 			contactsOpen.set(false);
 			aboutMoreOpen.set(false)
+			menuOpen.set(true);
 			aboutOpen.set(true);
 		})
 		return
@@ -214,9 +223,7 @@
 		}
 	}
 
-	header:hover{
-		transition: .5s ease-out;
-	}
+	header:hover{transition: .5s ease-out;}
 
 	header ul{
 		display: flex;
@@ -224,9 +231,7 @@
 		width: 100%;
 		height: fit-content;
 
-		@container (width < 800px){
-			margin-top: 1rem;
-		}
+		@container (width < 800px){margin-top: 1rem;}
 	}
 
 	header li{
@@ -249,9 +254,7 @@
 		justify-content: end;
 		filter: drop-shadow(var(--icon-shadow-color) 0px 28px 10px);
 
-		@container (width < 800px){
-			justify-content: start;
-		}
+		@container (width < 800px){justify-content: start;}
 	}
 
 	.header-logo figure  {
@@ -264,7 +267,7 @@
 		height: 100%;
 		max-height: 50px;
 		margin-inline: 20px;
-		/* view-transition-name: header-figure; */
+		view-transition-name: header-figure;
 
 		@starting-style{
 			flex: 0 1 auto;
@@ -296,12 +299,10 @@
 			transition: .5s cubic-bezier(0.375, 0.585, 0.12, 1.091) ;
 			animation: sway 5s linear infinite 15s both ;
 			view-transition-name: header-figure;
-
 			contain: paint layout;
 
-			@starting-style{
-				translate: 0 -16vw;
-			}
+			/* logo floats down */
+			/* @starting-style{translate: 0 -6vw;} */
 
 			&:hover{
 				rotate: 25deg;
@@ -330,12 +331,16 @@
 	/* button styling */
 	li:is(.D-menu,.head-extra) button{
 		--_btn-shadow-color: color-mix(in srgb, var(--color-bg,#ffffff), rgba(65, 60, 39, 0.181) 70%);
+		--_btn-border-color: color-mix(in srgb, var(--accent-color,#ffffff), rgba(90, 86, 70, 0.181) 65%);
+		
 		position: relative;
 		display: grid;
 		place-content: center;
 		text-wrap: nowrap;
 		padding-inline: 10px;
-		border: none;
+		/* border: solid 2px var(--_btn-border-color); */
+		border-style: solid groove groove solid;
+
 		border-radius: 25px;
 		width: auto;
 		min-width: fit-content;
@@ -395,9 +400,7 @@
 	li button.menu-btn{
 		display: none;
 
-		@container (width < 990px){
-			display: block;
-		}
+		@container (width < 990px) {display: block;}
 
 		svg path{
 			fill: transparent;
@@ -440,9 +443,7 @@
 			transform: translate( 0,-5rem);
 		}
 
-		svg path{
-				fill: rgba(192, 158, 24, 0.9);	
-		}
+		svg path{fill: rgba(192, 158, 24, 0.9);}
 	}
 
 	li.head-extra button.read-more-btn{
@@ -450,6 +451,7 @@
 		color: color-mix(in srgb,var(--color-text,#ffffff) 70% , var(--primary-color ,var(--black)) 90% );
 		border: solid 2px;
 		border-color:color-mix(in srgb, var(--primary-color, rgba(255, 255, 255, 0.781)),color-mix(in srgb, var(--color-bg), rgba(255, 255, 255, 0.595) 50% ) 90%) ;
+		display: none;
 	}
 
 	li.head-extra #noscript-notice{
@@ -466,7 +468,7 @@
 	}
 
 	/* :global(main:has(button.close-btn:is(:active,:focus-within)) article.active) { */
-	:global(main:has(button:is(.close-btn,.about-btn,.contact-btn):is(:active)) article.active) {
+	/* :global(main:has(button:is(.close-btn,.about-btn,.contact-btn):is(:active)) article.active) {
 		height: calc(var(--menu-height) + 18px);
 		transition: .4s cubic-bezier(0.375, 0.685, 0.32, 1.275);
 	}
@@ -475,7 +477,7 @@
 		translate: 0 -175vh !important;
 		filter: blur(1px);
 		transition: translate .8s 1s !important ;
-	}
+	} */
 
 	
 	@keyframes sway {

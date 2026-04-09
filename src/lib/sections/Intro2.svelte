@@ -30,7 +30,8 @@
 
 <style>
 
-	:global(.mainContain:has(:is(#works,#workList))){
+	/* :global(.mainContain:has(:is(#works,#workList):first-child:nth-last-of-type(1))){ */
+	:global(.mainContain:has( .contentContain:first-child:nth-last-of-type(1))){
 		/* align-items: center; */
 		justify-content: center;
 	}
@@ -42,26 +43,27 @@
 
 
 	:global(main:has(.menu-container.active) .contentContain:has(:is(#works,#workList))){
-		transform: translateY(calc(var(--menu-height, 0))) scale(.83);
+		transform: translateY(calc(var(--menu-height, 0) - 10dvh )) scale(.83);
 		pointer-events:none;
-		opacity: .7;
-		filter:drop-shadow(rgba(131, 127, 107, 0.304) 0px -28px 40px);
-		box-shadow: 0 -10px 20px -9px rgba(12, 15, 23, 0.378);
+		filter:drop-shadow(rgba(131, 127, 107, 0.304) 0px -8px 20px) brightness(1) contrast(.9);
+		box-shadow: 0 -10px 0px -9px rgba(12, 15, 23, 0.233);
 		transition: 800ms linear(0, 0.012 0.9%, 0.05 2%, 0.411 9.2%, 0.517 11.8%, 0.611 14.6%, 0.694 17.7%, 0.765 21.1%, 0.824 24.8%, 0.872 28.9%, 0.91 33.4%, 0.939 38.4%, 0.977 50.9%, 0.994 68.4%, 1);
 
 		&:hover{
 			pointer-events:fill;
-			transform: translateY(calc(var(--menu-height, 0) - 2rem)) scale(.83);
+			transform: translateY(calc(var(--menu-height, 0) - 15dvh)) scale(.83);
+			filter:drop-shadow(rgba(131, 127, 107, 0) 0px -28px 2px);
+			box-shadow: 0 0px 20px -15px rgba(12, 15, 23, 0.378);
 		}
 
 		&::before{
 			content: '';
 			position: absolute;
+			justify-items: top;
 			inset: 0;
-			opacity: 0;
-			z-index: 100;
+			z-index: 10;
 			pointer-events:fill;
-			cursor:row-resize;
+			cursor:pointer;
 		}
 	}
 
@@ -70,19 +72,34 @@
 		min-height: var(--file-section-height);
 		top:calc(100% - var(--file-section-height) - 4%);
 		bottom: 0 !important;
-		max-width: 1700px;
+		max-width: 1200px;
 		transition: 
 			transform .5s linear(0, 0.012 0.9%, 0.05 2%, 0.411 9.2%, 0.517 11.8%, 0.611 14.6%, 0.694 17.7%, 0.765 21.1%, 0.824 24.8%, 0.872 28.9%, 0.91 33.4%, 0.939 38.4%, 0.977 50.9%, 0.994 68.4%, 1) 100ms, 
 			opacity .5s 100ms;
+	}
+
+	/*  */
+	:global(.mainContain:has(details[open])) {
+
+
+		:global(.contentContain:has([open] summary:not(.experiment))){
+			/* border: solid red 10px ; */
+			width: 100dvw !important;
+			/* align-self: center !important; */
+			/* width: 100% !important; */
+			/* flex-basis: 100cqw !important; */
+			max-width: 1400px !important;
+			/* max-width: 2000px ; */
+		}
 	}
 
 	:global(.contentContain:has(#works)){
 		--file-section-height: 70dvh;
 		/* --file-section-height: clamp(50dvh, 80lvw, 75dvh); */
 		&:has(:global(details[open])){
-			--file-section-height: 95%;
+			--file-section-height: 90%;
 			/* max-width: 2000px; */
-			top:calc(100% - var(--file-section-height) - 1%);
+			top:calc(100% - var(--file-section-height) - 3%);
 		}
 		@container (width < 900px){--file-section-height: 90%;}
 	}
@@ -168,9 +185,5 @@
 		max-width: 8ch;
 		opacity: 1;
   }
-
-	/* @media (max-width: 600px){
-		
-	} */
 
 </style>

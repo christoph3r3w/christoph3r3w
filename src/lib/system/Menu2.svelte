@@ -3,11 +3,11 @@
  	import { menuOpen,contactsOpen,aboutOpen,aboutMoreOpen } from "$lib/store";
 	import { onMount } from "svelte";
 	import { elasticOut } from 'svelte/easing';
+	import { CornerDownRight, ArrowBigDown } from '@lucide/svelte';
 	let openMenu = $derived($menuOpen);
 	let openContacts = $derived($contactsOpen);
 	let openAbout = $derived($aboutOpen);
 	let openAboutMore = $derived($aboutMoreOpen);
-
 
 	function startViewTransition(callback: () => void) {
 		if (!document.startViewTransition) {
@@ -50,7 +50,7 @@
 			easing: params.easing || elasticOut,
 			css: (t:any, u:any) => 
 				`
-				opacity: ${t * .2};
+				opacity: ${t * .6};
 				blur: ${u * 10}px;	
 				`
 		};
@@ -71,28 +71,23 @@
 		openContacts = $contactsOpen;
 		openAbout = $aboutOpen;
 
-		// if( openAbout == true){
-		// 	document.body.style.setProperty('--menu-height','32cqh')
-		// }else{
-		// 	document.body.style.setProperty('--menu-height','56cqh')
-		// }
-
 		// Cleanup function for the effect
 		return () => {
-			// Reset to default value on cleanup
 			document.body.style.removeProperty('--menu-height');
 		};
 	})
 </script>
 
 {#snippet Contacts()}
-	<!-- <li class="head-contacts"> -->
+	<div class="text-bubble">
 		<p>you can contact me at:</p>
 		<span>
 			<a href="mailto:masmesa.studio@gmail.com">masmesa.studio@gmail.com</a>
 		</span>
-		<p>or find me on:</p>
-		<span >
+	</div>
+	<div class="text-bubble">
+		<!-- <p>or find me on:</p> -->
+		<span class="contact-links">
 			<a href="/" target="_blank" data-title="LinkedIn" aria-label='link to my linkedin'> 
 						<svg width="52" height="53" viewBox="0 0 52 53" fill="none" xmlns="http://www.w3.org/2000/svg">
 							<g clip-path="url(#clip0_1040_190)">
@@ -123,7 +118,7 @@
 						</svg>
 						<p>GitHub</p>
 			</a>
-			<a href="/" target="_blank" data-title="Instagram" aria-label='link to my instagram'> 
+			<!-- <a href="/" target="_blank" data-title="Instagram" aria-label='link to my instagram'> 
 						<svg width="52" height="53" viewBox="0 0 52 53" fill="none" xmlns="http://www.w3.org/2000/svg">
 							<g clip-path="url(#clip0_1040_191)">
 							<path d="M26 4.77207C32.9469 4.77207 33.7695 4.80312 36.5016 4.92734C39.0406 5.04121 40.4117 5.47598 41.3258 5.83828C42.5344 6.31445 43.4078 6.89414 44.3117 7.81543C45.2258 8.74707 45.7844 9.62695 46.2516 10.8588C46.607 11.7904 47.0336 13.1982 47.1453 15.7758C47.2672 18.5707 47.2977 19.4092 47.2977 26.4793C47.2977 33.5598 47.2672 34.3982 47.1453 37.1828C47.0336 39.7707 46.607 41.1682 46.2516 42.0998C45.7844 43.3316 45.2156 44.2219 44.3117 45.1432C43.3977 46.0748 42.5344 46.6441 41.3258 47.1203C40.4117 47.4826 39.0305 47.9174 36.5016 48.0312C33.7594 48.1555 32.9367 48.1865 26 48.1865C19.0531 48.1865 18.2305 48.1555 15.4984 48.0312C12.9594 47.9174 11.5883 47.4826 10.6742 47.1203C9.46563 46.6441 8.59219 46.0645 7.68828 45.1432C6.77422 44.2115 6.21563 43.3316 5.74844 42.0998C5.39297 41.1682 4.96641 39.7604 4.85469 37.1828C4.73281 34.3879 4.70234 33.5494 4.70234 26.4793C4.70234 19.3988 4.73281 18.5604 4.85469 15.7758C4.96641 13.1879 5.39297 11.7904 5.74844 10.8588C6.21563 9.62695 6.78438 8.73672 7.68828 7.81543C8.60234 6.88379 9.46563 6.31445 10.6742 5.83828C11.5883 5.47598 12.9695 5.04121 15.4984 4.92734C18.2305 4.80312 19.0531 4.77207 26 4.77207ZM26 0C18.9414 0 18.0578 0.0310547 15.2852 0.155273C12.5227 0.279492 10.6234 0.734961 8.97813 1.38711C7.26172 2.07031 5.80938 2.9709 4.36719 4.45117C2.91484 5.92109 2.03125 7.40137 1.36094 9.14043C0.721094 10.8277 0.274219 12.7531 0.152344 15.5687C0.0304688 18.4051 0 19.3057 0 26.5C0 33.6943 0.0304688 34.5949 0.152344 37.4209C0.274219 40.2365 0.721094 42.1723 1.36094 43.8492C2.03125 45.5986 2.91484 47.0789 4.36719 48.5488C5.80938 50.0187 7.26172 50.9297 8.96797 51.6025C10.6234 52.2547 12.5125 52.7102 15.275 52.8344C18.0477 52.9586 18.9313 52.9896 25.9898 52.9896C33.0484 52.9896 33.932 52.9586 36.7047 52.8344C39.4672 52.7102 41.3664 52.2547 43.0117 51.6025C44.718 50.9297 46.1703 50.0187 47.6125 48.5488C49.0547 47.0789 49.9484 45.5986 50.6086 43.8596C51.2484 42.1723 51.6953 40.2469 51.8172 37.4313C51.9391 34.6053 51.9695 33.7047 51.9695 26.5104C51.9695 19.316 51.9391 18.4154 51.8172 15.5895C51.6953 12.7738 51.2484 10.8381 50.6086 9.16113C49.9688 7.40137 49.0852 5.92109 47.6328 4.45117C46.1906 2.98125 44.7383 2.07031 43.032 1.39746C41.3766 0.745312 39.4875 0.289844 36.725 0.165625C33.9422 0.0310547 33.0586 0 26 0Z" fill="#000100" style="fill:#000100;fill:color(display-p3 0.0000 0.0039 0.0000);fill-opacity:1;"/>
@@ -137,33 +132,78 @@
 							</defs>
 						</svg>
 						<p>instagram</p>
-			</a>					
+			</a>					 -->
 		</span>
-	<!-- </li> -->
+	</div>
 {/snippet}
 
 {#snippet About()}
-	<!-- <li class="head-about {openAboutMore?'read-more':''}"> -->
-		<p>Hi Christopher here </p>
+	<article class="text-bubble">
+		<p>Hello Christopher here </p>
 		{#key openAboutMore}
 		<p in:whoo={{ duration: 200 }} > 
-			I'm a web developer in Amsterdam, 
-			focused on accessible interfaces and scalable systems that adapt to real user needs.
+			A web developer in Amsterdam
 		</p>
+		<!-- <p in:whoo={{ duration: 200 }} > 
+			I'm a web developer in Amsterdam
+		</p> -->
+		<!-- <p>	
+			intrested in accessible interfaces and scalable systems that adapt to real user needs.
+		</p> -->
 		{/key}
 		{#if openAboutMore == true}
-				<p in:whoo={{ duration: 300, delay: 400 }} out:whoo={{ duration: 400 }}>
-					Curiosity and experimentation drive my practice. Through studies and client work, I developed a structural approach to applying these principles across different user needs and content.
-				</p>
-				<h2 in:whoo={{ duration: 300, delay: 400 }} out:whoo={{ duration: 400 }}>
-					Approach
+			<div class="previous-roles" in:whoo={{ duration: 200, delay: 400 }} out:whoo={{ duration: 200 }}>
+				<h2 in:whoo={{ duration: 200, delay: 400 }} out:whoo={{ duration: 200 }}>
+					Previous roles:
 				</h2>
-				<p in:whoo={{ duration: 300, delay: 400 }} out:whoo={{ duration: 400 }}>
-					The projects I've enjoyed most began as thoughtful conversations — with clients, collaborators, or users themselves. These conversations shape how I approach the work: researching new tools and techniques, questioning assumptions about interface design, and building systems flexible enough to adapt to both visual needs and the data that flows through them.
-				</p>
-				<p in:whoo={{ duration: 300, delay: 400 }} out:whoo={{ duration: 400 }}>
-					I draw on web fundamentals as a creative material — experimenting with what's possible, staying curious about emerging features, and always thinking about who will actually use what I'm making. Whether it's a custom solution for a specific stakeholder or a system built to scale, the goal remains the same: work that's thoughtful, accessible, and genuinely useful.
-				</p>
+				<ul>
+					<li>Frontend Developer</li>
+					<li>Frontend Engineer</li>
+					<li>UI Designer</li>
+					<li>UI Consultant</li>
+				</ul>	
+			</div>
+			<p in:whoo={{ duration: 300, delay: 400 }} out:whoo={{ duration: 400 }}>
+				Curiosity and experimentation drive my practice. Through studies and client work, I developed a structural approach to applying these principles across different user needs and content.
+			</p>
+			<h2 in:whoo={{ duration: 300, delay: 400 }} out:whoo={{ duration: 400 }}>
+				Approach
+			</h2>
+			<p in:whoo={{ duration: 300, delay: 400 }} out:whoo={{ duration: 400 }}>
+				The projects I've enjoyed most began as thoughtful conversations, with clients, collaborators, or users themselves. These conversations shape how I approach the work: 
+			</p>
+			<ul class="approaches" in:whoo={{ duration: 300, delay: 400 }} out:whoo={{ duration: 400 }}>
+				<!-- <li>Considering the needs of the stakeholders</li> -->
+				<!-- <li>Researching (new) tools and techniques that uniquely address user needs</li> -->
+				<!-- <li>Designing how the content and data that flows through the system</li> -->
+				<!-- <li>Designing the data flows </li> -->
+				<!-- <li>Laying out the content system</li> -->
+				<!-- <li>building systems flexible to adapt to both visual needs and the data that flows through them.</li> -->
+				<!-- <li>building flexible systems that adapts to both visual needs and the data flows .</li> -->
+				<li>
+					<p class="apr-pill">Considering stakeholder needs	</p>
+					<p class="apr-pill">Researching tools and techniques that address user needs</p>
+				</li>
+				<!-- <CornerDownRight /> -->
+				<ArrowBigDown />
+				<li>
+					<p class="apr-pill">Designing the data flows </p>
+					<p class="apr-pill">Laying out the content system</p>
+				</li>
+				<!-- <CornerDownRight /> -->
+				<ArrowBigDown/>
+				<li class="apr-pill">Building flexible systems that adapt to visual needs and data flows</li>
+				<li class="apr-pill">Automated and user testing</li>
+				<!-- <CornerDownRight/ /> -->
+				<ArrowBigDown />
+				<li class="apr-pill">Iterating until the project meets the criteria to go live</li>
+			</ul>
+			<p in:whoo={{ duration: 300, delay: 400 }} out:whoo={{ duration: 400 }}>
+				I draw on web fundamentals as a creative material, experimenting with what's possible, staying curious about emerging features, while always thinking about the person using the product.
+			</p>
+			<p in:whoo={{ duration: 300, delay: 400 }} out:whoo={{ duration: 400 }}>
+				Whether it's a custom solution for a specific stakeholder or a system built to scale, the goal remains the same: work that's thoughtful, accessible, and genuinely fun.	
+			</p>
 				<!-- <div class="previous-roles" in:whoo={{ duration: 300, delay: 400 }} out:whoo={{ duration: 200 }}>
 					<h2 in:whoo={{ duration: 300, delay: 400 }} out:whoo={{ duration: 200 }}>
 						Stack:
@@ -176,7 +216,7 @@
 						<li>Junior backend Developer</li>
 					</ul>	
 				</div> -->
-				<div class="previous-roles" in:whoo={{ duration: 200, delay: 400 }} out:whoo={{ duration: 200 }}>
+				<!-- <div class="previous-roles" in:whoo={{ duration: 200, delay: 400 }} out:whoo={{ duration: 200 }}>
 					<h2 in:whoo={{ duration: 200, delay: 400 }} out:whoo={{ duration: 200 }}>
 						Previous roles:
 					</h2>
@@ -185,18 +225,19 @@
 						<li>Frontend Engineer</li>
 						<li>UI Designer</li>
 						<li>UI Consultant</li>
-						<!-- <li>Junior backend Developer</li> -->
 					</ul>	
-				</div>
+				</div> -->
 		{/if}
-		<button class="read-more-btn" onclick={handleAboutMore}>
-			{#if openAboutMore == false}
-			Read more
-			{:else}
-			Read less
-			{/if}
-		</button>
-	<!-- </li> -->
+		<div class="rm-btn-container">
+			<button class="read-more-btn" onclick={handleAboutMore}>
+				{#if openAboutMore == false}
+				Read more
+				{:else}
+				Read less
+				{/if}
+			</button>
+		</div>
+	</article>
 {/snippet}
 
 {#snippet headerC()}
@@ -217,22 +258,16 @@
 				</picture> -->
 			</a>
 		</li>
-		<li class:head-contacts={openContacts} class:head-about={openAbout} class:read-more={openAbout && openAboutMore}  class:menu-routes={!openContacts && !openAbout}> 
+		<li class="" class:head-contacts={openContacts} class:head-about={openAbout} class:read-more={openAbout && openAboutMore}  class:menu-routes={!openContacts && !openAbout}> 
 			{#if openContacts == true}
 				{@render Contacts()}
 			{:else if openAbout == true}
 				{@render About()}
 			{:else}
-				<!-- <span> <button onclick={() => showAbout()}>About</button></span>
-				<span> <button onclick={() => showContacts()}>Contact</button></span>
-				<span> <a class="noLink" href="/">Masmesa studio</a></span>
-				<span> <a class="noLink" href="/">Workshops,events</a></span> -->
-			<!-- <li class="menu-routes">
 				<span> <button onclick={() => showAbout()}>About</button></span>
 				<span> <button onclick={() => showContacts()}>Contact</button></span>
 				<span> <a class="noLink" href="/">Masmesa studio</a></span>
 				<span> <a class="noLink" href="/">Workshops,events</a></span>
-			</li> -->
 		{/if}
 		</li>
 	</ul>
@@ -244,32 +279,24 @@
 	</section>
 {/snippet}
 
-{#if openMenu == true}
-	<article class="menu-container active">
-				{@render headerC()}
-	</article>
-{:else if openMenu == false}
-	<article class=" menu-container close">		
-		{@render menuContent()}
-	</article>
-{/if}
+<article class="menu-container {openMenu ? 'active' : 'close'}">
+	{@render headerC()}
+</article>
 
-<!-- {#key menuOpen}
-	<article class="menu-container {openMenu == true?'active':'close'}">
-		{#if openMenu == true}
-			{@render headerC()}
-		{:else if openMenu == false}
-		{@render menuContent()}
-		{/if}
-	</article>
-{/key} -->
+
 
 
 <style>
 	:root{
-		--menu-height:50cqh;
+		--menu-height:40cqh;
 		--icon-shadow-color: color-mix(in srgb, var(--color-bg,#ffffff), rgba(105, 98, 63, 0.181) 50%);
-		
+		--logo-img-min-size: 4.5rem;
+		--logo-width: clamp(4cqw, -.1rem + 67cqw, 5cqw);
+		--intro-element-displacement:calc(var(--H-top) + 11cqb);
+		--intro-element-transition:.9s cubic-bezier(0.175, 0.885, 0.32, 1.275)  100ms;
+		--pill-radius:107.59px;
+		--pill-padding:21.5px;
+
 		@property --menu-height{
 			syntax: '<length>';
 			initial-value: 46cqh;
@@ -281,20 +308,23 @@
 
 	.menu-container{
 		position: relative;
-		height:var(--menu-height);
+		display: flex;
+		justify-content: center;
+		min-height: var(--menu-height);
+		height:fit-content;
 		padding-inline: var(--Padding-genral);
-		/* background-color: rgba(255, 255, 255, 0.342);
-		background-color: color-mix(in srgb, var(--color-bg, rgba(255, 255, 255, 0.781)), rgba(255, 255, 255, 0.342) 80%);
-		background-color: color-mix(in srgb, var(--tritary-color, rgba(255, 255, 255, 0.781)), rgba(255, 255, 255, 0.342) 20%);
-		background-color: color-mix(in srgb, var(--tritary-color, rgba(255, 255, 255, 0.781)),color-mix(in srgb, var(--color-bg), rgba(255, 255, 255, 0.595) 50% ) 90%); */
 		background-color: inherit;
+		background-color: transparent;
+		/* background-color: color-mix(in srgb, var(--tritary-color, rgba(255, 255, 255, 0.781)),color-mix(in srgb, var(--color-bg), rgba(255, 255, 255, 0.595) 50% ) 90%); */
+		/* background-color: color-mix(in srgb, var(--tritary-color, rgba(255, 255, 255, 0.781)), rgba(255, 255, 255, 0.342) 20%); */
 
 		backdrop-filter: blur(5px);
-		z-index: 1;
+		z-index: 2;
 		
 		container-type: inline-size;
 		container-name: menu;
 		/* view-transition-name: menu; */
+		/* border: solid 4px; */
 
 		@starting-style{
 			translate: 0 -100%;
@@ -302,34 +332,29 @@
 	}
 
 	.close-menu-container{
-		display: block;
+		display: flex;
 		position: relative;
+		align-items: center;
+		justify-content: center;
 		width: 100%;
 		height: 100%;
 	}
 
 	.active{
-		position:absolute;
-		display: block;
+		position: absolute;
+		min-height: var(--menu-height);
 		inset: 0;
-		top: calc(0 - 10%);
-		/* background-color: rgba(255, 255, 255, 0.801);
-		background-color: color-mix(in hsl, var(--color-bg)60%, transparent );
-		background-color: color-mix(in srgb, var(--color-bg, rgba(255, 255, 255, 0.511)) 60%, rgba(255, 255, 255, 0.199) 80%);
-		background-color: color-mix(in srgb, var(--tritary-color, rgba(255, 255, 255, 0.781)), rgba(255, 255, 255, 0.595) 60%); */
-		/* background-color: color-mix(in srgb, var(--tritary-color, rgba(255, 255, 255, 0.781)),color-mix(in srgb, var(--color-bg), rgba(255, 255, 255, 0.595) 50% ) 90%); */
-		/* box-shadow: rgba(27, 21, 14, 0.041) 0px 50px 50px -20px, rgba(0, 0, 0, 0.15) 0px 10px 60px -30px, rgba(10, 37, 64, 0.35) 0px -1.7px 3px 0px inset; */
 
 		z-index: 1;
-		animation: block .65s linear 100ms alternate both;
+		/* animation: block .65s linear 100ms alternate both; */
 		/* view-transition-name: menu; */
 	}
 
 	.close{
-		position: absolute;
-		inset: 0;
-		animation: launch .4s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275) .01s;
+		display: none;
+		min-height: 0;
 		z-index: 3;
+		/* translate:0 calc(-1.2 * var(--H-top)); */
 		
 		@starting-style{
 			/* view-transition-name: menu; */
@@ -349,40 +374,49 @@
 		width: 100%;
 		height: 100%;
 		bottom: 0;
-		padding-inline: 6rem;
+		margin-left: 22cqw;
 		container-type: inline-size;
-				/* outline: solid red; */
-
+		/* outline: solid rgb(81, 255, 0); */
 	}
 
 	.headerUl > li{
 		flex: 1 1 inherit;
 		container-type: inline-size;
+		/* outline: solid red; */
 	}
 
 	/* home, main icon  */
 
 	.headerUl li.header-logo{
-		--logo-width:calc-size(fit-content , size + clamp(1rem , 0.05vw + 40cqw ,35cqw));
-		--logo-width: clamp(20cqw, -.1rem + 87cqw, 39cqw);
-		width: var(--logo-width);
-		height: 60cqh;
-		max-height: 100%;
-		z-index: 30;
-		/* outline: solid red; */
-		
+		/* --logo-width:calc-size(fit-content , size + clamp(1rem , 0.05vw + 40cqw ,35cqw)); */
+		/* --logo-width: clamp(20cqw, -.1rem + 87cqw, 39cqw); */
+		flex: 0 1;
+		position: relative;
+		display: flex;
+		justify-content: end;
+		margin-top:calc(1rem + .5%) ;
+		min-width: 25cqw;
+		width: var(--logo-width,0);
+		/* height: var(--logo-width,0); */
+		/* height: 60cqh; */
+		/* max-height: 100%; */
+		z-index: 30;	
 	}
 
 	li.header-logo a {
 		display: grid;
 		place-content: center;
-		position: relative;
-		align-self: center;
-		justify-self: center;
-		aspect-ratio: 1;
-		height: 100%;
-		width: 100%;
 		overflow: visible;
+		min-width: var(--logo-img-min-size);
+		max-width: 60px;
+		max-width: clamp(3rem, 93% - 2rem, 100%);
+		max-width: var(--logo-img-min-size);
+		/* aspect-ratio: 1; */
+		/* width: 40px; */
+		height: fit-content;
+		transition: var(--intro-element-transition) ;
+
+		/* outline: solid blue; */
 	}
 
 	/* make the flower face a component that has a custom event,
@@ -390,12 +424,10 @@
 	li.header-logo .profile{
 		flex: 0 1 auto;
 		position: relative;
-		width: 100%;
-		max-width: clamp(3rem, 93% - 2rem, 100%);
-		min-width: 5rem;
-		height: 100%;
-		min-height: 5rem;
-		/* view-transition-name: header-figure; */
+		/* max-width: clamp(3rem, 93% - 2rem, 100%); */
+		min-width: var(--logo-img-min-size,0);
+		min-height: var(--logo-img-min-size,0);
+		view-transition-name: header-figure;
 		isolation: isolate;
 
 		& img{
@@ -414,7 +446,7 @@
 			mask: 100% 50% var(--g),88.302% 82.139% var(--g),58.682% 99.24% var(--g),25% 93.301% var(--g),3.015% 67.101% var(--g),3.015% 32.899% var(--g),25% 6.699% var(--g),58.682% 0.76% var(--g),88.302% 17.861% var(--g),radial-gradient(100% 100%,#000 35.01%,#0000 calc(35.01% + 1px));
 			scale: 1;
 			transition: .8s cubic-bezier(0.175, 0.885, 0.32, 1.275) ;
-			/* animation: sway 10s linear infinite .5s backwards ; */
+			animation: sway 50s linear infinite .5s backwards ;
 			view-transition-name: header-figure;
 			z-index: 3;
 
@@ -431,55 +463,82 @@
 		}
 	}
 
-	.headerUl:has(li:nth-of-type(n) a:hover) .flower{
-		--g:/27.486% 27.486% radial-gradient(#000 calc(71% - 1px),#0000 71%) no-repeat;
-		transition: transform 1s .1s ;
-		transform: rotateY(.5turn);
-		/* animation:flip 1s alternate forwards .1s   ; */
-	}
-
-	.headerUl:has(li:nth-of-type(1) a:not(:hover)) .flower {
-		transition: .9s cubic-bezier(0.175, 0.885, 0.32, 1.275)  1s ;
-		/* animation: sway 10s backwards infinite .1s; */
-	}
-
-	li:not(.header-logo){
+	/* .headerUl > li:not(.header-logo){ */
+	li:is(.head-contacts, .head-about, .read-more){
 		display: flex;
 		flex-direction: column;
 		padding-inline: var(--Padding-genral);
+		margin-top: var(--intro-element-displacement);
+		max-width: 700px;
+		color: var(--color-text);
+		transition: top var(--intro-element-transition);
+
 		flex: 1 1 auto;
-		gap: 4%;
-		/* outline: solid red; */
+	}
+
+	.text-bubble{
+		/* --_btn-shadow-color: color-mix(in srgb, var(--color-bg,#ffffff), rgba(65, 60, 39, 0.181) 70%); */
+		/* --_btn-shadow-color: color-mix(in srgb, var(--accent-color,#ffffff), rgba(90, 86, 70, 0.181) 95%); */
+		--_btn-shadow-color: color-mix(in srgb, var(--color-bg-muted,#ffffff), rgba(90, 86, 70, 0.181) 95%);
+		/* --_btn-border-color: color-mix(in srgb, var(--accent-color,#ffffff), rgba(90, 86, 70, 0.181) 65%); */
+		--_btn-border-color: color-mix(in srgb, var(--accent-color,#ffffff), var(--tritary-color-muted) 65%);
+
+		padding: clamp(1rem, 1.5cqw, 2rem) clamp(1.5rem, 3cqw, 4rem);
+		border-radius:10px 23.7px 23.7px 23.7px;
+		border: solid 2px var(--color-bg-muted);
+		border: solid 2px var(--tritary-color-muted);
+		border: solid 2px var(--_btn-border-color);
+		/* border-style: solid groove groove solid; */
+		width: fit-content;
+		min-height: 3rem;
+		height: fit-content;
+		margin-bottom: 2% ;
+		background-color: #ffffff;
+		background-color: color-mix(in srgb, var(--tritary-color, #ffffffc7) 5%,color-mix(in srgb, var(--color-bg), #ffffff60 90% ) 90%);
+		/* background-color: color-mix(in lab, var(--accent-color, #ffffffc7)50% ,color-mix(in srgb, var(--color-bg), #ffffff60 90% ) 90%); */
+
+		filter: drop-shadow(var(--_btn-shadow-color) 0px 28px 10px);
+		animation: buble-text-in 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+
+		@starting-style{
+			opacity: 0;
+			translate: -50% 0;
+		}
+
+	}
+
+	.text-bubble p:nth-child(1){
+		font-size: 1.3rem;
+		line-height: 1.5;
 	}
 
 	/* contacts menu */
-	li.head-contacts{
-		display: flex;
+	/* ///////////// */
+	.head-contacts{
 		flex-direction: column;
-		justify-content:end;
 		align-items: start;
-		color: var(--color-text);
-		margin-block: 2rem;
 
 		::first-letter{
 			text-transform: uppercase;
 		}
 	}
 
-	li.head-contacts > p {
-		font-size: var(--text-size-m);
+	.head-contacts .text-bubble > p {
 		color: var(--color-heading);
-		margin-top:2%;
 	}
 
-	li.head-contacts span {
+	.head-contacts .text-bubble > span {
+		color: var(--color-heading);
+	}
+
+	.head-contacts .text-bubble span {
 		display: inline-flex;
 		flex-flow: row nowrap;
 		font-size: var(--text-size-l);
 		gap: 4cqw;
 	}
 
-	li.head-contacts span a{
+	.head-contacts .text-bubble span a{
 		display: flex;
 		flex-direction: column;
 		justify-content:center;
@@ -493,7 +552,6 @@
 		&:hover {
 			color: var(--accent-color);
 			fill:var(--accent-color);
-
 			svg path{
 				fill: var(--accent-color) !important ;
 			}
@@ -515,7 +573,7 @@
 		}
 
 		svg{
-			width: clamp(40px, -.2rem + 19cqw ,3cqw);
+			width: clamp(25px, -.2rem + 12cqw ,4cqw);
 			aspect-ratio: 1;
 			fill: var(--color-text);
 		}
@@ -525,7 +583,11 @@
 		}
 	}
 
-	/* about menu */
+	:global(.menu-container:has(.head-about,.head-contacts)){
+		.header-logo a{
+			translate: 0  calc(var(--intro-element-displacement) - 1rem);
+		}	
+	}
 
 	:global(.menu-container:has(.head-about)){
 		/* --menu-height: 20cqh ; */
@@ -533,16 +595,10 @@
 		box-shadow: none;
 		transition: .5s cubic-bezier(0.575, 0.005, 0.32, 1.175) 100ms;		
 
-
 		.header-logo{
 			animation: none !important;
 			height: auto;
 			width: clamp(20cqw, -.1rem + 87cqw, 39cqw);
-		}
-
-		.header-logo a{
-			max-width: 500px;	
-			width: 100%;
 		}
 
 		.header-logo a .profile::after{
@@ -567,32 +623,109 @@
 			animation-duration:90s !important;
 			animation-delay:9s !important;
 		}
+
+		.text-bubble > p:not(:nth-of-type(n + 3)){
+			/* color: var(--accent-color); */
+			/* color: color-mix(in srgb,var(--color-text,#ffffff) 70% , var(--accent-color ,var(--black)) 90% ); */
+			max-width: 37ch;
+		}
+
+		.text-bubble > p:nth-of-type(1){
+			line-height: 2;
+		}
 	}
+
+	/* about menu */
+	/* ////////// */
+	li.head-about{
+		position: relative;
+		display: flex;
+		font-size: clamp(1.2rem, -0.3006rem + 2.8522cqw, var(--text-size-l));
+		font-size: 1.4rem;
+		scrollbar-color: color-mix(in srgb, #2c5d98, var(--primary-color,var(--black)) 40%) transparent;
+		scrollbar-color: color-mix(in srgb, var(--color-bg,#2c5d98), var(--primary-color,var(--black)) 26%) transparent;
+	}
+
+	.head-about .text-bubble > :nth-child(n){
+		max-width: 43ch;
+	}
+
+	.head-about .rm-btn-container{
+		display: flex;
+		align-items: end;
+		justify-content: end;
+		height: fit-content;
+		margin-top: 2rem;
+	}
+
+	.head-about button.read-more-btn{
+		--_btn-hue:var(--accent-color);
+		--_btn-color2: color-mix(in srgb, var(--_btn-hue, #ffffffc7),color-mix(in lab, var(--color-bg), #ffffff98 50% ) 90%) ;
+		place-content: center;
+		padding-inline: var(--pill-padding);
+
+		background-color: var(--_btn-color2);
+		color: color-mix(in srgb,var(--color-text,#ffffff) 70% , var(--_btn-hue ,var(--black)) 90% );
+		border: solid 2px;
+		border-color: var(--_btn-color2);
+		border-radius: var(--pill-radius);
+
+		max-width: fit-content;
+		min-height: 3rem;
+		text-wrap: nowrap;
+		font-size: var(--text-size-s);
+		cursor: pointer;
+		transition: 500ms ease;
+
+		@starting-style{
+			opacity: 0;
+			scale: 0.8;
+		}
+	}
+
+	/* read more */
+	/* ///////// */
 
 	:global(.menu-container:has(.read-more)){
 		--menu-height: 100cqh;
 		background-color: color-mix(in hsl, var(--color-bg)60%, transparent );
 
 		.read-more{
-			/* position: absolute;
-			top: 10cqh;
-			right: 10cqw; */
-			height: 95cqh;
+			margin-top: calc(var(--intro-element-displacement) - 7cqh);
+			height: 90cqh;
 			overflow-y: scroll;
+			overflow-x: visible;
+		}
+
+		.headerUl{
+			margin-left: 0;
+			justify-content: center;
+		}
+
+		.header-logo{
+			--logo-width: clamp(20cqw, -.1rem + 87cqw, 29cqw);
+			min-width: var(--logo-width);
+		}
+
+		.header-logo a{
+			max-width: 100%;	
+			aspect-ratio: 1;
+			width: 100%;
+			translate:0 9rem;
 		}
 
 		.header-logo a .profile{
 			--g:/27.486% 27.486% radial-gradient(#000 calc(71% - 1px),#0000 71%) no-repeat;
 			aspect-ratio: 1;
-			max-width: 55cqw;
+			max-width: 75cqw;
 			min-height: 20cqh;
 			animation: none;
 			/* view-transition-name: header-figure; */
 		}
 
 		.header-logo a .profile::after{
-			background-color: color-mix(in srgb, #2c5d98, var(--primary-color) 40%);
 			--g:/29.486% 26.486% radial-gradient(#000 calc(71% - 1px),#0000 71%) no-repeat;
+			background-color: color-mix(in srgb, #2c5d98, var(--primary-color) 40%);
 			animation: sway 30s linear 9s backwards ;
 		}
 
@@ -602,119 +735,71 @@
 			animation: inherit;
 			object-view-box: inset(0 10px);
 		}
+
 		img.face-2{display: none;}		
-	}
 
-	li.head-about{
-		position: relative;
-		display: flex;
-		align-items: bottom;
-		font-size: clamp(1.2rem, -0.3006rem + 2.8522cqw, var(--text-size-l));
-		padding: unset ;
-		max-width: 700px;
-		margin-top: var(--H-top);
-		overflow-y:auto;
-		scrollbar-color: color-mix(in srgb, #2c5d98, var(--primary-color,var(--black)) 40%) transparent;
-	}
+		.text-bubble{
+			display: flex;
+			flex-direction: column;
+			width: 100%	;	
+			padding-left: 5cqw;
+			background-color: transparent;
+			border: none;
+			gap: 1rem;
+			filter: none;
+		}
 
-
-	li.head-about.read-more{
-		position: relative;
-		font-size: clamp(1.2rem, -0.3006rem + 2.8522cqw, 2rem);
-		max-width: 900px;
-		max-height: 98%;
-		/* height: 100cqh; */
-		overflow-y: auto;
-		padding-bottom: 7rem;
-		/* outline: solid red; */
-		/* background-color: rgba(255, 255, 255, 0.801); */
-		/* background-color: color-mix(in hsl, var(--color-bg)60%, transparent ); */
-	}
-
-	/* li.head-about.read-more .asset-border{
-			position: sticky;
-			position: absolute;
-			position: fixed;
-			inset-block:0;
-			height: 100%;
-			backdrop-filter: blur(5px);
-			z-index: 0;
-			pointer-events: none;
-			contain: style paint;
-			background-color:  rgba(0, 0, 0, 0.359);
-	}
-
-	li.head-about.read-more .asset-border.b-bottom {
-			inset-block: unset;
-			bottom: 0;
-			height: 10%;
-			width: 100%;
-			mask: linear-gradient(
-				to top,
-				var(--file-primary-hue) 0% 5%,
-				transparent 50% 100%
-			);
-	} */
-
-	li.head-about :nth-child(n){
-		max-width: 43ch;
-	}
-
-	li.head-about > :nth-child(1){
-		margin-top: 10rem;
-	}
-
-	li.head-about button.read-more-btn{
-		display: none;
-		place-content: center;
-		justify-self: end;
-		padding-inline: 10px;
-		margin-bottom: 1rem;
-
-		background-color: color-mix(in srgb, var(--primary-color, rgba(255, 255, 255, 0.781)),color-mix(in srgb, var(--color-bg), rgba(255, 255, 255, 0.595) 50% ) 90%);
-		color: color-mix(in srgb,var(--color-text,#ffffff) 70% , var(--primary-color ,var(--black)) 90% );
-		border: solid 2px;
-		border-color:color-mix(in srgb, var(--primary-color, rgba(255, 255, 255, 0.781)),color-mix(in srgb, var(--color-bg), rgba(255, 255, 255, 0.595) 50% ) 90%) ;
-		border-radius: 25px;
-
-		max-width: fit-content;
-		min-height: 3rem;
-		text-wrap: nowrap;
-		font-size: var(--text-size-s);
-		cursor: pointer;
-		z-index: 3;
-		transition: 500ms ease;
-
-		@starting-style{
-			opacity: 0;
-			scale: 0.8;
+		.text-bubble > p:nth-child(1){
+			font-size: inherit;
+			line-height: 1.5;
 		}
 	}
 
-	li.head-about h2{
-		font-size: clamp(1.5rem, -0.1304rem + 3.6522cqw, var(--text-size-xl));
+	li.read-more{
+		position: relative;
+		flex-direction: row;
+		font-size: clamp(1.2rem, -0.3006rem + 2.8522cqw, 2rem);
+		max-width: 900px;
+		padding-top: 7rem;
+		overflow-y: auto;
+		overflow-x: visible;
+	}
+	
+	.read-more h2{
+		font-size: clamp(1.5rem, -0.1304rem + 3.6522cqw, var(--text-size-l));
 		height: fit-content;
 		color:color-mix(in hsl,var(--color-text),var(--color-bg) 60%);
-
+		margin-block:2rem 1rem;
 	}
 
-	li.head-about p{
+	.read-more .text-bubble{
+		--_ct:oklch;
+	}
+	.read-more .text-bubble > p{
 		max-width: 45ch;
 		height: fit-content;
-		color:color-mix(in hsl,var(--color-text),var(--color-bg) 30%);
+		color:color-mix(in var(--_ct),var(--color-text),var(--color-bg) 30%);
+		color:color-mix(in var(--_ct),var(--color-text),var(--accent-color) 40%);
+
+		&:nth-of-type(n + 3){
+			line-height: 1.3;
+			font-size: clamp(1.3rem, -0.96rem + 2.8522dvw, var(--text-size-l));
+		}
 	}
 
-	li.head-about .previous-roles{
+
+	/* .read-more .previous-roles{
 		display: flex;
 		align-items: top;
 		justify-content: top;
-		margin-block:2rem;
+		margin-block:2rem 1rem;
 
 		h2{
 			flex: 1 1 50%;
-			font-size: clamp(1.5rem, -0.1304rem + 3.6522cqw, var(--text-size-xl));
+			font-size: clamp(1.5rem, -0.1304rem + 3.6522cqw, var(--text-size-m));
 			min-width: fit-content;
 			height: fit-content;
+			margin-block:0;
 		}
 
 		ul{
@@ -730,10 +815,144 @@
 			font-size: var(--text-size-m);
 			font-weight: 200;
 		}
+	} */
+
+	.read-more .previous-roles:nth-of-type(1){
+		display: flex;
+		align-items: top;
+		justify-content: top;
+		margin-block:2rem 1rem;
+		flex-direction: column;
+
+		h2{
+			flex: 1 1 50%;
+			font-size: clamp(1.5rem, -0.1304rem + 3.6522cqw, var(--text-size-l));
+			min-width: fit-content;
+			height: fit-content;
+			margin-block:2rem 2rem;
+		}
+
+		ul{
+			flex: 1 1 auto;
+			display: inherit;
+			flex-flow: row wrap;
+			gap: .5rem;
+		}
+
+		li{
+			--_pill-hue:var(--accent-color);
+			--_pill-color2: color-mix(in var(--_ct), var(--_pill-hue, #ffffffc7),color-mix(in lab, var(--color-bg), #ffffff98 50% ) 90%) ;
+			--_pill-color2: color-mix(in xyz, var(--_pill-hue, #ffffffc7),color-mix(in lab, var(--color-bg), #ffffff98 50% ) 90%) ;
+			place-content: center;
+			padding-inline: var(--pill-padding);
+			margin-bottom: 1rem;
+			border-radius: var(--pill-radius);
+
+			background-color: var(--_pill-color2);
+			color: color-mix(in var(--_ct),var(--color-text,#ffffff) 70% , var(--_pill-hue ,var(--black)) 90% );
+			border: solid 2px;
+			border-color:var(--_pill-color2) ;
+			filter: drop-shadow(var(--_btn-shadow-color) 0px 10px 15px);
+
+			max-width: fit-content;
+			min-height: 3rem;
+			text-wrap: nowrap;
+		}
 	}
 
+	.read-more .approaches{
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+		margin-block:2rem 1rem;
+
+		li{
+			all: unset;
+		}
+
+		.apr-pill.apr-pill{
+			--_ct:oklch;
+			--_pill-hue:var(--accent-color);
+			--_pill-color2: color-mix(in var(--_ct), var(--_pill-hue, #ffffffc7),color-mix(in lab, var(--color-bg), #ffffff98 50% ) 90%) ;
+
+			all: unset !;
+			font-size: var(--text-size-m);
+			font-weight: 200;
+			text-align: center;
+			align-items: center;
+
+			place-content: center;
+			padding-inline: var(--pill-padding);
+			margin-bottom: 1rem ;
+			border-radius: var(--pill-radius);
+			
+			color: color-mix(in var(--_ct),var(--color-text,#ffffff) 70% , var(--_pill-hue ,var(--black)) 90% );
+			border: solid 3px var(--_pill-hue);
+			border-color:color-mix(in var(--_ct), var(--_pill-hue, #ffffffc7) 70%,color-mix(in srgb, var(--color-bg), #ffffff98 50% ) 50%) ;
+			background-color: color-mix(in var(--_ct), var(--_pill-hue, #ffffffc7),color-mix(in srgb, var(--color-bg), #ffffff98 50% ) 90%);
+
+			max-width: fit-content ;
+			min-height: 3rem;
+		}
+
+		/* li:has(p){
+			background-color: transparent;
+			border: none;
+			padding: none;
+
+			p{
+				all: unset;
+				display: flex;
+				flex-flow: column nowrap;
+				place-content: center;
+				padding-inline: var(--pill-padding);
+				margin-bottom: 1rem;
+				border-radius: var(--pill-radius);
+				background-color: color-mix(in srgb, var(--_btn-hue, rgba(255, 255, 255, 0.781)),color-mix(in srgb, var(--color-bg), rgba(255, 255, 255, 0.595) 50% ) 90%);
+				color: color-mix(in srgb,var(--color-text,#ffffff) 70% , var(--_btn-hue ,var(--black)) 90% );
+
+				max-width: fit-content !important;
+				width: fit-content;
+				min-height: 3rem;
+				text-wrap: nowrap;
+			}
+		} */
+	}
+
+	.read-more :global(.lucide:nth-of-type(n)){
+		--_lucide-c:color-mix(in var(--_ct),var(--color-text) 80%,var(--color-bg) 60%);
+		color:color-mix(in var(--_ct), var(--_lucide-c,#2c5d98), var(--primary-color,var(--color-heading)) 36%);
+		margin-left: 1rem;
+		transition: color 300ms ease,fill 300ms ease;
+		fill:currentColor;		
+	}
+
+	.read-more .rm-btn-container{
+		display: flex;
+		position: sticky;
+		bottom: 2rem;
+		left: -3rem;
+		height: fit-content;
+		/* width: fit-content; */
+		/* translate:calc(-1 * clamp(20cqw, -.1rem + 87cqw, 29cqw)) 0; */
+		/* translate:-5rem 0; */
+	}
+
+	.read-more button.read-more-btn{
+		place-content: center;	
+		font-size: var(--text-size-s);
+		transition: 500ms ease;
+
+		@starting-style{
+			opacity: 0;
+			scale: 0.8;
+		}
+	}
+
+
 	/* main menu navigation */
-	li.menu-routes{
+	/* //////////////////// */
+	.menu-routes{
 		flex: 2 1 auto;
 		justify-content: center;
 		font-size: clamp(1.5rem, -1.1304rem + 5.6522cqw, 3rem);
@@ -741,7 +960,7 @@
 		height: 100%;
 	}
 
-	li.menu-routes span :is(a,button){
+	.menu-routes span :is(a,button){
 		border: none;
 		background: none;
 		font-size: inherit;
@@ -749,11 +968,23 @@
 		cursor: pointer;
 	}
 
-	li.menu-routes .noLink{
+	.menu-routes .noLink{
 		pointer-events: none;
 		cursor: default;
 		opacity: 0.6;
 		color: gray;
+	}
+
+	.headerUl:has(li:nth-of-type(n) a:hover) .flower{
+		--g:/27.486% 27.486% radial-gradient(#000 calc(71% - 1px),#0000 71%) no-repeat;
+		transition: transform 1s 100ms ;
+		transform: rotateY(.5turn);
+		/* animation:flip 1s alternate forwards .1s   ; */
+	}
+
+	.headerUl:has(li:nth-of-type(1) a:not(:hover)) .flower {
+		transition: .9s cubic-bezier(0.175, 0.885, 0.32, 1.275)  100ms ;
+		/* animation: sway 10s backwards infinite .1s; */
 	}
 
 	@keyframes sway {
@@ -763,22 +994,19 @@
 	}
 
 
-	@keyframes block {
+	/* @keyframes block {
 		0% { transform: translate(0, -100%); } 
 		30% { transform: translate(0, 0%); animation-timing-function: linear; filter: blur(1.4px); } 
 		35% { transform: translate(0, 5%); animation-timing-function: linear; filter: blur(0); } 
 		37% { transform: translate(0, -15%);animation-timing-function: ease-out; } 
 		55% { transform: translate(0, -20%);animation-timing-function: linear; } 
-		/* 60% { transform: translate(0, 0%);animation-timing-function: ease-out;  filter: blur(1px);}  */
 		76% { transform: translate(0, -8.51%);animation-timing-function: ease-out; }
 		83% { transform: translate(0, 0); animation-timing-function: ease;}
 		
-		/* | 7 | 0.04117715 | 8.24%  | */
 		85% { transform: translate(0, -3.24%); }
 		
 		95% { transform: translate(0, 1.03%); }
 		
-		/* | 9 | 0.0201768035 | 4.03%  | */
 		96% { 
 			transform: translate(0, 0.9%); 
 			animation-timing-function: cubic-bezier(0.68, -3.55, 0.265, 3.55);
@@ -786,14 +1014,13 @@
 		
 		100% { 
 			transform: translate(0, 0); 
-			/* animation-timing-function: cubic-bezier(0.68, -1.55, 0.265, 1.55); */
 			animation-timing-function: linear(0, 0.029 1.6%, 0.123 3.5%, 0.651 10.6%, 0.862 14.1%, 1.002 17.7%, 1.046 19.6%, 1.074 21.6%, 1.087 23.9%, 1.086 26.6%, 1.014 38.5%, 0.994 46.3%, 1);
 			animation-duration:1s ;
 		} 
-	}
+	} */
 
 	@keyframes launch {
-		50%{filter: blur(2px) ;	}
+		50%{filter: blur(1px) ;	}
 		100%{
 			translate: 0 -100%;
 			filter: opacity(5%);
@@ -803,6 +1030,18 @@
 	@keyframes flip{
 		to{transform: rotateY(2turn);	}
 	}
+
+	@keyframes buble-text-in{
+		0%{
+			opacity: 0;
+			translate:0 -10% ;
+		}
+		100%{
+			opacity: 1;
+			translate: 0;
+		}
+	}
+
 
 	@media (width < 1000px) {
 		li.head-about button.read-more-btn{
