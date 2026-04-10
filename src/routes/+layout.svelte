@@ -8,10 +8,6 @@
 <Window role='window' styleOn="">
 	<Header />
 	<Menu2 />
-	<!-- <section>
-		<StickerBed />
-	</section> -->
-	<!-- <CuttingBoard/> -->
 	{@render children()}
 </Window>
 <Footer class='ftr'/>
@@ -23,8 +19,8 @@
 		/* color-scheme: light dark; */
 		--H-top:5cqh;
 		--Padding-genral:2cqh;
-		--primary-gray: #d5d5d5e7;
-		/* --primary-gray: rgb(235, 233, 219); */
+		/* --primary-gray: #d5d5d5e7; */
+		--primary-gray: rgb(235, 233, 219);
 		--primary-gray: var(--color-bg);
 	}
 
@@ -54,16 +50,16 @@
 		overflow: hidden;
 		background-attachment: fixed, fixed;
 		background:url('cuttingmat55-33-2.svg'),
-		radial-gradient(circle,rgba(42, 123, 155, 0) 62%, var(--color-bg) 100%) ;
+		radial-gradient(circle,rgba(42, 123, 155, 0) 69%, var(--color-bg) 100%) ;
 		background-size: cover, cover;
 		background-repeat: no-repeat;
 		background-position: center, center;
 		background-blend-mode:color-dodge;
 		 &::after{
-			/* content: ""; */
+			content: "";
 			position: fixed;
 			inset: 0;
-			background:	radial-gradient(circle,rgba(42, 123, 155, 0) 62%, var(--color-bg) 100%) ;
+			background:	radial-gradient(circle,rgba(42, 123, 155, 0) 82%, var(--color-bg) 100%) ;
 			pointer-events: none;
 			z-index: -1;
 		}
@@ -78,7 +74,6 @@
 		display: block;
 		flex: 0 1 auto;
 		padding-inline: var(--Padding-genral);
-		/* background-color: rgba(0, 128, 0, 0); */
 		display: none;
 	}
 

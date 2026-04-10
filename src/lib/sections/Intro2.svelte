@@ -30,18 +30,10 @@
 
 <style>
 
-	/* :global(.mainContain:has(:is(#works,#workList):first-child:nth-last-of-type(1))){ */
 	:global(.mainContain:has( .contentContain:first-child:nth-last-of-type(1))){
-		/* align-items: center; */
 		justify-content: center;
 	}
 	
-	/* :global(.mainContain:has(:is(#works,#workList):nth-of-type(-n + 1))){
-		align-items: center;
-		justify-content: start;
-	} */
-
-
 	:global(main:has(.menu-container.active) .contentContain:has(:is(#works,#workList))){
 		transform: translateY(calc(var(--menu-height, 0) - 10dvh )) scale(.83);
 		pointer-events:none;
@@ -83,13 +75,10 @@
 
 
 		:global(.contentContain:has([open] summary:not(.experiment))){
-			/* border: solid red 10px ; */
 			width: 100dvw !important;
-			/* align-self: center !important; */
-			/* width: 100% !important; */
-			/* flex-basis: 100cqw !important; */
 			max-width: 1400px !important;
-			/* max-width: 2000px ; */
+			/* border: solid red 10px ; */
+			/* align-self: center !important; */
 		}
 	}
 

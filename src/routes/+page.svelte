@@ -1,9 +1,11 @@
 <script lang="ts">
-  import { Window,Intro,Intro2,Works, OrderedList } from '$lib';
+  import { Window,Intro,Intro2,Works } from '$lib';
   import { onMount, onDestroy } from 'svelte';
   import { menuOpen } from '$lib/store';
+  
 
   let {data} = $props();
+  let d = $derived(data)
 
 
   // Reactive variables using $state
@@ -106,39 +108,38 @@ onDestroy(() => {
 	}
 
   function escapeKey(event: KeyboardEvent) {
-        if (event.key === 'Escape' || event.code === 'Escape') { 
-          menuOpen.set(false);
-        } else{
-          return
-        }
+    if (event.key === 'Escape' || event.code === 'Escape') { 
+        menuOpen.set(false);
+    } else{
+        return
+    }
   }
 
 	function menuClose(){
-		// startViewTransition(function() {
+		startViewTransition(function() {
 			menuOpen.set(false);
-		// })
+		})
 	}
 
   
 </script>
 
-  <div class="container" bind:this={container}>
+<div class="container" bind:this={container}>
 
   <!-- the section -->
   <section class="mainContain scroller" bind:this={scroller} >
-    <Window role="child" class="contentContain" color="var(--tritary-color-muted)" style="--hoverC:var(--tritary-color)" bind:this={sections[0]}>
-      <Intro2 {data}/>
+    <Window role="child" class="contentContain" color="var(--tritary-color-muted)" styleOn="--hoverC:var(--tritary-color)" bind:this={sections[0]}>
+      <Intro2 data={d}/>
     </Window>
-    <!-- <Window role="child" class="contentContain" color="#e7c75e" style="--hoverC:white" bind:this={sections[0]}>
-      <Intro2 {data}/>
+    <!-- <Window role="child" class="contentContain" color="#e7c75e" styleOn="--hoverC:white" bind:this={sections[0]}>
+      <Intro2 data={d}/>
     </Window> -->
     
-    <!-- <Window role="child" class="contentContain" color="white" style="--hoverC:white" bind:this={sections[0]}>
+    <!-- <Window role="child" class="contentContain" color="white" styleOn="--hoverC:white" bind:this={sections[0]}>
       <Intro2 {data}/>
     </Window> -->
 
-
-    <!-- <Window role="child" class="contentContain" color="white" style="--hoverC:white" bind:this={sections[0]}>
+    <!-- <Window role="child" class="contentContain" color="white" styleOn="--hoverC:white" bind:this={sections[0]}>
      <Intro/>
     </Window> -->
 
@@ -146,11 +147,11 @@ onDestroy(() => {
       <p>no yoo</p>
     </Window> -->
 
-    <!-- <Window role="child" class="contentContain" color="transparent" style="--hoverC:#DCA256" bind:this={sections[2]}>
+    <!-- <Window role="child" class="contentContain" color="transparent" styleOn="--hoverC:#DCA256" bind:this={sections[2]}>
       <Works {data}/>
     </Window> -->
     
-    <!-- <Window role="child" class="contentContain" color="transparent" style="--hoverC:#3B6E25" bind:this={sections[3]}>
+    <!-- <Window role="child" class="contentContain" color="transparent" styleOn="--hoverC:#3B6E25" bind:this={sections[3]}>
       <p>no y443</p>
     </Window> -->
   </section>
@@ -182,19 +183,20 @@ onDestroy(() => {
     width: 100vw;
     height: 100%;
 	  overflow: hidden; 
+    z-index: 0;
   }
 
   .mainContain {
     position: relative;
     display: flex;
-	  gap: 5dvw;
     flex-direction: row;
-    overflow-y: hidden;
-    overflow-x: auto;
     scroll-snap-type: x mandatory;
     height: 99.8%;
     width: auto;
+	  gap: 7dvw;
     padding-inline: 5dvw;
+    overflow-y: hidden;
+    overflow-x: auto;
     will-change: transform, scale, background-color;
   }
 
@@ -202,6 +204,9 @@ onDestroy(() => {
   .scroller {
     
     &::scroll-button(*){
+    	--_btn-shadow-color: color-mix(in srgb, var(--color-bg,#ffffff), rgba(65, 60, 39, 0.181) 70%);
+		  --_btn-border-color: color-mix(in srgb, var(--accent-color,#ffffff), rgba(90, 86, 70, 0.181) 65%);
+
       position: fixed;
       /* top: anchor(top);
       left: anchor(left);
@@ -210,8 +215,10 @@ onDestroy(() => {
       bottom: 4%;
       margin-inline: 6%;
       background: rgba(197, 197, 197, 0.762);
-      color: rgb(178, 67, 67);
-      border: none;
+      color: var(--color-text);
+      border: solid 2px var(--_btn-border-color);
+      background-color: color-mix(in srgb,var(--color-bg,#ffffff) , rgba(255, 255, 255, 0.61) 80% );
+		  filter: drop-shadow(var(--_btn-shadow-color) 0px 28px 10px);
       border-radius: 50%;
       width: 40px;
       aspect-ratio: 1;
@@ -259,7 +266,7 @@ onDestroy(() => {
     flex-basis: clamp(60vw,100%,90vw);
     height: 97.5%;
 	  /* translate:clamp(-2% ,-2vw, -8%) 0; */
-	  background-color: color-mix(in srgb, var(--hoverC,#2C5D98) , rgba(255, 255, 255, 0.466) 70% );
+	  background-color: color-mix(in srgb, var(--hoverC,var(--white)) , rgba(255, 255, 255, 0.466) 70% );
 	  transition: 200ms ease-out;
     transition-property: top,height;
     display: grid;
@@ -277,7 +284,7 @@ onDestroy(() => {
   }
 
   :global(.contentContain:hover){
-    background-color: color-mix(in srgb, var(--hoverC,#2C5D98) , rgba(255, 255, 255, 0.466) 30% );
+    background-color: color-mix(in srgb, var(--hoverC,var(--white)) , rgba(255, 255, 255, 0.466) 30% );
     transition: .1s ease-out;
   }
 
@@ -287,7 +294,6 @@ onDestroy(() => {
 		grid-column: 1/-1;
 		grid-row: 1/-1;
     padding-inline: var(--padding-genral) !important;
-
   }
 
   @media (width < 900px) {
