@@ -499,7 +499,7 @@
 			}
 		}
 
-		li button:is(.contact-btn,.about-btn,.read-more-btn){
+		li button:is(.contact-btn,.about-btn){
 			display: none;
 		}
 	}

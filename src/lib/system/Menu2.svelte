@@ -144,9 +144,6 @@
 		<p in:whoo={{ duration: 200 }} > 
 			A web developer in Amsterdam
 		</p>
-		<!-- <p in:whoo={{ duration: 200 }} > 
-			I'm a web developer in Amsterdam
-		</p> -->
 		<!-- <p>	
 			intrested in accessible interfaces and scalable systems that adapt to real user needs.
 		</p> -->
@@ -204,29 +201,10 @@
 			<p in:whoo={{ duration: 300, delay: 400 }} out:whoo={{ duration: 400 }}>
 				Whether it's a custom solution for a specific stakeholder or a system built to scale, the goal remains the same: work that's thoughtful, accessible, and genuinely fun.	
 			</p>
-				<!-- <div class="previous-roles" in:whoo={{ duration: 300, delay: 400 }} out:whoo={{ duration: 200 }}>
-					<h2 in:whoo={{ duration: 300, delay: 400 }} out:whoo={{ duration: 200 }}>
-						Stack:
-					</h2>
-					<ul>
-						<li>Frontend Developer </li>
-						<li>Frontend Engineer</li>
-						<li>UI Designer</li>
-						<li>UI Consultant</li>
-						<li>Junior backend Developer</li>
-					</ul>	
-				</div> -->
-				<!-- <div class="previous-roles" in:whoo={{ duration: 200, delay: 400 }} out:whoo={{ duration: 200 }}>
-					<h2 in:whoo={{ duration: 200, delay: 400 }} out:whoo={{ duration: 200 }}>
-						Previous roles:
-					</h2>
-					<ul>
-						<li>Frontend Developer</li>
-						<li>Frontend Engineer</li>
-						<li>UI Designer</li>
-						<li>UI Consultant</li>
-					</ul>	
-				</div> -->
+			{:else}
+			<p style="margin-top: 1rem;" in:whoo={{ duration: 200, delay: 400 }} out:whoo={{ duration: 200 }}>
+				intrested in accessible interfaces and scalable systems that adapt to real user needs.
+			</p>
 		{/if}
 		<div class="rm-btn-container">
 			<button class="read-more-btn" onclick={handleAboutMore}>
@@ -238,6 +216,11 @@
 			</button>
 		</div>
 	</article>
+	{#if openAboutMore !== true}
+		<article class="text-bubble" in:whoo={{ duration: 200 }}>
+			here below im hightlighting some projects that I have done. 
+		</article>
+	{/if}
 {/snippet}
 
 {#snippet headerC()}
@@ -779,7 +762,7 @@
 		max-width: 45ch;
 		height: fit-content;
 		color:color-mix(in var(--_ct),var(--color-text),var(--color-bg) 30%);
-		color:color-mix(in var(--_ct),var(--color-text),var(--accent-color) 40%);
+		color:color-mix(in var(--_ct),var(--color-text)100%,var(--accent-color) 10%);
 
 		&:nth-of-type(n + 3){
 			line-height: 1.3;
@@ -1052,30 +1035,46 @@
 	@media (width < 650px) {
 
 		.menu-container{
-			--menu-height:70cqh;
+			--menu-height:70svh;
+			--container-block-padding: calc( var(--H-top) + 12cqh);
 			min-height: var(--menu-height);
 			/* background-color: rgba(255, 255, 255, 0.37); */
 		}
 
-		.headerUl{
+		.active ul.headerUl{
 			flex-direction: column;
 			height: 100%;
-			padding-inline:2% ;
+			padding:0;
+			margin-left: 0;
 		}
 
+		.headerUl > li:nth-of-type(n + 2){
+			width: 100%;
+			justify-self: end;
+			padding-top: 7cqh;
+			padding-inline: var(--Padding-genral);
+			gap: 2cqh;
+		}
+
+		/* .headerUl > li{
+			outline: solid red;
+		} */
+
 		.headerUl li.header-logo {
-			margin-top: calc( var(--H-top) + 12cqh);
+			margin-block: var(--container-block-padding) 0;
 			aspect-ratio: unset;
-			width: 50%;
 			width: clamp(1rem , 0.5vw + 100cqw ,100%);
 			height: fit-content;
+			justify-content: center;
 			max-height: 20dvh;
+			outline-color: rgb(64, 255, 0);
 		}
 
 		.headerUl li.header-logo a {
 			align-items: center;
 			align-self: center;
 			width: clamp(1rem , 0.5vw + 100cqw ,100%);
+			translate:0 0 !important;
 
 			& .profile{
 				width: auto;
@@ -1084,12 +1083,16 @@
 			}
 		}
 
-		li:nth-of-type(n + 2){
-			width: 100%;
-			justify-self: end;
-			padding-top: 7cqh;
-			padding-inline: var(--Padding-genral);
-			gap: 2cqh;
+		.headerUl .profile.flower{
+			animation: sway 10s linear infinite .5s, flip 12s ease-out 3s both;
+			isolation: isolate;
+			/* view-transition-name: header-figure; */
+		}
+
+		.headerUl:has(li:nth-of-type(n) a:hover) .flower{
+			transition: all 1s .1s ;
+			transform: rotateY(0deg) !important;
+			/* animation:flip 1s alternate forwards .1s   ; */
 		}
 
 		:global(.menu-container:has(.head-contacts)){
@@ -1097,31 +1100,35 @@
 				max-height: fit-content;
 				margin: 0;
 				padding-top: 5%;
+				padding-inline: 0;
 				align-items: top;
 				justify-content: start;
 			}
+
+			.text-bubble{
+				padding: 4%;
+				line-height: 1.5;
+				border-radius: 13.7px;
+				width: 100%;			
+			}
+
+			.contact-links{
+				width: 100%;
+				justify-content: space-around;
+			}
+
+			.contact-links a{aspect-ratio: 1;}
+			.contact-links svg{width: clamp(40px, -.2rem + 12cqw, 4cqw);}
+		}
+
+		.headerUl .head-contacts span {
+			gap: 12cqw;
 		}
 
 		:global(.menu-container:has(.head-about)){
 			.headerUl .header-logo {
 				width: 100%;
 			}
-		}
-
-		:global(.menu-container:has(.read-more)){
-			--menu-height: 100cqh;
-			.headerUl .header-logo a .profile {
-				width: 100%;
-			}
-
-			.read-more{
-				min-height: 10cqh;
-				overflow-y: scroll;
-			}
-		}
-
-		.headerUl .head-contacts span {
-			gap: 12cqw;
 		}
 
 		.headerUl li.head-about {
@@ -1136,25 +1143,62 @@
 			}
 		}
 
+		:global(.menu-container:has(.read-more)){
+			--menu-height: 100svh;
+			/* max-height: 50%; */
+
+			.headerUl {
+				overflow: auto;
+				max-height: fit-content;
+			}
+			.headerUl .header-logo a .profile {
+				width: 100%;
+			}
+
+			.read-more{
+				flex-direction: column;
+				overflow-y: scroll;
+				/* overflow-y: visible; */
+				height: 60cqh;
+
+				margin: 0;
+				padding: 0;
+			}
+
+			.text-bubble{
+				width: 100%;
+				height: 340svh;
+				padding-bottom: var(--container-block-padding);
+			}
+
+			.approaches{
+				align-items: center;
+
+				.apr-pill{
+					border-radius: 10px;
+					line-height: 1.5;
+					text-align: left;
+				}
+
+				:global(.lucide:nth-of-type(n)){
+					margin-left: 0;
+				}
+			}
+
+			.previous-roles:nth-of-type(1){
+				margin:0;
+			}
+		}
+
 		/* :global(main:has(button:is(.close-btn,.about-btn,.contact-btn):hover) article.active) {
 			height: calc-size(fit-content, size + 2%) !important;
 			transition: .4s cubic-bezier(0.375, 0.685, 0.32, 1.275);
 		} */
 
-		.headerUl .profile.flower{
-			animation: sway 10s linear infinite .5s, flip 12s ease-out 3s both;
-			isolation: isolate;
-			/* view-transition-name: header-figure; */
-		}
-
-		.headerUl:has(li:nth-of-type(n) a:hover) .flower{
-			transition: all 1s .1s ;
-			transform: rotateY(0deg) !important;
-			/* animation:flip 1s alternate forwards .1s   ; */
-		}
-
 		.headerUl .menu-routes{
-			line-height: 1.5;
+			display: flex;
+			flex-flow: column;
+			line-height: 1.7;
 		}
 	}
 
