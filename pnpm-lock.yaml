@@ -42,6 +42,9 @@ importers:
       '@types/qrcode':
         specifier: ^1.5.6
         version: 1.5.6
+      eruda:
+        specifier: ^3.4.3
+        version: 3.4.3
       playwright:
         specifier: ^1.59.1
         version: 1.59.1
@@ -937,6 +940,9 @@ packages:
 
   emoji-regex@8.0.0:
     resolution: {integrity: sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==}
+
+  eruda@3.4.3:
+    resolution: {integrity: sha512-J2TsF4dXSspOXev5bJ6mljv0dRrxj21wklrDzbvPmYaEmVoC+2psylyRi70nUPFh1mTQfIBsSusUtAMZtUN+/w==}
 
   esbuild@0.21.5:
     resolution: {integrity: sha512-mg3OPMV4hXywwpoDxu3Qda5xCKQi+vCTZq8S9J/EpkhB2HzKXq4SNFZE3+NK93JYxc8VMSep+lOUSC/RVKaBqw==}
@@ -1892,6 +1898,8 @@ snapshots:
   dijkstrajs@1.0.3: {}
 
   emoji-regex@8.0.0: {}
+
+  eruda@3.4.3: {}
 
   esbuild@0.21.5:
     optionalDependencies:

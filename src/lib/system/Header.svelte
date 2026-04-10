@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { menuOpen, contactsOpen, aboutOpen, aboutMoreOpen, modeDark } from '$lib/store';
 	import { themeList } from '../atoms/theme-list';
-	// import {page} from '$app/state'
 	let openMenu = $derived($menuOpen);
 	let openContacts = $derived($contactsOpen);
 	let openAbout = $derived($aboutOpen);
@@ -413,11 +412,7 @@
 	/* button styling */
 	li:is(.D-menu, .head-extra) button {
 		--_btn-shadow-color: color-mix(in srgb, var(--color-bg, #ffffff), rgba(65, 60, 39, 0.181) 70%);
-		--_btn-border-color: color-mix(
-			in srgb,
-			var(--accent-color, #ffffff),
-			rgba(90, 86, 70, 0.181) 65%
-		);
+		--_btn-border-color: color-mix(in srgb,var(--accent-color, #ffffff),rgba(90, 86, 70, 0.181) 65%);
 
 		position: relative;
 		display: grid;
@@ -600,6 +595,16 @@
 				transform: none;
 				scale: 1;
 			}
+		}
+
+		li button.menu-btn{
+			/* outline: solid greenyellow; */
+			display: grid;
+			place-content: center;
+			
+		}
+		li button.menu-btn svg{
+			min-width: 3rem;
 		}
 
 		li button:is(.contact-btn, .about-btn) {

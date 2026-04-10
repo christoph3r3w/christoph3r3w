@@ -1,8 +1,14 @@
 <script lang="ts">
 	import { Header, Footer, Window, Menu, Menu2, StickerBed, CuttingBoard } from '$lib';
+	import { onMount } from 'svelte';
 	let svg = CuttingBoard;
 
 	let { children } = $props();
+
+	onMount(async () => {
+		const eruda = (await import('eruda')).default;
+		// eruda.init();
+	});
 </script>
 
 <Window role="window" styleOn="">
@@ -22,12 +28,18 @@
 		--primary-gray: var(--color-bg);
 	}
 
+	:global(html) {
+		border: solid rgb(0, 255, 85) 4px;
+	}
+
 	:global(body) {
 		display: flex;
 		flex-direction: column;
-		height: 100lvh;
+		height: 100dvh;
 		overflow: hidden;
 		touch-action: none;
+		background-attachment: fixed;
+		background-size: cover;
 	}
 
 	/* :global(body :nth-child(n):focus-visible){
@@ -60,6 +72,7 @@
 			inset: 0;
 			background: radial-gradient(circle, rgba(42, 123, 155, 0) 82%, var(--color-bg) 100%);
 			pointer-events: none;
+			height: 100lvh;
 			z-index: -1;
 		}
 	}
@@ -91,10 +104,13 @@
 	@media (width < 900px) {
 		:global(html) {
 			height: 100lvh;
+			/* padding-bottom: env(safe-area-inset-bottom); */
+			/* border:solid rgb(0, 255, 68) 4px; */
 		}
 
 		:global(body) {
-			height: 100lvh;
+			min-height: 100lvh;
+			outline: solid orange 4px;
 		}
 
 		:global(footer) {
