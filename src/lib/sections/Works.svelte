@@ -3,6 +3,8 @@
 	import {OrderedList,ContactForm,StickerBed} from '$lib';
 	import {fade, fly} from 'svelte/transition';
 	import QRCode from 'qrcode';	
+	import { ListCollapse,ListIndentDecrease,QrCode,XIcon } from '@lucide/svelte';
+
 	
 	interface Work {
 		title: string;
@@ -250,13 +252,9 @@
 		<div class="description-space">
 			<button onclick={moveDescription}>
 			{#if showDescription }
-				<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-				<path d="M3 18V16H21V18H3ZM3 13V11H21V13H3ZM3 8V6H21V8H3Z" fill="#1D1B20" style="fill:#1D1B20;fill:color(display-p3 0.1137 0.1059 0.1255);fill-opacity:1;"/>
-				</svg>
+				<ListCollapse size="20"/>
 			{:else}
-				<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-				<path d="M3 18V16H16V18H3ZM19.6 17L14.6 12L19.6 7L21 8.4L17.4 12L21 15.6L19.6 17ZM3 13V11H13V13H3ZM3 8V6H16V8H3Z" fill="#1D1B20" style="fill:#1D1B20;fill:color(display-p3 0.1137 0.1059 0.1255);fill-opacity:1;"/>
-				</svg>
+				<ListIndentDecrease size="20"/>
 			{/if}
 			</button>
 		</div> 
@@ -280,9 +278,13 @@
 				{showQr ? 'Link →' : 'Visit site'}
 			</a>
 			{#if work.link.showType != 'desktop'}
-				<button class='{{disabled:!work.link.src}} qr-btn' onclick={toggleQR}>
-					<!-- {showQr ? 'Hide QR' : 'QR'} -->
-					{showQr ? 'X' : 'QR'}
+				<button class='{{disabled:!work.link.src}} qr-btn' onclick={toggleQR} title={showQr ? 'close QR' : 'Qr code'}>
+					<!-- {showQr ? 'X' : 'QR'} -->
+					{#if showQr }
+						<XIcon />
+					{:else}
+						<QrCode />
+					{/if}
 				</button>
 			{/if}
 		</div>
@@ -368,7 +370,7 @@
 	{:then dataWorks } 
 	{@const works = dataWorks[1]?.works.slice(0).filter((w: Work) => w.published.is === true) || []}
 	{#each works as work, i}
-	{#key i}
+	{#key work.slug}
 		<details 
 			class="file file-{i+1} {firstLoad? 'jump' : ''}" 
 			style="--file-index:{i + 1}; --work-icon: url('{work.assets.icon}'); {work.assets.color? `--file-primary-color:${work?.assets.color}`:''}"
@@ -449,7 +451,10 @@
 		border-radius: inherit;
 		gap: 1rem;
 		container-type: inline-size;
-		will-change: transform,filter,top,left;		
+		will-change: transform,filter,top,left;	
+		/* border:solid red 10px !important; */
+		/* max-width: 1500px; */
+	
 	}
 
 	/* Hover effect for the summary */
@@ -526,6 +531,11 @@
 		details.file summary span > img{
 			opacity:1 ;
 		}
+
+		&::selection{
+			color: var(--color-text);
+			background-color: yellow;
+		}
 	}
 
 	/* the details component */
@@ -535,11 +545,6 @@
 
 		&[open]{
 			display: none;
-		}
-
-		&::selection{
-			color: var(--color-text);
-			background-color: yellow;
 		}
 	}
 
@@ -605,11 +610,15 @@
 			font-size: 2rem;
 			font-weight: 700;
 			text-shadow: 3px 2px 3px rgba(255,255,255,.2);
+			/* outline: solid; */
 		}
 
 		.file-title{
 			flex: 2 1 auto;
+			flex: 1 1 30%;
 			text-wrap: nowrap;
+			/* margin-left: 1rem; */
+			/* display: none; */
 			/* color: color-mix(in oklch, var(--file-primary-hue), rgb(14, 14, 14) 55%); */
 			/* color: color-mix(in oklch, var(--file-primary-hue), var(--color-text) 95%); */
 
@@ -637,15 +646,17 @@
 			flex-basis: clamp(2.5%, 100%, 30px);
 			position: relative;
 			width: fit-content;
-			max-width: max(30px,3%);
+			width: 100%;
+			/* max-width: max(30px,3%); */
 			height: fit-content;
-			aspect-ratio: 1;
+			/* aspect-ratio: 1; */
 			/* outline: solid red; */
 		}
 
 		.work-icon-span > img{
 			/* outline: solid rgb(0, 255, 0); */
-			width: 100%;
+			/* width: 100%; */
+			width: clamp(2.5%, 100%, 30px);
 			height: 100%;
 			aspect-ratio: 1;
 			object-fit: cover;
@@ -688,7 +699,7 @@
 		background-color: color-mix(in oklch , var(--hoverC,var(--primary-color,hsl(calc(213 - 90 / var(--file-index)), 55%, 38%))) 60% , rgba(255, 255, 255, 0.466) 33% );
 
 		background-image: 
-						url('/works-assets/material-assets/paper 1 black&white transparent cropped (Custom).png')	;
+						url('/works-assets/material-assets/paper 1 black&white transparent cropped again (Custom flipped).png')	;
 		background-attachment:fixed  !important ;
 		background-size:none, cover;
 		backdrop-filter: blur(2px);
@@ -721,6 +732,7 @@
 	}
 
 	/* initial general animation for files and folder and cover element */
+	/* ///////////////////// */
 	/* files covers */
 	details.file summary {
 		--file-primary-hue:color-mix(in oklch, hsl(calc( var(--hue-number,213) / var(--file-index)), 55%, 38%) , var(--file-primary-color) var(--file-primary-color-amount));
@@ -730,9 +742,10 @@
 		color: black;
 
 		background-color: color-mix(in oklch, var(--file-primary-hue) , rgba(255, 255, 255, 0.466) 10% );
-		background-color: color-mix(in lab, var(--file-primary-hue) , var(--color-bg) 30% );
-		/* background-color: var(--tan-light); */
+		background-color: color-mix(in lab, var(--file-primary-hue) , var(--color-bg) 20% );
 		border-radius: var(--wc-radius) var(--wc-radius) var(--wc-radius) 0;
+		border-radius: var(--wc-radius) ;
+		border-radius: var(--wc-radius) var(--wc-radius) var(--wc-radius) 5px;
 		backdrop-filter: blur(50px);
 
 		@container (width < 900px){
@@ -745,17 +758,15 @@
 		/* files background overlay */
 	details.file summary:nth-of-type(n)::before{
 		content: '';
-		position: absolute;
-		background-position: 100% 100%;
-		background-repeat: no-repeat;
-		background-size: cover;
-		background-attachment:local;
+		background-color: color-mix(in oklch, var(--file-primary-hue) , hsla(204, 93%, 33%, 0.566) 60% );
+		background-color: color-mix(in oklch, var(--file-primary-hue) , rgba(238, 130, 238, 0.462) 60% );
+		background-color: color-mix(in lab, var(--file-primary-hue) , rgba(173, 130, 238, 0.462) 55% );
+		/* background-color: rgba(238, 130, 238, 0.462); */
 		
+		position: absolute;
 		inset: 1rem;
 		top: 4rem;
 		left: 3rem;
-		/* background-color: rgba(238, 130, 238, 0.462); */
-		background-color: color-mix(in oklch, var(--file-primary-hue) , hsla(204, 93%, 33%, 0.566) 60% );
 		border-radius: inherit;
 		z-index: 100;
 		contain: paint content;
@@ -917,13 +928,13 @@
 		grid-template-columns: repeat(56,1fr);
 		grid-template-rows: repeat(38,1fr);
 		z-index: 10 !important;
-		overflow-x: hidden;
-		border-radius: 0 0 var(--wc-radius) var(--wc-radius);
-		/* background-color: var(--bg-test); */
+		/* overflow-x: hidden; */
+		contain: layout size style ;
+		/* border-radius: 0 0 var(--wc-radius) var(--wc-radius); */
+		border-radius: var(--wc-radius);
 		
 		background-color: color-mix(in oklch, var(--file-primary-hue) , rgba(255, 255, 255, 0.466) 50% );
 		/* background-color: color-mix(in oklch, var(--file-primary-hue) , white 20% ); */
-		
 		background-color: color-mix(in lab, var(--file-primary-hue) , var(--color-bg) 30% );
 		/* background-color: color-mix(in oklch, var(--bg-test) 90% , rgba(255, 255, 255, 0.719) 70% ); */
 	}
@@ -931,8 +942,10 @@
 	details[open]:has(.experiment)::details-content{
 		background-color: transparent ;
 	}
-		
+	
+	/* ////////////////////// */
 	/* work description section */
+	/* //////////////////////// */
 	details[open] .work-description{
 		--_description-bg:#e5e5f7f4;
 		
@@ -1074,7 +1087,10 @@
 
 		height: fit-content;
 		padding: var(--stamp-radius);
-		background: var(--primary-gray-bg);
+		background-color: var(--primary-gray-bg);
+		background-image: url('/works-assets/material-assets/Chris website12-2.png');
+		background-blend-mode:color-dodge; 
+		background-blend-mode:lighten; 
 		
 		contain: paint layout;
 		border: 2px solid var(--file-line-color2) ;
@@ -1249,7 +1265,6 @@
 		justify-content: end;
 
 		@container (width < 200px){
-			flex-direction: column-reverse;
 			justify-content: start;
 		}
 
@@ -1329,6 +1344,8 @@
 		padding-block: 30cqh 7cqh;
 		overflow-y: auto;
 		overflow-x: hidden;
+		contain: style ;
+		border-radius: var(--wc-radius);
 		container-type: inline-size;
 		background: 
 			conic-gradient(from 90deg at var(--t) var(--t),var(--grid-color))
@@ -1352,10 +1369,16 @@
 		}
 	}
 
+	details[open]:has(.move-description) .work-assets > *{
+		padding-left: 33cqw;
+		transition: 200ms 100ms linear(0, 0.297 6.8%, 0.515 13.8%, 0.686 22%, 0.812 31.6%, 0.895 42.6%, 0.949 56.4%, 1);
+	}
+
 	details[open] .asset-border{
 		position: absolute;
 		inset-block:0;
 		height: 100%;
+		width: auto;
 		backdrop-filter: blur(3px);
 		z-index: 2;
 		pointer-events: none;
@@ -1364,8 +1387,7 @@
 		&.b-left {
 			left: 0;
 			backdrop-filter: blur(6px);
-
-			border-radius: 0 var(--wc-radius) var(--wc-radius) 0;
+			border-radius: var(--wc-radius) 0 0 var(--wc-radius);
 			border-color:peru;
 			mask: linear-gradient(
 				to right,
@@ -1375,10 +1397,11 @@
 		}
 
 		&.b-right {
+			padding-left: 0;
 			right: 0;
-			border-radius: var(--wc-radius) 0 0 var(--wc-radius);
+			border-radius: 0 var(--wc-radius) var(--wc-radius) 0;
 			border-color: yellow;
-			left:70dvw;
+			left:75dvw;
 			mask: linear-gradient(
 				to left,
 				var(--file-primary-hue) -2% 70%,
@@ -1391,6 +1414,7 @@
 			bottom: 0;
 			height: 10%;
 			width: 100%;
+			border-radius:0 0 var(--wc-radius)  var(--wc-radius);
 			border-color:blue;
 			mask: linear-gradient(
 				to top,
@@ -1455,7 +1479,7 @@
 	.work-assets .content-block p{
 		line-height: 1.5;
 		font-size: clamp(0.9rem, 4vw, var(--text-size-s));
-		font-size: clamp(0.9rem, 4vw, 1.1rem);
+		font-size: clamp(0.9rem, 4vw, 1.3rem);
 		
 		max-width: 80cqw;
 		width: 80ch;
@@ -1464,9 +1488,25 @@
 
 		&:not(a)::selection{
 			color: rgb(0, 0, 0);
-			background-color: rgba(255, 255, 255, 0.459);
+			/* background-color: rgba(255, 255, 255, 0.459); */
 		}
 	}	
+
+	.work-assets .content-block:nth-of-type(1) > p:nth-child(1){
+		/* outline: solid red; */
+		margin-bottom: 5rem;
+	}
+
+	.work-assets :global(.content-block a){
+		color: color-mix(in oklch, var(--file-primary-hue) , rgba(255, 255, 255, 0.566) 60% );
+		/* text-decoration: underline; */
+		cursor: pointer;
+
+		&::selection{
+			color: rgb(0, 0, 0);
+			background-color: rgba(255, 255, 255, 0.459);
+		}
+	}
 
 	/* has no img */
 	.work-assets .content-block:has(p:nth-child(n)):has(p:nth-last-child(1)){
@@ -1555,7 +1595,7 @@
 	}
 
 	/* block has multiple images */
-	.content-block:nth-of-type(n):has(.asset-img-ctnr:nth-child(2n)):has(.asset-img-ctnr:nth-last-child(1)){
+	.content-block:has(.asset-img-ctnr:nth-child(2n)):has(.asset-img-ctnr:nth-last-child(1)){
 		position: relative;
 		min-height:50cqh ;
 		min-height:fit-content;
@@ -1581,13 +1621,10 @@
 			width: 30cqw;
 			width: 20cqw;
 			cursor:nw-resize;
-			cursor:zoom-in;
-			
-			/* outline: springgreen solid; */
+			cursor:zoom-in;			
 		}
 
 		.asset-img-ctnr:nth-last-of-type(1){
-			/* scroll-snap-align: start; */
 			margin-right: 24%;
 		}
 
@@ -1678,7 +1715,6 @@
 			bottom: 5%;
 			right: 5%;
 		}
-
 	}
 
 	/* //////////////// */
@@ -1755,11 +1791,12 @@
 			}
 	}
 
-	.big-asset.big-asset{
-		min-width:80cqh !important;
-		border-color:gold;
+	.big-asset.big-asset.big-asset.big-asset{
+		min-height:40cqh ;
+		min-width: 100% ;
+		aspect-ratio: 16/9;
 
-		.asset-img-ctnr{
+		article.asset-img-ctnr{
 			cursor:zoom-out !important;
 		}
 
@@ -1876,7 +1913,7 @@
 			top: -2%;
 			left: 0%;
 
-			.small-description,.side-description {
+			.small-description{
 				display: none;
 			}
 		}

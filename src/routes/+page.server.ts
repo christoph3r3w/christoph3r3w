@@ -334,13 +334,27 @@ export async function load() {
 				contentBlock:[
 					{
 						text:[
-						'Red Bears is an online journalistic platform that provides a platform for young and upcoming journalists to write and to collaborate on stories happening within Holland. ',
-						'For one of our sprints during the study, we got the opertunity to do a redesign of the user interface for redpers. The task was to think of alternative ways of how the user interface can be and to find creative solutions to enrich how red bars present themselves. '
+						'Redpers is an online journalistic platform that provides a platform for young and upcoming journalists to write and to collaborate on stories happening within Holland. ',
+						'During a school sprint my group and I got Repers as a client, and we had to introduce potential redesign or enrich the exsiting user interface for there main website with the using the ejs framework. '
 						],
 						// video:['/works-assets/redpers/Recording 2024-05-24 105739.mp4']
 					},
 					{
 						images:['/works-assets/redpers/ezgif-2-71870b8477.gif'],
+					},
+					{
+						text:[
+							'My task was to find potential enhancements for the article page, test these with users, and to present how these can be integrated on to the website',
+							'My propositions were',
+							],
+						html:[
+							`<ul>
+								<li>A progress</li>
+								<li>dark mode state</li>
+								<li>the ability to like or copy an article</li>
+								<li>small enhancements to the hero section</li>
+							</ul>`							
+							]
 					},
 					{
 						images:[
@@ -349,7 +363,15 @@ export async function load() {
 						'/works-assets/redpers/Screenshot 2024-04-19 001126.png',
 						'/works-assets/redpers/Screenshot 2024-03-18 1543318.png',
 						'/works-assets/redpers/redpers css.gif',
+						'/works-assets/redpers/Recording 2024-05-24 105739.mp4'
 						],
+						// video:['/works-assets/redpers/Recording 2024-05-24 105739.mp4']
+					},
+					{
+						video:['/works-assets/redpers/Recording 2024-05-24 105739.mp4']
+					},
+					{
+							text:['']
 					},
 					{
 						html:[
@@ -362,9 +384,7 @@ export async function load() {
 						</a>`,
 					
 						]
-					},{
-						video:['/works-assets/redpers/Recording 2024-05-24 105739.mp4']
-					}
+					},
 				
 				],
 				collaborators: {

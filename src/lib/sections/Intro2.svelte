@@ -95,10 +95,9 @@
 
 	:global(.contentContain:has(#works)){
 		--file-section-height: 70dvh;
-		/* --file-section-height: clamp(50dvh, 80lvw, 75dvh); */
+		--file-section-height: clamp(50dvh, 80lvw, 70dvh);
 		&:has(:global(details[open])){
 			--file-section-height: 90%;
-			/* max-width: 2000px; */
 			top:calc(100% - var(--file-section-height) - 3%);
 		}
 		@container (width < 900px){--file-section-height: 90%;}
