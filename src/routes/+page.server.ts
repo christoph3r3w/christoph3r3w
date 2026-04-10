@@ -517,7 +517,6 @@ export async function load() {
 				}
 			}
 		}
-
 		throw lastError;
 	};
 
