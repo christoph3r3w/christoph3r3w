@@ -1,6 +1,6 @@
 <script lang="ts">
-import {onMount} from 'svelte';
-import {fade, fly} from 'svelte/transition';
+	import { onMount } from 'svelte';
+	import { fade, fly } from 'svelte/transition';
 	interface Props {
 		total?: number;
 		patern?: 'random' | 'grid';
@@ -17,40 +17,139 @@ import {fade, fly} from 'svelte/transition';
 		rotation?: number;
 	}
 
-	let {total, patern} : Props = $props()
+	let { total, patern }: Props = $props();
 
 	let stickerList: StickerListItem[] = [
-		{id: 'hero', visible: false, content: '/stickers/stickerrr-light.png', type: 'image', alt: 'tutorial sticker', canMove: true},
-		{id: 'chris-icon', visible: false, content: '/chris icon lowlowres.png', type: 'shape', alt: 'chris icon', canMove: true},
-		{id: 'hero2', visible: false, content: 'Here are some selected projects I have done', type: 'text', canMove: true},
-		{id: 'triangle', visible: false, content: 'In progress', type: 'text', alt: 'in progress', canMove: true},	
-		{id: 'pixel-c',visible: false, content: '/stickers/pixel-c-star.png', type: 'image', alt: 'pixel sticker', canMove: true},	
-		{id: 'flag', visible: false, content: '/stickers/korsou sticker.png', type: 'image', alt: 'tutorial sticker', canMove: true},
-		{id: 'vue', visible: true, content: '/stickers/vue.png', type: 'image', alt: 'tutorial sticker', canMove: true},
-		{id: 'JS', visible: true, content: '/stickers/js sticker (2).png', type: 'image', alt: 'tutorial sticker', canMove: true},
-		{id: 'figma', visible: true, content: '/stickers/figma sticker.png', type: 'image', alt: 'tutorial sticker', canMove: true},
-		{id: 'svelte', visible: true, content: '/stickers/svelte.png', type: 'image', alt: 'tutorial sticker', canMove: true},
-		{id: 'c-name', visible: true, content: '/stickers/c-name free.png', type: 'image', alt: 'tutorial sticker', canMove: false},
-		{id: 'c-pixel-icon', visible: true, content: '/stickers/c-icon-pixeled.png', type: 'image', alt: 'c-pixel-icon', canMove: false},
-		{id: 'in-progress clear', visible: true, content: '/stickers/in progresss-texture-clear.png', type: 'image', alt: 'in progress', canMove: true},
-		{id: 'in-progress', visible: true, content: '/stickers/in progress-texture.png', type: 'image', alt: 'tutorial sticker', canMove: true},
+		{
+			id: 'hero',
+			visible: false,
+			content: '/stickers/stickerrr-light.avif',
+			type: 'image',
+			alt: 'tutorial sticker',
+			canMove: true
+		},
+		{
+			id: 'chris-icon',
+			visible: false,
+			content: '/chris icon lowlowres.avif',
+			type: 'shape',
+			alt: 'chris icon',
+			canMove: true
+		},
+		{
+			id: 'hero2',
+			visible: false,
+			content: 'Here are some selected projects I have done',
+			type: 'text',
+			canMove: true
+		},
+		{
+			id: 'triangle',
+			visible: false,
+			content: 'In progress',
+			type: 'text',
+			alt: 'in progress',
+			canMove: true
+		},
+		{
+			id: 'pixel-c',
+			visible: false,
+			content: '/stickers/pixel-c-star.avif',
+			type: 'image',
+			alt: 'pixel sticker',
+			canMove: true
+		},
+		{
+			id: 'flag',
+			visible: false,
+			content: '/stickers/korsou sticker.avif',
+			type: 'image',
+			alt: 'tutorial sticker',
+			canMove: true
+		},
+		{
+			id: 'vue',
+			visible: true,
+			content: '/stickers/vue.avif',
+			type: 'image',
+			alt: 'tutorial sticker',
+			canMove: true
+		},
+		{
+			id: 'JS',
+			visible: true,
+			content: '/stickers/js sticker (2).avif',
+			type: 'image',
+			alt: 'tutorial sticker',
+			canMove: true
+		},
+		{
+			id: 'figma',
+			visible: true,
+			content: '/stickers/figma sticker.avif',
+			type: 'image',
+			alt: 'tutorial sticker',
+			canMove: true
+		},
+		{
+			id: 'svelte',
+			visible: true,
+			content: '/stickers/svelte.avif',
+			type: 'image',
+			alt: 'tutorial sticker',
+			canMove: true
+		},
+		{
+			id: 'c-name',
+			visible: true,
+			content: '/stickers/c-name free.avif',
+			type: 'image',
+			alt: 'tutorial sticker',
+			canMove: false
+		},
+		{
+			id: 'c-pixel-icon',
+			visible: true,
+			content: '/stickers/c-icon-pixeled.avif',
+			type: 'image',
+			alt: 'c-pixel-icon',
+			canMove: false
+		},
+		{
+			id: 'in-progress clear',
+			visible: true,
+			content: '/stickers/in progresss-texture-clear.avif',
+			type: 'image',
+			alt: 'in progress',
+			canMove: true
+		},
+		{
+			id: 'in-progress',
+			visible: true,
+			content: '/stickers/in progress-texture.avif',
+			type: 'image',
+			alt: 'tutorial sticker',
+			canMove: true
+		}
 	];
 
-	let visibleStickers = $derived(stickerList.filter(sticker => sticker.visible).slice(0,total?total: stickerList.length));
+	let visibleStickers = $derived(
+		stickerList.filter((sticker) => sticker.visible).slice(0, total ? total : stickerList.length)
+	);
 	let moveX = $state(0);
 	let moveY = $state(0);
 	let rotate = $state(0);
 
-	function shuffleStickers(){
-		visibleStickers = visibleStickers.map(sticker => ({
+	function shuffleStickers() {
+		visibleStickers = visibleStickers.map((sticker) => ({
 			...sticker,
-			...(
-				sticker.canMove ? {
-					offsetX: (Math.random() - 0.6) * 120,
-					offsetY: (Math.random() - 0.5) * 70,
-					rotation:  50 * (Math.random() - 0.5)
-				} : {}
-			)
+			...(sticker.canMove
+				? {
+						offsetX: (Math.random() - 0.6) * 120,
+						offsetY: (Math.random() - 0.5) * 70,
+						rotation: 50 * (Math.random() - 0.5)
+					}
+				: {})
 		}));
 	}
 
@@ -79,49 +178,68 @@ import {fade, fly} from 'svelte/transition';
 			// window.removeEventListener('mousemove', handleMouseMove);
 		};
 	});
-
 </script>
 
 <!-- for later add a patern option, it will toggle a pattern based on a selected sticker or all in a specific grid area -->
 
-{#each  visibleStickers as sticker}
+{#each visibleStickers as sticker}
 	{#if sticker.type === 'text'}
-		<p class="cover-content sticker-label {sticker.id} text" style=" transform: translate({sticker.offsetX || 0}px, {sticker.offsetY || 0}px) rotate({sticker.rotation || 0}deg);">{sticker.content}</p>
+		<p
+			class="cover-content sticker-label {sticker.id} text"
+			style=" transform: translate({sticker.offsetX || 0}px, {sticker.offsetY ||
+				0}px) rotate({sticker.rotation || 0}deg);"
+		>
+			{sticker.content}
+		</p>
 	{:else if sticker.type === 'shape'}
-		<span class="cover-content sticker-label {sticker.id}" style="transform: translate({sticker.offsetX || 0}px, {sticker.offsetY || 0}px) rotate({sticker.rotation || 0}deg);">
-			<img src={sticker.content} alt={sticker.alt}>
+		<span
+			class="cover-content sticker-label {sticker.id}"
+			style="transform: translate({sticker.offsetX || 0}px, {sticker.offsetY ||
+				0}px) rotate({sticker.rotation || 0}deg);"
+		>
+			<img src={sticker.content} alt={sticker.alt} />
 		</span>
 	{:else}
-		<img src={sticker.content} alt={sticker.alt} class="cover-content sticker-label {sticker.id}" style="transform: translate({sticker.offsetX || 0}px, {sticker.offsetY || 0}px) rotate({sticker.rotation || 0}deg);">
+		<img
+			src={sticker.content}
+			alt={sticker.alt}
+			class="cover-content sticker-label {sticker.id}"
+			style="transform: translate({sticker.offsetX || 0}px, {sticker.offsetY ||
+				0}px) rotate({sticker.rotation || 0}deg);"
+		/>
 	{/if}
 {/each}
-	<!-- {#key total}
+
+<!-- {#key total}
     <p in:fly|global={{duration: 500}}>{total ?? stickerList.length}</p>
 	{/key} -->
 
 <style>
-
 	/* sticker styling */
 
-	.cover-content{
-		transition: .4s var(--transition-timing) 1s, box-shadow 0s, filter .4s, background-color 0s;
+	.cover-content {
+		transition:
+			0.4s var(--transition-timing) 1s,
+			box-shadow 0s,
+			filter 0.4s,
+			background-color 0s;
 
-		&:not(.text){
+		&:not(.text) {
 			display: grid;
 			place-content: center;
 			padding: 0;
 		}
 
-		&:nth-child(1){
+		&:nth-child(1) {
 			position: absolute;
-			text-shadow: 3px 2px 3px rgba(255,255,255,.2);
-			text-shadow: 0px 3px 3px rgba(255,255,255,0.5);
+			text-shadow: 3px 2px 3px rgba(255, 255, 255, 0.2);
+			text-shadow: 0px 3px 3px rgba(255, 255, 255, 0.5);
 			color: rgba(0, 0, 0, 0.156);
 			font-size: clamp(4rem, 15vw, 5rem);
 			bottom: 5%;
 			right: 5%;
 		}
-		&.hero2{
+		&.hero2 {
 			--sticker-color: hsl(201, 100%, 59%);
 			--sticker-width: 30cqw;
 			--sticker-height: 20cqh;
@@ -130,7 +248,7 @@ import {fade, fly} from 'svelte/transition';
 			z-index: 0;
 			font-size: clamp(1rem, 15vw, 1.2rem);
 		}
-		&.chris-icon{
+		&.chris-icon {
 			--sticker-color: hsla(84, 75%, 50%, 0.897);
 			--sticker-width: 8rem;
 			--sticker-height: 8rem;
@@ -138,17 +256,17 @@ import {fade, fly} from 'svelte/transition';
 			display: grid;
 			place-content: center;
 			border-radius: 50%;
-			outline: 1.5px inset color-mix(in oklab, var(--sticker-color) 10% , rgba(0, 0, 0, 0.707) );
+			outline: 1.5px inset color-mix(in oklab, var(--sticker-color) 10%, rgba(0, 0, 0, 0.707));
 			top: 30%;
 			left: 3%;
 
-			@supports (corner-shape: superellipse(0)){
-				&{
+			@supports (corner-shape: superellipse(0)) {
+				& {
 					corner-shape: scoop;
 				}
 			}
 		}
-		&.triangle{
+		&.triangle {
 			--sticker-color: hsla(61, 75%, 50%, 0.945);
 			--sticker-width: 8rem;
 			--sticker-height: 8rem;
@@ -156,15 +274,17 @@ import {fade, fly} from 'svelte/transition';
 			--sticker-top: 20%;
 			left: 23%;
 			font-size: 1.2rem;
-			outline: 8px solid color-mix(in oklab, var(--sticker-color) 80% , rgba(0, 0, 0, 0.579) );
+			outline: 8px solid color-mix(in oklab, var(--sticker-color) 80%, rgba(0, 0, 0, 0.579));
 			outline-offset: -5px;
-			outline-style: double ;
+			outline-style: double;
 
-			@supports (corner-shape: superellipse(0)){
-				&{corner-shape: superellipse(0.2);}
+			@supports (corner-shape: superellipse(0)) {
+				& {
+					corner-shape: superellipse(0.2);
+				}
 			}
 		}
-		&.hero{
+		&.hero {
 			--sticker-color: hsla(0, 75%, 50%, 0);
 			--sticker-width: 10rem;
 			--sticker-height: 9rem;
@@ -173,9 +293,8 @@ import {fade, fly} from 'svelte/transition';
 			left: 5%;
 			opacity: 0;
 			/* filter: drop-shadow(.5px .5px 1px black); */
-
 		}
-		&.in-progress{
+		&.in-progress {
 			--sticker-color: hsla(0, 75%, 50%, 0);
 			--sticker-width: auto;
 			--sticker-height: 14rem;
@@ -185,7 +304,7 @@ import {fade, fly} from 'svelte/transition';
 			/* filter: drop-shadow(.5px .5px 1px black); */
 			z-index: 0;
 		}
-		&.clear{
+		&.clear {
 			--sticker-color: hsla(0, 75%, 50%, 0);
 			--sticker-width: auto;
 			--sticker-height: 12rem;
@@ -197,16 +316,16 @@ import {fade, fly} from 'svelte/transition';
 			/* filter: drop-shadow(.5px .5px 1px black); */
 			z-index: 0;
 		}
-		&.flag{
+		&.flag {
 			--sticker-color: hsla(0, 75%, 50%, 0);
 			--sticker-width: auto;
 			--sticker-height: 6rem;
 			--sticker-rotation: 3deg;
-			--sticker-top:0%;
+			--sticker-top: 0%;
 			right: 5%;
 			/* filter: drop-shadow(.5px .5px 1px black); */
 		}
-		&.vue{
+		&.vue {
 			--sticker-color: hsla(0, 75%, 50%, 0);
 			--sticker-width: auto;
 			--sticker-height: 6rem;
@@ -215,7 +334,7 @@ import {fade, fly} from 'svelte/transition';
 			left: 12%;
 			/* filter: drop-shadow(.5px .5px 1px black); */
 		}
-		&.svelte{
+		&.svelte {
 			--sticker-color: hsla(0, 75%, 50%, 0);
 			--sticker-width: auto;
 			--sticker-height: 7rem;
@@ -224,18 +343,18 @@ import {fade, fly} from 'svelte/transition';
 			left: 15%;
 			/* filter: drop-shadow(.5px .5px 1px black); */
 		}
-		&.JS{
+		&.JS {
 			--sticker-color: hsla(0, 75%, 50%, 0);
 			--sticker-width: auto;
 			--sticker-height: 8rem;
 			--sticker-rotation: -6deg;
 			--sticker-top: 3%;
 			/* left: 7%; */
-						right: 5%;
+			right: 5%;
 
 			/* filter: drop-shadow(.5px .5px 1px black); */
 		}
-		&.figma{
+		&.figma {
 			--sticker-color: hsla(0, 75%, 50%, 0);
 			--sticker-width: auto;
 			--sticker-height: 6rem;
@@ -243,7 +362,7 @@ import {fade, fly} from 'svelte/transition';
 			--sticker-top: 65%;
 			left: 35%;
 		}
-		&.c-name{
+		&.c-name {
 			--sticker-color: hsla(0, 75%, 50%, 0);
 			--sticker-width: auto;
 			--sticker-height: 2rem;
@@ -251,9 +370,9 @@ import {fade, fly} from 'svelte/transition';
 			--sticker-top: auto;
 			bottom: 15%;
 			right: 7%;
-			opacity: .2;
+			opacity: 0.2;
 		}
-		&.pixel-c{
+		&.pixel-c {
 			--sticker-color: hsla(0, 75%, 50%, 0);
 			--sticker-width: auto;
 			--sticker-height: 12rem;
@@ -263,7 +382,7 @@ import {fade, fly} from 'svelte/transition';
 			left: 0%;
 			/* opacity: 0; */
 		}
-		&.c-pixel-icon{
+		&.c-pixel-icon {
 			--sticker-color: hsla(0, 75%, 50%, 0);
 			--sticker-width: auto;
 			--sticker-height: 2rem;
@@ -279,14 +398,22 @@ import {fade, fly} from 'svelte/transition';
 	/* utility classes */
 	/* /////////////// */
 
-	.sticker-label{
-		--sticker-shadow-color: color-mix(in oklab, var(--tritary-color) 30% , rgba(21, 20, 20, 0.501) 80% );
-		--sticker-shadow-color2: color-mix(in oklab, var(--tritary-color) 60% , rgba(21, 20, 20, 0.216) 50% );
+	.sticker-label {
+		--sticker-shadow-color: color-mix(
+			in oklab,
+			var(--tritary-color) 30%,
+			rgba(21, 20, 20, 0.501) 80%
+		);
+		--sticker-shadow-color2: color-mix(
+			in oklab,
+			var(--tritary-color) 60%,
+			rgba(21, 20, 20, 0.216) 50%
+		);
 
 		position: absolute;
 		font-size: 1rem;
 		font-weight: lighter;
-		color: color-mix(in oklch, rgb(0, 0, 0), var(--sticker-color,transparent) 10%);
+		color: color-mix(in oklch, rgb(0, 0, 0), var(--sticker-color, transparent) 10%);
 		background-color: var(--sticker-color);
 		border-radius: 15px;
 		padding: 3ex 2ex;
@@ -297,21 +424,16 @@ import {fade, fly} from 'svelte/transition';
 		top: var(--sticker-top, 5%);
 		transform: rotate(var(--sticker-rotation, 0deg));
 		transform-origin: top center;
-		filter: drop-shadow(.5px .5px 1px var(--sticker-shadow-color)) drop-shadow(.5px 12px 10px var(--sticker-shadow-color2));
-		opacity: .88;
+		filter: drop-shadow(0.5px 0.5px 1px var(--sticker-shadow-color))
+			drop-shadow(0.5px 12px 10px var(--sticker-shadow-color2));
+		opacity: 0.88;
 		/* filter: drop-shadow(.5px 12px 10px var(--sticker-shadow-color)); */
 		/* filter: drop-shadow(.5px .5px 1px black); */
 
-
-
-			@supports (corner-shape: superellipse(0)){
-				&{
-					corner-shape: superellipse(3);
-				}
+		@supports (corner-shape: superellipse(0)) {
+			& {
+				corner-shape: superellipse(3);
 			}
+		}
 	}
-
-
-
-
 </style>

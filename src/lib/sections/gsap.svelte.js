@@ -10,15 +10,15 @@
 
 // export function splitText(node, options = {}) {
 //   if (!node) return;
-  
+
 //   const split = new SplitText(node, {
 //     type: "chars,words",
 //     ...options
 //   });
-  
+
 //   // Store the split instance on the node for debugging
 //   node._splitInstance = split;
-  
+
 //   // Return the split instance directly
 //   return split;
 // }

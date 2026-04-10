@@ -16,16 +16,14 @@ const config = {
 		inspector: {
 			toggleKeyCombo: 'alt-x',
 			showToggleButton: 'none',
-			holdMode: true,
+			holdMode: true
 		}
 	},
 	compilerOptions: {
 		experimental: {
 			async: true
 		}
-	},
-	 
-
+	}
 };
 
 export default config;

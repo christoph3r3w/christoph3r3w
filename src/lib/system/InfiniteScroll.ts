@@ -124,10 +124,10 @@
 //     const sectionPercentage = 100 / this.state.totalSections;
 //     const absoluteSection = Math.floor(percentage / sectionPercentage);
 //     const relativeSection = ((absoluteSection % this.state.totalSections) + this.state.totalSections) % this.state.totalSections;
-    
+
 //     const bufferOffset = Math.floor(this.currentScrollX / sequenceWidth) - this.bufferSize;
 //     this.state.currentSection = relativeSection + (bufferOffset * this.state.totalSections);
-    
+
 //     const displaySection = ((relativeSection + 1 + this.state.totalSections) % this.state.totalSections) || this.state.totalSections;
 //     this.state.progressCounter.textContent = `${displaySection}/${this.state.totalSections}`;
 //     this.targetProgressScale = percentage / 100;
@@ -155,14 +155,14 @@
 
 //     if (Math.abs(this.targetScrollX - this.currentScrollX) < 0.01) {
 //       this.isAnimating = false;
-      
+
 //       const basePosition = sequenceWidth * this.bufferSize;
 //       const currentPosition = (this.currentScrollX - basePosition) % sequenceWidth;
 //       const percentage = (currentPosition / sequenceWidth) * 100;
 //       const sectionPercentage = 100 / this.state.totalSections;
 //       const exactSection = percentage / sectionPercentage;
 //       const roundedSection = Math.round(exactSection);
-      
+
 //       if (Math.abs(exactSection - roundedSection) > 0.0) {
 //         this.snapSectionToStart();
 //       }
@@ -175,25 +175,25 @@
 
 //   snapSectionToStart = (sectionIndex?: number): void => {
 //     if (!this.state.scroller || !this.state.progressCounter || !this.state.progressBar || this.state.totalSections === 0) return;
-    
+
 //     const scrollerElement = this.state.scroller as HTMLElement;
 //     const sequenceWidth = parseFloat(scrollerElement.style.width) / (1 + this.bufferSize * 2);
 //     const sectionWidth = sequenceWidth / this.state.totalSections;
-    
+
 //     if (sectionIndex === undefined) {
 //       const basePosition = sequenceWidth * this.bufferSize;
 //       const currentPosition = (this.currentScrollX - basePosition) % sequenceWidth;
 //       let percentage = (currentPosition / sequenceWidth) * 100;
-      
+
 //       if (percentage < 0) {
 //         percentage = 100 + percentage;
 //       }
-      
+
 //       const sectionPercentage = 100 / this.state.totalSections;
 //       const currentSectionFloat = percentage / sectionPercentage;
-      
+
 //       sectionIndex = Math.round(currentSectionFloat);
-      
+
 //       if (sectionIndex >= this.state.totalSections) {
 //         sectionIndex = 0;
 //       } else if (sectionIndex < 0) {
@@ -202,17 +202,17 @@
 //     } else {
 //       sectionIndex = ((sectionIndex % this.state.totalSections) + this.state.totalSections) % this.state.totalSections;
 //     }
-    
+
 //     this.state.currentSection = sectionIndex;
-    
+
 //     const targetPercentage = (sectionIndex * 100) / this.state.totalSections;
 //     const targetPosition = (targetPercentage / 100) * sequenceWidth;
-    
+
 //     this.targetScrollX = (this.bufferSize * sequenceWidth) + targetPosition;
-    
+
 //     this.state.progressCounter.textContent = `${this.state.currentSection + 1}/${this.state.totalSections}`;
 //     this.targetProgressScale = targetPercentage / 100;
-    
+
 //     if (!this.isAnimating) {
 //       this.isAnimating = true;
 //       this.animationFrameId = requestAnimationFrame(() => this.animate(sequenceWidth));
@@ -290,13 +290,12 @@
 //           this.snapSectionToStart();
 //         }
 //       };
-      
+
 //       this.decayFrameId = requestAnimationFrame(decayVelocity);
 //     } else {
 //       this.snapSectionToStart();
 //     }
 //   };
-  
 
 //   cleanup = () => {
 //     if (this.animationFrameId !== null) {
@@ -309,4 +308,4 @@
 //     }
 //     this.isAnimating = false;
 //   };
-// } 
+// }

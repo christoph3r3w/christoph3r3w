@@ -1,30 +1,28 @@
 <script lang="ts">
-	import {Header, Footer, Window,Menu,Menu2,StickerBed,CuttingBoard} from '$lib';
-	let svg = CuttingBoard
+	import { Header, Footer, Window, Menu, Menu2, StickerBed, CuttingBoard } from '$lib';
+	let svg = CuttingBoard;
 
-	let {children} = $props();
+	let { children } = $props();
 </script>
 
-<Window role='window' styleOn="">
+<Window role="window" styleOn="">
 	<Header />
 	<Menu2 />
 	{@render children()}
 </Window>
-<Footer class='ftr'/>
-
+<Footer class="ftr" />
 
 <style>
-
-	:root{
+	:root {
 		/* color-scheme: light dark; */
-		--H-top:5cqh;
-		--Padding-genral:2cqh;
+		--H-top: 5cqh;
+		--Padding-genral: 2cqh;
 		/* --primary-gray: #d5d5d5e7; */
 		--primary-gray: rgb(235, 233, 219);
 		--primary-gray: var(--color-bg);
 	}
 
-	:global(body){
+	:global(body) {
 		display: flex;
 		flex-direction: column;
 		height: 100lvh;
@@ -36,12 +34,12 @@
 		border: solid rgba(255, 140, 0, 0.815);
 	}	 */
 
-	:global(header){
+	:global(header) {
 		padding-inline: var(--Padding-genral);
-		padding-block: .5%;
+		padding-block: 0.5%;
 	}
 
-	:global(main){
+	:global(main) {
 		flex: 1 !important;
 		display: flex;
 		flex-direction: column;
@@ -49,28 +47,29 @@
 		padding: 0;
 		overflow: hidden;
 		background-attachment: fixed, fixed;
-		background:url('cuttingmat55-33-2.svg'),
-		radial-gradient(circle,rgba(42, 123, 155, 0) 69%, var(--color-bg) 100%) ;
+		background:
+			url('cuttingmat55-33-2.svg'),
+			radial-gradient(circle, rgba(42, 123, 155, 0) 69%, var(--color-bg) 100%);
 		background-size: cover, cover;
 		background-repeat: no-repeat;
 		background-position: center, center;
-		background-blend-mode:color-dodge;
-		 &::after{
-			content: "";
+		background-blend-mode: color-dodge;
+		&::after {
+			content: '';
 			position: fixed;
 			inset: 0;
-			background:	radial-gradient(circle,rgba(42, 123, 155, 0) 82%, var(--color-bg) 100%) ;
+			background: radial-gradient(circle, rgba(42, 123, 155, 0) 82%, var(--color-bg) 100%);
 			pointer-events: none;
 			z-index: -1;
 		}
 	}
 
-	:global(main.contain){
+	:global(main.contain) {
 		background-color: var(--primary-gray);
 		/* height: 500vh; */
 	}
 
-	:global(footer){
+	:global(footer) {
 		display: block;
 		flex: 0 1 auto;
 		padding-inline: var(--Padding-genral);
@@ -90,22 +89,21 @@
 	} */
 
 	@media (width < 900px) {
-		:global(html){
+		:global(html) {
 			height: 100lvh;
 		}
 
-		:global(body){
+		:global(body) {
 			height: 100lvh;
 		}
-		
-		:global(footer){
+
+		:global(footer) {
 			display: none;
 		}
 	}
 
 	@media (height < 350px) {
-
-		:global(body::after){
+		:global(body::after) {
 			content: 'oops, screen is too small';
 			position: fixed;
 			inset: 0;
@@ -116,5 +114,4 @@
 			z-index: 200;
 		}
 	}
-
 </style>

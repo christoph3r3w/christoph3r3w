@@ -3,34 +3,64 @@
 	<head>
 		<meta charset="utf-8" />
 		<title>Ceek</title>
-		<meta name="description" content="christopher's portfolio">
+		<meta name="description" content="christopher's portfolio" />
 		<link rel="icon" href="%sveltekit.assets%/favicon.ico" />
 
 		<meta property="og:title" content="Ceek" />
 		<meta property="og:description" content="christopher's portfolio" />
-		<meta property="og:image" content="%sveltekit.assets%/portfolio icon/favicon-32x32.png" />
+		<meta property="og:image" content="%sveltekit.assets%/portfolio icon/favicon-32x32.avif" />
 		<meta property="og:url" content="https://ceek.dev/" />
 		<meta property="og:type" content="website" />
 
 		<meta name="twitter:card" content="summary_large_image" />
 		<meta name="twitter:title" content="Ceek" />
 		<meta name="twitter:description" content="christopher's portfolio" />
-		<meta name="twitter:image" content="%sveltekit.assets%/portfolio icon/favicon-32x32.png" />
+		<meta name="twitter:image" content="%sveltekit.assets%/portfolio icon/favicon-32x32.avif" />
 
-		<link rel="apple-touch-icon" sizes="180x180" href="%sveltekit.assets%/portfolio icon/apple-touch-icon.png">
-		<link rel="icon" type="image/png" sizes="32x32" href="%sveltekit.assets%/portfolio icon/favicon-32x32.png">
-		<link rel="icon" type="image/png" sizes="16x16" href="%sveltekit.assets%/portfolio icon/favicon-16x16.png">
+		<link
+			rel="apple-touch-icon"
+			sizes="180x180"
+			href="%sveltekit.assets%/portfolio icon/apple-touch-icon.avif"
+		/>
+		<link
+			rel="icon"
+			type="image/png"
+			sizes="32x32"
+			href="%sveltekit.assets%/portfolio icon/favicon-32x32.avif"
+		/>
+		<link
+			rel="icon"
+			type="image/png"
+			sizes="16x16"
+			href="%sveltekit.assets%/portfolio icon/favicon-16x16.avif"
+		/>
 		<!-- <link rel="manifest" href="%sveltekit.assets%/portfolio icon/site.webmanifest"> -->
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<link rel="preload" href="%sveltekit.assets%/app.css" as="style" onload="this.rel='stylesheet'">
-		<link rel="stylesheet" href="%sveltekit.assets%/spalsh.css" as="style" onload="this.rel='stylesheet'">
+		<link
+			rel="preload"
+			href="%sveltekit.assets%/app.css"
+			as="style"
+			onload="this.rel = 'stylesheet'"
+		/>
+		<link
+			rel="stylesheet"
+			href="%sveltekit.assets%/spalsh.css"
+			as="style"
+			onload="this.rel = 'stylesheet'"
+		/>
 		%sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover">
 		<section id="splash" data-splash-skip="%spalsh-skip%">
-			<figure class="profile profile-2 " >
+			<figure class="profile profile-2">
 				<picture class="flower">
-					<img src="./25acb22a-22a3-41d5-a0eb-c91529c4c6c8 (Custom).jpg" alt="icon of me" width="10" height="10" loading="lazy">
+					<img
+						src="./25acb22a-22a3-41d5-a0eb-c91529c4c6c8 (Custom).avif"
+						alt="icon of me"
+						width="10"
+						height="10"
+						loading="lazy"
+					/>
 				</picture>
 			</figure>
 			<span id="loading"> loading</span>
@@ -38,5 +68,3 @@
 		<div style="display: contents">%sveltekit.body%</div>
 	</body>
 </html>
-
-

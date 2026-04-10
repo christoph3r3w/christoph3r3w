@@ -6,6 +6,7 @@
 ---
 
 ## Overview
+
 This document outlines the implementation of a server-side screenshot capture functionality for the Christoph3r3w SvelteKit project. The system captures full-page screenshots of any website URL provided.
 
 ---
@@ -13,7 +14,9 @@ This document outlines the implementation of a server-side screenshot capture fu
 ## Technology Choice: Playwright
 
 ### Why Playwright?
+
 ✅ **Excellent for this use case** because:
+
 - **Headless Browser Automation**: Renders pages exactly as browsers do, capturing all JavaScript-rendered content
 - **Cross-browser**: Supports Chromium, Firefox, and WebKit (using Chromium here for optimal performance)
 - **Reliable**: Handles complex pages, animations, and dynamic content
@@ -22,6 +25,7 @@ This document outlines the implementation of a server-side screenshot capture fu
 - **Production-Ready**: Widely used in production environments for similar tasks
 
 ### Alternatives Considered:
+
 - **Puppeteer**: Similar but less maintained; Playwright is the modern successor
 - **Sharp/ImageMagick**: Cannot render JavaScript or complex layouts
 - **Selenium**: Heavier, slower, and outdated for this use case
@@ -31,21 +35,26 @@ This document outlines the implementation of a server-side screenshot capture fu
 ## Implementation Details
 
 ### 1. **Playwright Installation** ✅
+
 ```bash
 npm install --save-dev playwright
 ```
+
 - Added as dev dependency since screenshots are typically generated server-side
 - Installed Chromium browser engine automatically
 
-### 2. **Core Function: `captureScreenshot()`** 
+### 2. **Core Function: `captureScreenshot()`**
+
 **Location:** `src/lib/utils/screenshot.js`
 
 **Function Signature:**
+
 ```javascript
-captureScreenshot(url, options = {})
+captureScreenshot(url, (options = {}));
 ```
 
 **Parameters:**
+
 - `url` (string, required): Website URL to capture (e.g., 'https://example.com')
 - `options` (object, optional):
   - `outputPath`: Directory to save screenshots (default: `./screenshots`)
@@ -55,6 +64,7 @@ captureScreenshot(url, options = {})
   - `viewport`: Viewport size {width, height} (default: 1280x720)
 
 **Returns:**
+
 ```javascript
 {
   success: boolean,
@@ -64,6 +74,7 @@ captureScreenshot(url, options = {})
 ```
 
 **Key Features:**
+
 - URL validation before processing
 - Automatic screenshot directory creation
 - Timestamped filenames with domain information
@@ -71,34 +82,39 @@ captureScreenshot(url, options = {})
 - Browser instance properly closed to prevent memory leaks
 
 ### 3. **API Endpoint: POST `/api/screenshot`**
+
 **Location:** `src/routes/api/screenshot/+server.js`
 
 **Request Format:**
+
 ```json
 {
-  "url": "https://example.com",
-  "waitTime": 1000,
-  "format": "png"
+	"url": "https://example.com",
+	"waitTime": 1000,
+	"format": "png"
 }
 ```
 
 **Success Response (200):**
+
 ```json
 {
-  "success": true,
-  "path": "/absolute/path/to/screenshot_example_com_2026-01-18T10-30-45.png"
+	"success": true,
+	"path": "/absolute/path/to/screenshot_example_com_2026-01-18T10-30-45.png"
 }
 ```
 
 **Error Response (400/500):**
+
 ```json
 {
-  "success": false,
-  "error": "Error message describing what went wrong"
+	"success": false,
+	"error": "Error message describing what went wrong"
 }
 ```
 
 **Validation:**
+
 - URL is required
 - URL format is validated
 - Returns appropriate HTTP status codes (400 for bad request, 500 for server error)
@@ -120,6 +136,7 @@ src/routes/api/screenshot/
 ## Usage Examples
 
 ### From SvelteKit Server Code:
+
 ```javascript
 import { captureScreenshot } from '$lib/utils/screenshot.js';
 
@@ -128,32 +145,33 @@ const result = await captureScreenshot('https://example.com');
 
 // With options
 const result = await captureScreenshot('https://example.com', {
-  waitTime: 2000,
-  format: 'jpeg',
-  viewport: { width: 1920, height: 1080 }
+	waitTime: 2000,
+	format: 'jpeg',
+	viewport: { width: 1920, height: 1080 }
 });
 
 if (result.success) {
-  console.log('Screenshot saved:', result.path);
+	console.log('Screenshot saved:', result.path);
 } else {
-  console.error('Failed:', result.error);
+	console.error('Failed:', result.error);
 }
 ```
 
 ### From Client-Side via API:
+
 ```javascript
 const response = await fetch('/api/screenshot', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    url: 'https://example.com',
-    waitTime: 1500
-  })
+	method: 'POST',
+	headers: { 'Content-Type': 'application/json' },
+	body: JSON.stringify({
+		url: 'https://example.com',
+		waitTime: 1500
+	})
 });
 
 const result = await response.json();
 if (result.success) {
-  console.log('Screenshot path:', result.path);
+	console.log('Screenshot path:', result.path);
 }
 ```
 
@@ -162,17 +180,21 @@ if (result.success) {
 ## Configuration Notes
 
 ### Viewport Settings
+
 The default viewport is **1280x720** (HD), which is suitable for most websites. Customize via options:
+
 - Desktop: `{ width: 1920, height: 1080 }` (Full HD)
 - Tablet: `{ width: 768, height: 1024 }`
 - Mobile: `{ width: 375, height: 667 }`
 
 ### Timeout Handling
+
 - **Default**: 30 seconds - sufficient for most pages
 - Increase for slow/data-heavy sites: `timeout: 60000`
 - Network idle waits for network activity to cease
 
 ### Image Format
+
 - **PNG** (default): Lossless, larger file size, better for details
 - **JPEG**: Lossy compression, smaller file size, better for photos
 
@@ -181,6 +203,7 @@ The default viewport is **1280x720** (HD), which is suitable for most websites. 
 ## Output Structure
 
 Screenshots are saved with naming convention:
+
 ```
 screenshot_{hostname}_{timestamp}.{format}
 ```
@@ -196,6 +219,7 @@ Example: `screenshot_example_com_2026-01-18T10-30-45.png`
 ## Error Handling
 
 The implementation handles:
+
 - ❌ Invalid URL format → Returns 400 Bad Request
 - ❌ Network timeout → Caught and returned as error
 - ❌ Page navigation failures → Graceful error response
@@ -221,6 +245,7 @@ All errors are logged and returned in the response for debugging.
 ## Future Enhancements
 
 Potential improvements:
+
 1. Add screenshot caching to avoid re-capturing same URLs
 2. Implement batch screenshot capture
 3. Add mobile/tablet viewport presets
@@ -235,9 +260,9 @@ Potential improvements:
 
 ```json
 {
-  "devDependencies": {
-    "playwright": "latest"
-  }
+	"devDependencies": {
+		"playwright": "latest"
+	}
 }
 ```
 
@@ -246,11 +271,13 @@ Potential improvements:
 ## Testing the Implementation
 
 1. **Start development server:**
+
    ```bash
    npm run dev
    ```
 
 2. **Test via curl:**
+
    ```bash
    curl -X POST http://localhost:5173/api/screenshot \
      -H "Content-Type: application/json" \
@@ -266,6 +293,7 @@ Potential improvements:
 ## Summary
 
 ✅ **What was implemented:**
+
 - Playwright integration for reliable website screenshot capture
 - Reusable server-side utility function with comprehensive options
 - SvelteKit API endpoint for easy access from client or server
@@ -276,4 +304,4 @@ Potential improvements:
 
 ---
 
-*For questions or issues, refer to Playwright documentation: https://playwright.dev/*
+_For questions or issues, refer to Playwright documentation: https://playwright.dev/_

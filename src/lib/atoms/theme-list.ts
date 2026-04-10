@@ -4,7 +4,7 @@ type Theme = {
 };
 
 export const themeList: Theme[] = [
-{
+	{
 		name: 'reset',
 		properties: {
 			'--color-bg': '',
@@ -17,8 +17,7 @@ export const themeList: Theme[] = [
 			'--accent-color': '',
 			'--color-border': '',
 			// '--color-border-hover': '#fff',
-			'--color-heading': '',
-			
+			'--color-heading': ''
 		}
 	},
 	// {
@@ -53,7 +52,7 @@ export const themeList: Theme[] = [
 			'--accent-color': '#e7c75e',
 			'--color-border': '#495057',
 			'--color-border-hover': '#fff',
-			'--color-heading': '#dee2e6',
+			'--color-heading': '#dee2e6'
 		}
 	},
 	{
@@ -72,7 +71,7 @@ export const themeList: Theme[] = [
 			'--accent-color': '#ffcc5c',
 			'--color-border': '#8b3a00',
 			'--color-border-hover': '#fff',
-			'--color-heading': '#dee2e6',
+			'--color-heading': '#dee2e6'
 		}
 	},
 	{
@@ -87,7 +86,7 @@ export const themeList: Theme[] = [
 			'--accent-color': '#90e0ef',
 			'--color-border': '#023e8a',
 			'--color-border-hover': '#90e0ef',
-			'--color-heading': '#caf0f8',
+			'--color-heading': '#caf0f8'
 		}
 	},
 	{
@@ -103,8 +102,7 @@ export const themeList: Theme[] = [
 			'--accent-color': '#FFF000',
 			'--color-border': '#023e8a',
 			'--color-border-hover': '#90e0ef',
-			'--color-heading': '#1e2b10cc',
+			'--color-heading': '#1e2b10cc'
 		}
-	},
-	
+	}
 ];

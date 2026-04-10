@@ -3,7 +3,7 @@
 		name: string;
 		properties: Record<string, string>;
 
-		constructor(name:string, properties:Record<string, string>) {
+		constructor(name: string, properties: Record<string, string>) {
 			this.name = name;
 			this.properties = properties;
 		}
@@ -27,5 +27,4 @@
 			'--color-border': '#495057'
 		})
 	]);
-
 </script>

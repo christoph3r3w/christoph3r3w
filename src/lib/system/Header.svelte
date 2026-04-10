@@ -1,80 +1,80 @@
-<script lang=ts>
-	import { menuOpen, contactsOpen, aboutOpen,aboutMoreOpen, modeDark } from '$lib/store';
+<script lang="ts">
+	import { menuOpen, contactsOpen, aboutOpen, aboutMoreOpen, modeDark } from '$lib/store';
 	import { themeList } from '../atoms/theme-list';
 	// import {page} from '$app/state'
-	let openMenu = $derived($menuOpen)
-	let openContacts = $derived($contactsOpen)
-	let openAbout = $derived($aboutOpen)
-	let dark = $state(false)
-	let currentThemeIndex = $state(0)
+	let openMenu = $derived($menuOpen);
+	let openContacts = $derived($contactsOpen);
+	let openAbout = $derived($aboutOpen);
+	let dark = $state(false);
+	let currentThemeIndex = $state(0);
 
 	function handleViewTransition(callback: () => void, target?: HTMLElement) {
 		const transitionTarget = target || document;
-		
+
 		if (!('startViewTransition' in transitionTarget)) {
 			// Fallback for browsers that don't support View Transitions
 			callback();
 			return;
 		}
-		
+
 		// Start a view transition on the target element or document
 		(transitionTarget as any).startViewTransition(callback);
 	}
 
-	function toggleMenu()  {
-		if( openContacts == true || openAbout == true){
+	function toggleMenu() {
+		if (openContacts == true || openAbout == true) {
 			handleViewTransition(() => {
-				contactsOpen.set(false)
-				aboutOpen.set(false)
-			})
-			return
+				contactsOpen.set(false);
+				aboutOpen.set(false);
+			});
+			return;
 		}
 		handleViewTransition(() => {
 			menuOpen.set(!$menuOpen);
 			contactsOpen.set(false);
-			aboutMoreOpen.set(false)
+			aboutMoreOpen.set(false);
 			aboutOpen.set(false);
-		})
-		return
+		});
+		return;
 	}
 
-	function toggleContacts(){
-		if(openMenu == true && openContacts == true){
-		handleViewTransition(() => {
-			menuOpen.set(false)
-			contactsOpen.set(false)
-		})
-			return
+	function toggleContacts() {
+		if (openMenu == true && openContacts == true) {
+			handleViewTransition(() => {
+				menuOpen.set(false);
+				contactsOpen.set(false);
+			});
+			return;
 		}
 		handleViewTransition(() => {
 			aboutOpen.set(false);
-			aboutMoreOpen.set(false)
+			aboutMoreOpen.set(false);
 			menuOpen.set(true);
 			contactsOpen.set(true);
-		})
-		return
+		});
+		return;
 	}
 
-	function toggleAbout(){
-		if(openMenu == true && openAbout == true){
+	function toggleAbout() {
+		if (openMenu == true && openAbout == true) {
 			handleViewTransition(() => {
-				menuOpen.set(false)
-				aboutOpen.set(false)
-			})
-			return
+				menuOpen.set(false);
+				aboutOpen.set(false);
+			});
+			return;
 		}
 		handleViewTransition(() => {
 			contactsOpen.set(false);
-			aboutMoreOpen.set(false)
+			aboutMoreOpen.set(false);
 			menuOpen.set(true);
 			aboutOpen.set(true);
-		})
-		return
+		});
+		return;
 	}
 
-	function handleDarkMode(){
-		dark = !dark
-		modeDark.set(dark)
+	function handleDarkMode() {
+		dark = !dark;
+		modeDark.set(dark);
 		const selectedThemeName = dark ? 'dark' : 'reset';
 		const selectedTheme = themeList.find((theme) => theme.name === selectedThemeName);
 
@@ -87,7 +87,7 @@
 		}
 	}
 
-	function handleThemeToggle(){
+	function handleThemeToggle() {
 		if (themeList.length === 0) {
 			return;
 		}
@@ -105,89 +105,157 @@
 		// console.log('Active theme:', nextTheme.name);
 	}
 
-	function handleAboutMore(){
+	function handleAboutMore() {
 		aboutMoreOpen.set(!$aboutMoreOpen);
 	}
 
 	$effect(() => {
-		if(openMenu == false){
+		if (openMenu == false) {
 			contactsOpen.set(false);
 			aboutOpen.set(false);
 			aboutMoreOpen.set(false);
 		}
-	})
-
+	});
 </script>
 
 {#snippet headerLogo()}
-		<li class="header-logo">
-			<a href="/" data-sveltekit-reload>
-				{#if openMenu === false}
+	<li class="header-logo">
+		<a href="/" data-sveltekit-reload>
+			{#if openMenu === false}
 				{#key openMenu}
-					<figure class=" flower" >
+					<figure class=" flower">
 						<picture>
-							<img src="./25acb22a-22a3-41d5-a0eb-c91529c4c6c8 (Custom).jpg" alt="icon of me" width="10" height="10" loading="lazy">
+							<img
+								src="./25acb22a-22a3-41d5-a0eb-c91529c4c6c8 (Custom).webp"
+								alt="icon of me"
+								width="10"
+								height="10"
+								loading="lazy"
+							/>
 							<!-- {#if openAbout == true}
-								<img src="./photos/2533cde4-1781-47d6-a605-089cc54dfa8e2.JPG" alt="me">
+								<img src="./photos/2533cde4-1781-47d6-a605-089cc54dfa8e2.avif" alt="me">
 							{:else}
-								<img class="" src="./25acb22a-22a3-41d5-a0eb-c91529c4c6c8 (Custom).jpg" alt="icon of my face me">
+								<img class="" src="./25acb22a-22a3-41d5-a0eb-c91529c4c6c8 (Custom).avif" alt="icon of my face me">
 							{/if} -->
 						</picture>
 					</figure>
 				{/key}
-				{/if}
-			</a>
-		</li>
+			{/if}
+		</a>
+	</li>
 {/snippet}
 
 {#snippet buttonNav()}
 	<li class="D-menu">
-		<button onmouseup={toggleContacts}  class="contact-btn">Contact</button>
-		<button onmouseup={toggleMenu}  class="menu-btn" aria-label="menu button">
+		<button onmouseup={toggleContacts} class="contact-btn">Contact</button>
+		<button onmouseup={toggleMenu} class="menu-btn" aria-label="menu button">
 			<svg width="" height="" viewBox="0 0 77 62" fill="none" xmlns="http://www.w3.org/2000/svg">
-				<path d="M25 31.25L25 30.75" stroke="black" stroke-width="5" stroke-linecap="round"/>
-				<path d="M39 31.25L39 30.75" stroke="black" stroke-width="5" stroke-linecap="round"/>
-				<path d="M52 31.25L52 30.75" stroke="#555555"  stroke-width="5" stroke-linecap="round"/>
+				<path d="M25 31.25L25 30.75" stroke="black" stroke-width="5" stroke-linecap="round" />
+				<path d="M39 31.25L39 30.75" stroke="black" stroke-width="5" stroke-linecap="round" />
+				<path d="M52 31.25L52 30.75" stroke="#555555" stroke-width="5" stroke-linecap="round" />
 			</svg>
 		</button>
-		<button onmouseup={toggleAbout}  class="about-btn">About</button>
+		<button onmouseup={toggleAbout} class="about-btn">About</button>
 		{#if openMenu == true}
-		<button class="themes icon-btn" title="theme toggle" aria-label="theme toggle" onclick={handleThemeToggle}>
-			<svg width="25" height="32" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
-				<path d="M19.25 29.75C19.25 31.6065 18.5125 33.387 17.1997 34.6997C15.887 36.0125 14.1065 36.75 12.25 36.75C10.3935 36.75 8.61301 36.0125 7.30025 34.6997C5.9875 33.387 5.25 31.6065 5.25 29.75V8.75C5.25 7.82174 5.61875 6.9315 6.27513 6.27513C6.9315 5.61875 7.82174 5.25 8.75 5.25H15.75C16.6783 5.25 17.5685 5.61875 18.2249 6.27513C18.8812 6.9315 19.25 7.82174 19.25 8.75V29.75Z"  style="stroke-opacity:1;" stroke-width="3" stroke-miterlimit="11.4737"/>
-				<path d="M29.225 22.75H33.25C34.1783 22.75 35.0685 23.1187 35.7249 23.7751C36.3812 24.4315 36.75 25.3217 36.75 26.25V33.25C36.75 34.1783 36.3812 35.0685 35.7249 35.7249C35.0685 36.3812 34.1783 36.75 33.25 36.75H12.25"  style="stroke-opacity:1;" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-				<path d="M12.25 29.75H12.2667"  style="stroke-opacity:1;" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-				<path d="M19.2502 14.0001L23.2752 9.97508C23.666 9.58293 24.1304 9.27191 24.6418 9.05991C25.1533 8.8479 25.7015 8.7391 26.2552 8.73975C26.8088 8.7404 27.3568 8.85049 27.8677 9.0637C28.3786 9.2769 28.8423 9.58902 29.2322 9.98208L32.5502 13.3001C32.9537 13.6882 33.2756 14.1532 33.4968 14.6676C33.7181 15.1819 33.8342 15.7353 33.8385 16.2952C33.8427 16.8552 33.7349 17.4103 33.5215 17.9279C33.3081 18.4456 32.9933 18.9153 32.5957 19.3096L17.3252 34.6501"  style="stroke-opacity:1;" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-			</svg>
-		</button>
+			<button
+				class="themes icon-btn"
+				title="theme toggle"
+				aria-label="theme toggle"
+				onclick={handleThemeToggle}
+			>
+				<svg
+					width="25"
+					height="32"
+					viewBox="0 0 42 42"
+					fill="none"
+					xmlns="http://www.w3.org/2000/svg"
+				>
+					<path
+						d="M19.25 29.75C19.25 31.6065 18.5125 33.387 17.1997 34.6997C15.887 36.0125 14.1065 36.75 12.25 36.75C10.3935 36.75 8.61301 36.0125 7.30025 34.6997C5.9875 33.387 5.25 31.6065 5.25 29.75V8.75C5.25 7.82174 5.61875 6.9315 6.27513 6.27513C6.9315 5.61875 7.82174 5.25 8.75 5.25H15.75C16.6783 5.25 17.5685 5.61875 18.2249 6.27513C18.8812 6.9315 19.25 7.82174 19.25 8.75V29.75Z"
+						style="stroke-opacity:1;"
+						stroke-width="3"
+						stroke-miterlimit="11.4737"
+					/>
+					<path
+						d="M29.225 22.75H33.25C34.1783 22.75 35.0685 23.1187 35.7249 23.7751C36.3812 24.4315 36.75 25.3217 36.75 26.25V33.25C36.75 34.1783 36.3812 35.0685 35.7249 35.7249C35.0685 36.3812 34.1783 36.75 33.25 36.75H12.25"
+						style="stroke-opacity:1;"
+						stroke-width="3"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+					/>
+					<path
+						d="M12.25 29.75H12.2667"
+						style="stroke-opacity:1;"
+						stroke-width="2"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+					/>
+					<path
+						d="M19.2502 14.0001L23.2752 9.97508C23.666 9.58293 24.1304 9.27191 24.6418 9.05991C25.1533 8.8479 25.7015 8.7391 26.2552 8.73975C26.8088 8.7404 27.3568 8.85049 27.8677 9.0637C28.3786 9.2769 28.8423 9.58902 29.2322 9.98208L32.5502 13.3001C32.9537 13.6882 33.2756 14.1532 33.4968 14.6676C33.7181 15.1819 33.8342 15.7353 33.8385 16.2952C33.8427 16.8552 33.7349 17.4103 33.5215 17.9279C33.3081 18.4456 32.9933 18.9153 32.5957 19.3096L17.3252 34.6501"
+						style="stroke-opacity:1;"
+						stroke-width="3"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+					/>
+				</svg>
+			</button>
 		{/if}
-		<button class="dark-mode icon-btn" title="theme toggle" aria-label="theme toggle" onclick={handleDarkMode} >
-			<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" >
-				<path style="fill:var(--primary-color);" d="M12.133 3C12.136 3 12.14 3 12.143 3C12.462 3 12.6 3.39301 12.36 3.60001C10.679 5.04701 9.755 7.32199 10.226 9.77399C10.749 12.495 12.988 14.566 15.773 14.938C17.532 15.173 19.161 14.728 20.456 13.839C20.719 13.658 21.068 13.897 20.989 14.203C19.885 18.519 15.626 21.595 10.767 20.902C6.73098 20.326 3.54399 17.087 3.06599 13.095C2.81599 11.013 3.28897 9.05101 4.26997 7.42001C5.85997 4.77401 8.78598 3 12.133 3Z" fill="#121212"/>
+		<button
+			class="dark-mode icon-btn"
+			title="theme toggle"
+			aria-label="theme toggle"
+			onclick={handleDarkMode}
+		>
+			<svg
+				width="24"
+				height="24"
+				viewBox="0 0 24 24"
+				fill="none"
+				xmlns="http://www.w3.org/2000/svg"
+			>
+				<path
+					style="fill:var(--primary-color);"
+					d="M12.133 3C12.136 3 12.14 3 12.143 3C12.462 3 12.6 3.39301 12.36 3.60001C10.679 5.04701 9.755 7.32199 10.226 9.77399C10.749 12.495 12.988 14.566 15.773 14.938C17.532 15.173 19.161 14.728 20.456 13.839C20.719 13.658 21.068 13.897 20.989 14.203C19.885 18.519 15.626 21.595 10.767 20.902C6.73098 20.326 3.54399 17.087 3.06599 13.095C2.81599 11.013 3.28897 9.05101 4.26997 7.42001C5.85997 4.77401 8.78598 3 12.133 3Z"
+					fill="#121212"
+				/>
 			</svg>
 		</button>
 	</li>
 {/snippet}
 
-<header class={openMenu === false?'down':''}>
+<header class={openMenu === false ? 'down' : ''}>
 	<ul class="headerUl">
 		{@render headerLogo()}
 		{@render buttonNav()}
 		<li class="head-extra">
-		{#if openAbout == true}
-			<button class="read-more-btn" onclick={handleAboutMore}>
-				{#if $aboutMoreOpen == false}
-				Read more
-				{:else}
-				Read less
-				{/if}
-			</button>
-		{/if}
-			<noscript>
-				<button title="warning" aria-label="warning" interestfor="noscript-notice" >
-					<svg xmlns="http://www.w3.org/2000/svg" width="20" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-triangle-alert-icon lucide-triangle-alert"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+			{#if openAbout == true}
+				<button class="read-more-btn" onclick={handleAboutMore}>
+					{#if $aboutMoreOpen == false}
+						Read more
+					{:else}
+						Read less
+					{/if}
 				</button>
-				
+			{/if}
+			<noscript>
+				<button title="warning" aria-label="warning" interestfor="noscript-notice">
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						width="20"
+						height="28"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						class="lucide lucide-triangle-alert-icon lucide-triangle-alert"
+						><path
+							d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"
+						/><path d="M12 9v4" /><path d="M12 17h.01" /></svg
+					>
+				</button>
+
 				<div id="noscript-notice" class="noscript-notice" popover="hint">
 					Note: JavaScript is disabled. For the best experience, please enable JavaScript.
 				</div>
@@ -197,14 +265,13 @@
 </header>
 
 <style>
-
-	:root{
-		--btn-shadow-color: color-mix(in srgb, var(--color-bg,#ffffff), rgba(105, 98, 63, 0.181) 50%);
-		--icon-shadow-color: color-mix(in srgb, var(--color-bg,#ffffff), rgba(105, 98, 63, 0.181) 50%);
+	:root {
+		--btn-shadow-color: color-mix(in srgb, var(--color-bg, #ffffff), rgba(105, 98, 63, 0.181) 50%);
+		--icon-shadow-color: color-mix(in srgb, var(--color-bg, #ffffff), rgba(105, 98, 63, 0.181) 50%);
 		--header-element-shadow: 0 10px 20px -10px rgba(12, 15, 23, 0.378);
 	}
 
-	header{
+	header {
 		position: relative;
 		display: flex;
 		flex-direction: column;
@@ -215,32 +282,36 @@
 		container-name: header;
 	}
 
-	header:is(:not(.down)){
-		transition: .5s ease-out;
+	header:is(:not(.down)) {
+		transition: 0.5s ease-out;
 
-		&:hover .head-extra{
+		&:hover .head-extra {
 			box-shadow: 0 10px 5px -10px rgba(0, 0, 0, 0);
 		}
 	}
 
-	header:hover{transition: .5s ease-out;}
+	header:hover {
+		transition: 0.5s ease-out;
+	}
 
-	header ul{
+	header ul {
 		display: flex;
 		flex-direction: row;
 		width: 100%;
 		height: fit-content;
 
-		@container (width < 800px){margin-top: 1rem;}
+		@container (width < 800px) {
+			margin-top: 1rem;
+		}
 	}
 
-	header li{
+	header li {
 		position: relative;
 		display: flex;
 		flex-flow: row nowrap;
 		justify-content: center;
 		align-items: center;
-		flex:1 3 30%;
+		flex: 1 3 30%;
 		min-height: 4rem;
 		width: 100%;
 		color: var(--color-text);
@@ -249,15 +320,17 @@
 	/* //////////////////////// */
 	/* logo - face icon section */
 	/* //////////////////////// */
-	li.header-logo{
-		transition: .5s ease-out;
+	li.header-logo {
+		transition: 0.5s ease-out;
 		justify-content: end;
 		filter: drop-shadow(var(--icon-shadow-color) 0px 28px 10px);
 
-		@container (width < 800px){justify-content: start;}
+		@container (width < 800px) {
+			justify-content: start;
+		}
 	}
 
-	.header-logo figure  {
+	.header-logo figure {
 		flex: 0 1 auto;
 		position: relative;
 		aspect-ratio: 1;
@@ -269,21 +342,21 @@
 		margin-inline: 20px;
 		view-transition-name: header-figure;
 
-		@starting-style{
+		@starting-style {
 			flex: 0 1 auto;
 			position: relative;
 			width: 100%;
 			height: 100%;
 		}
 
-		& img{
+		& img {
 			aspect-ratio: 1;
 			width: 100%;
 			height: 100%;
 			object-fit: cover;
 			object-position: center;
 
-			@starting-style{
+			@starting-style {
 				aspect-ratio: 1;
 				width: 100%;
 				height: 100%;
@@ -292,34 +365,43 @@
 			}
 		}
 
-		&.flower{
-			--g:/25.486% 25.486% radial-gradient(#000 calc(69% - 1px),#0000 73%) no-repeat;
-			mask: 100% 50% var(--g),88.302% 82.139% var(--g),58.682% 99.24% var(--g),25% 93.301% var(--g),3.015% 67.101% var(--g),3.015% 32.899% var(--g),25% 6.699% var(--g),58.682% 0.76% var(--g),88.302% 17.861% var(--g),radial-gradient(100% 100%,#000 35.01%,#0000 calc(35.01% + 1px));
+		&.flower {
+			--g: /25.486% 25.486% radial-gradient(#000 calc(69% - 1px), #0000 73%) no-repeat;
+			mask:
+				100% 50% var(--g),
+				88.302% 82.139% var(--g),
+				58.682% 99.24% var(--g),
+				25% 93.301% var(--g),
+				3.015% 67.101% var(--g),
+				3.015% 32.899% var(--g),
+				25% 6.699% var(--g),
+				58.682% 0.76% var(--g),
+				88.302% 17.861% var(--g),
+				radial-gradient(100% 100%, #000 35.01%, #0000 calc(35.01% + 1px));
 			scale: 1;
-			transition: .5s cubic-bezier(0.375, 0.585, 0.12, 1.091) ;
-			animation: sway 5s linear infinite 15s both ;
+			transition: 0.5s cubic-bezier(0.375, 0.585, 0.12, 1.091);
+			animation: sway 5s linear infinite 15s both;
 			view-transition-name: header-figure;
 			contain: paint layout;
 
 			/* logo floats down */
 			/* @starting-style{translate: 0 -6vw;} */
 
-			&:hover{
+			&:hover {
 				rotate: 25deg;
 				transition: 12s;
 			}
-
 		}
 	}
 
 	/* //////////////////////////////////// */
 	/* button menu section - middle section */
 	/* //////////////////////////////////// */
-	li.D-menu{
+	li.D-menu {
 		flex: 0 2 fit-content;
 		position: relative;
-		justify-content:center;		
-		transition: .6s ease-out;
+		justify-content: center;
+		transition: 0.6s ease-out;
 		gap: 3rem;
 		gap: 1rem;
 		padding: 1rem 0;
@@ -329,10 +411,14 @@
 	}
 
 	/* button styling */
-	li:is(.D-menu,.head-extra) button{
-		--_btn-shadow-color: color-mix(in srgb, var(--color-bg,#ffffff), rgba(65, 60, 39, 0.181) 70%);
-		--_btn-border-color: color-mix(in srgb, var(--accent-color,#ffffff), rgba(90, 86, 70, 0.181) 65%);
-		
+	li:is(.D-menu, .head-extra) button {
+		--_btn-shadow-color: color-mix(in srgb, var(--color-bg, #ffffff), rgba(65, 60, 39, 0.181) 70%);
+		--_btn-border-color: color-mix(
+			in srgb,
+			var(--accent-color, #ffffff),
+			rgba(90, 86, 70, 0.181) 65%
+		);
+
 		position: relative;
 		display: grid;
 		place-content: center;
@@ -345,28 +431,28 @@
 		width: auto;
 		min-width: fit-content;
 		height: 3rem;
-		font-size: clamp(var(--text-size-s),50dvw - 1rem , 1.3rem );
+		font-size: clamp(var(--text-size-s), 50dvw - 1rem, 1.3rem);
 		line-height: 1rem;
-		background-color: color-mix(in srgb,var(--color-bg,#ffffff) , rgba(255, 255, 255, 0.61) 80% );
+		background-color: color-mix(in srgb, var(--color-bg, #ffffff), rgba(255, 255, 255, 0.61) 80%);
 		filter: drop-shadow(var(--_btn-shadow-color) 0px 28px 10px);
 		backdrop-filter: blur(8px);
-		color:inherit;
+		color: inherit;
 		cursor: pointer;
 		z-index: 5;
 
-		&::after{
+		&::after {
 			content: '';
 			position: absolute;
 			inset-inline: -25%;
 			inset-block: 0 -2rem;
-			border-radius:15px;
+			border-radius: 15px;
 			z-index: -1;
 			user-select: none;
 		}
 
-		svg path{
+		svg path {
 			fill: transparent;
-			stroke: var(--color-text,#000000);	
+			stroke: var(--color-text, #000000);
 		}
 	}
 
@@ -384,77 +470,93 @@
 		transition: 2s;
 	} */
 
-	li button:hover{
+	li button:hover {
 		filter: drop-shadow(var(--_btn-shadow-color) 0px 23px 10px);
 	}
 
-	li button:active{
+	li button:active {
 		filter: drop-shadow(var(--_btn-shadow-color) 0px 15px 10px);
-		scale: .97;
+		scale: 0.97;
 	}
 
-	li button.icon-btn{
+	li button.icon-btn {
 		aspect-ratio: 1;
 	}
 
-	li button.menu-btn{
+	li button.menu-btn {
 		display: none;
 
-		@container (width < 990px) {display: block;}
+		@container (width < 990px) {
+			display: block;
+		}
 
-		svg path{
+		svg path {
 			fill: transparent;
-			stroke: var(--color-text,#000000);	
+			stroke: var(--color-text, #000000);
 		}
 	}
 
-	li button.dark-mode svg path{
+	li button.dark-mode svg path {
 		fill: var(--color-text);
 		stroke: var(--color-text);
 		background-color: black;
-		stroke-width:2px ;
+		stroke-width: 2px;
 	}
 
 	/* ///////////////////////// */
 	/* right side header section */
 	/* ///////////////////////// */
-	
-	li.head-extra{
+
+	li.head-extra {
 		position: relative;
 		padding-inline: 20px;
 	}
 
-	li.head-extra noscript{
+	li.head-extra noscript {
 		display: flex;
 		justify-content: end;
 		width: 60%;
 
-		button{
+		button {
 			border-radius: 50%;
 			cursor: help;
 		}
 	}
 
-	li.head-extra button{
+	li.head-extra button {
 		/* transition: .5s ease-out; */
-		transform: translate( 0,-5rem);
+		transform: translate(0, -5rem);
 		animation: readMoreAnim 0.5s ease-out both;
-		@starting-style{
-			transform: translate( 0,-5rem);
+		@starting-style {
+			transform: translate(0, -5rem);
 		}
 
-		svg path{fill: rgba(192, 158, 24, 0.9);}
+		svg path {
+			fill: rgba(192, 158, 24, 0.9);
+		}
 	}
 
-	li.head-extra button.read-more-btn{
-		background-color: color-mix(in srgb, var(--primary-color, rgba(255, 255, 255, 0.781)),color-mix(in srgb, var(--color-bg), rgba(255, 255, 255, 0.595) 50% ) 90%);
-		color: color-mix(in srgb,var(--color-text,#ffffff) 70% , var(--primary-color ,var(--black)) 90% );
+	li.head-extra button.read-more-btn {
+		background-color: color-mix(
+			in srgb,
+			var(--primary-color, rgba(255, 255, 255, 0.781)),
+			color-mix(in srgb, var(--color-bg), rgba(255, 255, 255, 0.595) 50%) 90%
+		);
+		color: color-mix(
+			in srgb,
+			var(--color-text, #ffffff) 70%,
+			var(--primary-color, var(--black)) 90%
+		);
 		border: solid 2px;
-		border-color:color-mix(in srgb, var(--primary-color, rgba(255, 255, 255, 0.781)),color-mix(in srgb, var(--color-bg), rgba(255, 255, 255, 0.595) 50% ) 90%) ;
+		border-color: color-mix(
+			in srgb,
+			var(--primary-color, rgba(255, 255, 255, 0.781)),
+			color-mix(in srgb, var(--color-bg), rgba(255, 255, 255, 0.595) 50%) 90%
+		);
 		display: none;
 	}
 
-	li.head-extra #noscript-notice{
+	li.head-extra #noscript-notice {
 		position: absolute;
 		top: 30%;
 		background-color: rgb(237, 192, 10);
@@ -479,29 +581,29 @@
 		transition: translate .8s 1s !important ;
 	} */
 
-	
 	@keyframes sway {
-		50%{rotate: 15deg;}
+		50% {
+			rotate: 15deg;
+		}
 	}
 
 	@keyframes readMoreAnim {
-		to{
+		to {
 			opacity: 1;
 			transform: translate(0, 0);
 		}
 	}
 
-	@media (max-width: 1000px){
-		header:hover{
-			.header-logo{
+	@media (max-width: 1000px) {
+		header:hover {
+			.header-logo {
 				transform: none;
 				scale: 1;
 			}
 		}
 
-		li button:is(.contact-btn,.about-btn){
+		li button:is(.contact-btn, .about-btn) {
 			display: none;
 		}
 	}
-
 </style>

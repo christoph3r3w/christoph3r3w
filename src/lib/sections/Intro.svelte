@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { onMount, onDestroy } from "svelte";
-	import { gsap } from "gsap";
-	import { SplitText } from "gsap/dist/SplitText";
-	import { linear } from "svelte/easing";
+	import { onMount, onDestroy } from 'svelte';
+	import { gsap } from 'gsap';
+	import { SplitText } from 'gsap/dist/SplitText';
+	import { linear } from 'svelte/easing';
 	gsap.registerPlugin(SplitText);
 
 	let introSection: HTMLElement;
@@ -13,40 +13,41 @@
 
 	onMount(() => {
 		if (textElement && introSection) {
-			split = new SplitText(textElement, { 
-				type: "chars, words",
+			split = new SplitText(textElement, {
+				type: 'chars, words',
 				autoSplit: true,
-				charsClass: "char++",
-				wordsClass: "word",
-				onSplit: (self)=> {
-					document.documentElement.style.setProperty('--letter-total', self.chars.length.toString());
+				charsClass: 'char++',
+				wordsClass: 'word',
+				onSplit: (self) => {
+					document.documentElement.style.setProperty(
+						'--letter-total',
+						self.chars.length.toString()
+					);
 				}
 			});
 
 			tl = gsap.timeline({});
 
 			tl.set(bar, {
-				y: "40cqh",
-				opacity: 0,
-			}).from(bar, {
-				y: "40cqh",
-				opacity: 0,
-				duration: 1,
-			}).to(bar, {
-				y: "0cqh",
-				opacity: 1,
-				duration: .4,
-			});
-
-			tl.from(textElement,{
-				y: "100cqh",
-				opacity: 0,
-				duration: 1.5,
+				y: '40cqh',
+				opacity: 0
 			})
-			
-			
+				.from(bar, {
+					y: '40cqh',
+					opacity: 0,
+					duration: 1
+				})
+				.to(bar, {
+					y: '0cqh',
+					opacity: 1,
+					duration: 0.4
+				});
 
-			
+			tl.from(textElement, {
+				y: '100cqh',
+				opacity: 0,
+				duration: 1.5
+			});
 
 			// tl.to(split.chars, {
 			// 	stagger: {
@@ -55,12 +56,12 @@
 			// 		// repeatDelay: 1,
 			// 		// yoyo: true,
 			// 		 grid: [23,15],
-    		// 		from: "random",
+			// 		from: "random",
 			// 		ease: "power5.out",
 			// 	},
 			// 	y:'10cqw',
 			// 	duration: 1,
-			// 	// autoAlpha: 0,	
+			// 	// autoAlpha: 0,
 			// 	ease: linear,
 			// }).to(
 			// 	".text p:nth-of-type(1)",
@@ -88,7 +89,6 @@
 			// 	'<0')
 			// 	.to('.char',{fontSize: "5rem"},'<0.2');
 
-			
 			// tl.from(".char3,.char7", {
 			// 	repeat: -1,
 			// 	repeatDelay: 1,
@@ -98,7 +98,6 @@
 			// 	duration:2,
 			// 	outline: "solid red 1px",
 			// },"-=1");
-
 
 			// tl.to(split.chars.slice(0, 3), {
 			// 	y: "50cqh",
@@ -133,21 +132,20 @@
 	});
 
 	// let name = $state(['c','h','r','i','s','t','o','p','h','e','r','.'])
-	
+
 	// $effect(() => {
 	// 	if (name.length > 0) {
 	// 		document.documentElement.style.setProperty('--letter-total', name.length.toString());
 	// 	}
 	// })
-
-
 </script>
+
 <div class="intro-section pad" bind:this={introSection}>
 	<!-- <p class="text" bind:this={textElement}	>Christopher Willems</p> -->
-	<div class="text" bind:this={textElement}	>
+	<div class="text" bind:this={textElement}>
 		<p>Chri</p>
 		<!-- <figure class='bar' bind:this={bar}>
-			<img src="25acb22a-22a3-41d5-a0eb-c91529c4c6c8.jpg" alt="">
+			<img src="25acb22a-22a3-41d5-a0eb-c91529c4c6c8.avif" alt="">
 			<section class="barControls">
 				<span class="toLeft"><button>left</button></span>
 				<span class="progress-counter">1234</span>
@@ -157,7 +155,7 @@
 		<p>stopher</p>
 	</div>
 	<!-- <figure class='bar' bind:this={bar}>
-		<img src="25acb22a-22a3-41d5-a0eb-c91529c4c6c8.jpg" alt="">
+		<img src="25acb22a-22a3-41d5-a0eb-c91529c4c6c8.avif" alt="">
 		<section class="barControls">
 			<span class="toLeft"><button>left</button></span>
 			<span class="progress-counter">1234</span>
@@ -168,45 +166,43 @@
 </div>
 
 <style>
-	:root{
-		
+	:root {
 		@property --letter-index {
-			syntax: "<number>";
+			syntax: '<number>';
 			initial-value: 0;
 			inherits: true;
 		}
-		
+
 		@property --letter-total {
-			syntax: "<number>";
+			syntax: '<number>';
 			initial-value: 11;
 			inherits: true;
 		}
-		
+
 		@property --random-col {
-			syntax: "<number>";
+			syntax: '<number>';
 			initial-value: 1;
 			inherits: true;
 		}
-		
+
 		@property --random-row {
-			syntax: "<number>";
+			syntax: '<number>';
 			initial-value: 1;
 			inherits: true;
 		}
-		
+
 		@property --h {
-			syntax: "<number> | <percentage>";
+			syntax: '<number> | <percentage>';
 			initial-value: -0%;
 			inherits: true;
 		}
 	}
 
-
 	:global(.char) {
 		display: inline-block;
 		position: relative;
 		will-change: transform;
-		font-size: 2rem ;
+		font-size: 2rem;
 		/* outline: solid rgba(0, 128, 0, 0.174) 1px; */
 	}
 	:global(.word) {
@@ -217,7 +213,7 @@
 		/* outline: solid rgba(0, 128, 0, 0.174) 1px; */
 	}
 
-	.intro-section{
+	.intro-section {
 		border-radius: inherit;
 		padding: 4rem !important;
 		background-origin: content-box;
@@ -248,7 +244,7 @@
 		display: flex;
 		align-items: center;
 	} */
-	
+
 	/* .bar {
 		--press:0;
 		--h:1;
@@ -399,5 +395,4 @@
 		z-index: 1;
 		background-color: rgba(94, 94, 94, 0.568);
 	} */
-
 </style>
