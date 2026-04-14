@@ -134,28 +134,28 @@
 			<Intro2 data={d || {}} />
 		</Window>
 		<!-- <Window role="child" class="contentContain" color="#e7c75e" styleOn="--hoverC:white" bind:this={sections[0]}>
-      <Intro2 data={d}/>
-    </Window> -->
+			<Intro2 data={d}/>
+		</Window> -->
 
 		<!-- <Window role="child" class="contentContain" color="white" styleOn="--hoverC:white" bind:this={sections[0]}>
-      <Intro2 {data}/>
-    </Window> -->
+			<Intro2 {data}/>
+		</Window> -->
 
 		<!-- <Window role="child" class="contentContain" color="white" styleOn="--hoverC:white" bind:this={sections[0]}>
-     <Intro/>
-    </Window> -->
+			<Intro/>
+		</Window> -->
 
 		<!-- <Window role="child" class="contentContain" color="transparent" bind:this={sections[1]}>
-      <p>no yoo</p>
-    </Window> -->
+			<p>no yoo</p>
+		</Window> -->
 
 		<!-- <Window role="child" class="contentContain" color="transparent" styleOn="--hoverC:#DCA256" bind:this={sections[2]}>
-      <Works {data}/>
-    </Window> -->
+			<Works {data}/>
+		</Window> -->
 
 		<!-- <Window role="child" class="contentContain" color="transparent" styleOn="--hoverC:#3B6E25" bind:this={sections[3]}>
-      <p>no y443</p>
-    </Window> -->
+			<p>no y443</p>
+		</Window> -->
 	</section>
 </div>
 

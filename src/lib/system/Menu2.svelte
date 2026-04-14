@@ -3,7 +3,7 @@
 	import { menuOpen, contactsOpen, aboutOpen, aboutMoreOpen } from '$lib/store';
 	import { onMount } from 'svelte';
 	import { elasticOut } from 'svelte/easing';
-	import { CornerDownRight, ArrowBigDown } from '@lucide/svelte';
+	import { CornerDownRight, ArrowBigDown,Mail } from '@lucide/svelte';
 	let openMenu = $derived($menuOpen);
 	let openContacts = $derived($contactsOpen);
 	let openAbout = $derived($aboutOpen);
@@ -83,14 +83,18 @@
 
 {#snippet Contacts()}
 	<div class="text-bubble">
-		<p>you can contact me at:</p>
-		<span>
+		<p>Contact me at:</p>
+		<span class="email">
 			<a href="mailto:masmesa.studio@gmail.com">masmesa.studio@gmail.com</a>
+			<a href="mailto:masmesa.studio@gmail.com">  <Mail /></a>
 		</span>
 	</div>
 	<div class="text-bubble">
 		<!-- <p>or find me on:</p> -->
 		<span class="contact-links">
+			<a class="mail-to" href="mailto:masmesa.studio@gmail.com">  
+				<Mail/>
+			</a>
 			<a href="/" target="_blank" data-title="LinkedIn" aria-label="link to my linkedin">
 				<svg
 					width="52"
@@ -604,6 +608,10 @@
 		gap: 4cqw;
 	}
 
+	.head-contacts .text-bubble span.contact-links > .mail-to {
+		display: none;
+	}
+
 	.head-contacts .text-bubble span a {
 		display: flex;
 		flex-direction: column;
@@ -613,7 +621,14 @@
 		font-weight: 600;
 		gap: min(1rem, 1cqh);
 		color: var(--color-text);
+		transition: 500ms ease;
+
 		overflow: hidden;
+
+		@starting-style {
+			opacity: 0;
+			scale: 0.8;
+		}
 
 		&:hover {
 			color: var(--accent-color);
@@ -1071,12 +1086,23 @@
 
 	/* main menu navigation */
 	/* //////////////////// */
-	.menu-routes {
-		flex: 2 1 auto;
-		justify-content: center;
-		font-size: clamp(1.5rem, -1.1304rem + 5.6522cqw, 3rem);
-		color: var(--color-text);
-		height: 100%;
+	:global(.menu-container:has(.menu-routes)) {
+
+		.menu-routes {
+			flex: 2 1 auto;
+			justify-content: center;
+			display: flex;
+			flex-flow: column;
+			margin-top: 15%;
+			line-height: 1.7;
+			font-size: clamp(1.8rem, -0.1304rem + 3.6522cqw, 3rem);
+			color: var(--color-text);
+			height: 100%;
+		}
+
+		.header-logo a {
+			translate: -2rem calc(var(--intro-element-displacement) - 1rem);
+		}
 	}
 
 	.menu-routes span :is(a, button) {
@@ -1175,6 +1201,17 @@
 		li.head-about button.read-more-btn {
 			display: grid;
 		}
+
+		:global(.menu-container:has(.menu-routes)) {
+
+
+			.headerUl .menu-routes {
+				display: flex;
+				flex-flow: column;
+				margin-top: 20%;
+				line-height: 1.7;
+			}
+		}
 	}
 
 	@media (width < 650px) {
@@ -1183,6 +1220,13 @@
 			--container-block-padding: calc(var(--H-top) + 12cqh);
 			min-height: var(--menu-height);
 			/* background-color: rgba(255, 255, 255, 0.37); */
+		}
+
+		.active {
+			/* --menu-height: 60svh; */
+			min-height: min(60lvh,var(--menu-height));
+			background-color: color-mix(in oklch, var(--color-bg, #ffffff82) 60%, #ffffff33 80%);
+			border-bottom: solid 5px color-mix(in oklch, var(--color-bg, #ffffff82) 50%, #ffffff33 80%);
 		}
 
 		.active ul.headerUl {
@@ -1194,8 +1238,9 @@
 
 		.headerUl > li:nth-of-type(n + 2) {
 			width: 100%;
+			height: 100%;
 			justify-self: end;
-			padding-top: 7cqh;
+			padding-top: 4cqh;
 			padding-inline: var(--Padding-genral);
 			gap: 2cqh;
 		}
@@ -1266,6 +1311,9 @@
 			.contact-links a {
 				aspect-ratio: 1;
 			}
+			.contact-links a.mail-to {
+				display: block;
+			}
 			.contact-links svg {
 				width: clamp(40px, -0.2rem + 12cqw, 4cqw);
 			}
@@ -1275,9 +1323,28 @@
 			gap: 12cqw;
 		}
 
+		.head-contacts	.text-bubble:has(.mail-to) {
+			display: flex;
+			margin-top: 2rem;
+
+			:global(.lucide){
+				width: 100%;
+				height: 100%;
+			}
+		}
+
+		.head-contacts	.text-bubble:has(.email) {
+			display: none;
+		}
+
 		:global(.menu-container:has(.head-about)) {
+			
 			.headerUl .header-logo {
 				width: 100%;
+			}
+
+			.head-about .text-bubble:nth-of-type(2){
+				display: none;
 			}
 		}
 
@@ -1295,7 +1362,6 @@
 
 		:global(.menu-container:has(.read-more)) {
 			--menu-height: 100svh;
-			/* max-height: 50%; */
 
 			.headerUl {
 				overflow: auto;
@@ -1308,7 +1374,6 @@
 			.read-more {
 				flex-direction: column;
 				overflow-y: scroll;
-				/* overflow-y: visible; */
 				height: 60cqh;
 
 				margin: 0;
@@ -1340,10 +1405,10 @@
 			}
 		}
 
-		/* :global(main:has(button:is(.close-btn,.about-btn,.contact-btn):hover) article.active) {
+		:global(main:has(button:is(.close-btn,.about-btn,.contact-btn):hover) article.active) {
 			height: calc-size(fit-content, size + 2%) !important;
 			transition: .4s cubic-bezier(0.375, 0.685, 0.32, 1.275);
-		} */
+		}
 
 		.headerUl .menu-routes {
 			display: flex;

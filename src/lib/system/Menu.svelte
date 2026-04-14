@@ -321,16 +321,6 @@
 	</article>
 {/if}
 
-<!-- {#key menuOpen}
-	<article class="menu-container {openMenu == true?'active':'close'}">
-		{#if openMenu == true}
-			{@render headerC()}
-		{:else if openMenu == false}
-		{@render menuContent()}
-		{/if}
-	</article>
-{/key} -->
-
 <style>
 	:root {
 		--menu-height: 50cqh;

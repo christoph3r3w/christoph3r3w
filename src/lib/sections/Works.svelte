@@ -155,7 +155,10 @@
 	});
 
 	$effect(() => {
-		
+		// projects.then(() => {
+		// 	clearLoadAnimation();
+		// 	let m3 = document.querySelector('.file-4')?.setAttribute('open','');
+		// });
 		generateQRCode(fileLinks);
 
 		// Clear qr timeout
@@ -220,6 +223,7 @@
 		<div class="asset-border b-left"></div>
 		<div class="asset-border b-right"></div>
 		<div class="asset-border b-bottom"></div>
+		{@render workDescription(work)}
 		{#if work.contentBlock}
 			{#if work.description}
 				<article class="content-block">
@@ -434,7 +438,7 @@
 	<!-- onclick it will close all details -->
 	<details class="work-cover" id="folder-cover">
 		<summary tabindex="-1">
-			<p class="cover-content">Portfolio</p>
+			<p class="cover-content text">Portfolio</p>
 			<StickerBed />
 		</summary>
 	</details>
@@ -686,23 +690,18 @@
 			margin-right: 1%;
 			overflow: hidden;
 			color: color-mix(in oklch, var(--file-primary-hue), rgb(14, 14, 14) 45%);
-			color: color-mix(
-				in oklch,
-				var(--file-primary-hue),
-				var(--color-text-mute, var(--color-text)) 45%
-			);
+			color: color-mix(in oklch,	var(--file-primary-hue), var(--color-text-mute, var(--color-text)) 45%);
+			color: color-mix(in oklch, var(--file-primary-hue), rgb(14, 14, 14) 55%);
+
 			font-size: 2rem;
 			font-weight: 700;
 			text-shadow: 3px 2px 3px rgba(255, 255, 255, 0.2);
-			/* outline: solid; */
 		}
 
 		.file-title {
 			flex: 2 1 auto;
 			flex: 1 1 30%;
 			text-wrap: nowrap;
-			/* margin-left: 1rem; */
-			/* display: none; */
 			/* color: color-mix(in oklch, var(--file-primary-hue), rgb(14, 14, 14) 55%); */
 			/* color: color-mix(in oklch, var(--file-primary-hue), var(--color-text) 95%); */
 		}
@@ -732,13 +731,9 @@
 			width: 100%;
 			/* max-width: max(30px,3%); */
 			height: fit-content;
-			/* aspect-ratio: 1; */
-			/* outline: solid red; */
 		}
 
 		.work-icon-span > img {
-			/* outline: solid rgb(0, 255, 0); */
-			/* width: 100%; */
 			width: clamp(2.5%, 100%, 30px);
 			height: 100%;
 			aspect-ratio: 1;
@@ -773,6 +768,7 @@
 
 	/* folder cover */
 	details:is(#folder-cover, .work-cover) summary {
+		display: block !important;
 		font-size: clamp(2rem, 20vw, 10rem);
 		color: var(--color-text);
 		/* background-color: color-mix(in oklch longer hue, var(--hoverC,hsl(calc(213 - 90 / var(--file-index)), 55%, 38%)) , var(--primary-color,rgba(255, 255, 255, 0.466)) 30% ); */
@@ -784,7 +780,6 @@
 			var(--hoverC, var(--primary-color, hsl(calc(213 - 90 / var(--file-index)), 55%, 38%))) 60%,
 			rgba(255, 255, 255, 0.466) 33%
 		);
-
 		background-image: url('/works-assets/material-assets/paper 1 black&white transparent cropped again (Custom flipped).avif');
 		background-attachment: fixed !important ;
 		background-size: none, cover;
@@ -1547,11 +1542,17 @@
 		}
 	}
 
+	details[open] .work-assets > .work-description {
+		display: none;
+	}
+
 	details[open]:has(.move-description) .work-assets > * {
 		padding-left: 33cqw;
 		transition: 200ms 100ms
 			linear(0, 0.297 6.8%, 0.515 13.8%, 0.686 22%, 0.812 31.6%, 0.895 42.6%, 0.949 56.4%, 1);
 	}
+
+	
 
 	details[open] .asset-border {
 		position: absolute;
@@ -1655,7 +1656,6 @@
 	}
 
 	.work-assets .content-block:nth-of-type(1) > p:nth-child(1) {
-		/* outline: solid red; */
 		margin-bottom: 5rem;
 	}
 
@@ -1744,6 +1744,7 @@
 
 	/* block has only one image */
 	.content-block:nth-of-type(n):has(.asset-img-ctnr:first-child:nth-last-of-type(1)) {
+		
 		.asset-img-ctnr {
 			max-width: 100%;
 			width: 90cqw;
@@ -1757,9 +1758,10 @@
 
 	/* block has multiple images */
 	.content-block:has(.asset-img-ctnr:nth-child(2n)):has(.asset-img-ctnr:nth-last-child(1)) {
+		flex: 1 0 auto;
 		position: relative;
-		min-height: 50cqh;
 		min-height: fit-content;
+		height: fit-content;
 		flex-flow: row nowrap;
 		gap: 1rem;
 		padding-block: 0;
@@ -2015,10 +2017,10 @@
 			cursor: zoom-out !important;
 		}
 
-		:nth-child(1) {
-			/* opacity:0.5; */
-			/* scale: 2; */
-		}
+		/* :nth-child(1) {
+			opacity:0.5;
+			scale: 2;
+		} */
 	}
 
 	.move-description {
@@ -2100,6 +2102,11 @@
 			--move: calc(50dvh + 1dvw * var(--total-work));
 			top: var(--move);
 
+			&:nth-child(n) :global(:nth-child(n):not(.text)) {
+				/* display: none; */
+				border:solid red;
+			}
+
 			@starting-style {
 				--move: calc(20dvh + 1dvw * var(--total-work));
 			}
@@ -2149,25 +2156,33 @@
 			/* background-color: transparent ; */
 		}
 
-		details[open] .work-description {
+		details[open] > .work-description {
 			grid-column: 3/ -3;
 			grid-row: 2 / span 10;
+			border: solid green;
+			display:none;
 		}
 
-		.work-description h2 {
+		details[open] .work-assets > .work-description {
+			min-height: 20cqh;
+			padding: 0;
+			padding-inline: 2%;
+		}
+
+		details[open] .work-assets .work-description h2 {
 			text-align: center;
 		}
 
-		.work-description .description-info {
+		details[open] .work-assets .work-description .description-info {
 			padding: 0;
 			flex: 0;
 		}
 
-		.work-description .description-info ul.collaborators li {
+		details[open] .work-assets .work-description .description-info ul.collaborators li {
 			margin-bottom: 3px;
 		}
 
-		.work-description ul.tools.stamp {
+		details[open] .work-assets .work-description ul.tools.stamp {
 			display: none;
 		}
 
@@ -2175,27 +2190,31 @@
 			flex: 0 1 5%;
 		}
 
-		details[open] .work-description.note {
+		details[open] > .work-description.note {
 			grid-column: 3/ -3;
 			grid-row: 3 / span 10;
 			flex-flow: row;
 			gap: 2%;
+			display: none;
+		}
+		details[open] .work-assets > .work-description.note {
+			flex-flow: row;
+			gap: 2%;
+			translate: 0 -15cqh;
 		}
 		details[open]:has(.work-description:not(.description-links):hover, .move-description)
 			.work-description.note {
-			translate: 0;
 			overflow: visible;
 			contain: none;
+			border: solid red	;
 			transition: 200ms
 				linear(0, 0.297 6.8%, 0.515 13.8%, 0.686 22%, 0.812 31.6%, 0.895 42.6%, 0.949 56.4%, 1);
 			.description-space {
-				transform: none;
-				outline: none;
-				/* transition:	transform 250ms linear(0, 0.297 6.8%, 0.515 13.8%, 0.686 22%, 0.812 31.6%, 0.895 42.6%, 0.949 56.4%, 1); */
+				display: none;			
 			}
 		}
 
-		.work-description.note.stamp .description-space {
+		details[open] .work-assets .work-description.note.stamp .description-space {
 			/* display: none; */
 			flex-basis: 100%;
 			order: 3;
@@ -2238,7 +2257,7 @@
 			max-width: 250px;
 			height: fit-content;
 			padding-right: 0;
-			translate: 0% 12px;
+			/* translate: 0% 12px; */
 			img {
 				width: 12cqh;
 			}
@@ -2260,9 +2279,9 @@
 		/* main content */
 		details[open] .work-assets {
 			grid-column: 1/ -1;
-			grid-row: 3/-1;
+			grid-row: 1/-1;
 			scroll-snap-type: none;
-			padding-block: 10cqh 7cqh;
+			padding-block: 2cqh 7cqh;
 
 			& > *.content-block {
 				--content-padding: 10cqw;
@@ -2288,8 +2307,17 @@
 		}
 
 		details[open] .work-assets :is(.b-left.b-left, .b-right.b-right) {
-			mask: none;
-			backdrop-filter: blur(0);
+			display: none;
+		}
+
+		:global(body:has(.menu-container.active)) .work-section details.work-cover :is(summary, ::details-summary){
+			/* --move: calc(50dvh + 1dvw * var(--total-work)); */
+			top:0 !important;
+
+			&:nth-child(n) :global(:nth-child(n):not(.text)) {
+				display: block;
+			}
+
 		}
 
 		/* utils */
