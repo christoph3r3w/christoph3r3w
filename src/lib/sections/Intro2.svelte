@@ -1,9 +1,41 @@
-<script>
+<script lang="ts">
 	import { Works, WorksList } from '$lib';
 	import { fileType } from '$lib/store';
-	let { data } = $props();
-	let pagination = $derived(data.dataWorks[0].pagination || { currentPage: 1, totalPages: 1 });
+
+	interface Props {
+		data?: any;
+	}
+
+	let { data = {} } : Props = $props();
+	let { projects} = $derived(data);
+	// let pagination = $derived(data?.dataWorks[0]?.pagination || 'none');
+	let pagination = $state('none');
 	let fType = $derived($fileType);
+
+	
+	$effect(() => {
+		let cancelled :boolean = false;
+		let r : any = null;
+
+		(async () => {
+			if (!projects || typeof (projects as Promise<unknown>).then !== 'function') {
+				if (!cancelled) pagination = 'none';
+				return;
+			}
+
+			const result = await (projects as Promise<[]>);
+			if (!cancelled) {
+				r = result;
+				pagination = r[0]?.pagination;
+			}
+		});
+
+		return () => {
+			cancelled = true;
+		};
+	});
+
+	
 </script>
 
 <div class="switchFileType {pagination == 'none' ? 'disabled' : ''}">

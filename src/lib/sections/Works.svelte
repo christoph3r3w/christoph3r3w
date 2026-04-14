@@ -1,20 +1,24 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onMount,tick } from 'svelte';
 	import { OrderedList, ContactForm, StickerBed } from '$lib';
 	import { fade, fly } from 'svelte/transition';
 	import QRCode from 'qrcode';
 	import { ListCollapse, ListIndentDecrease, QrCode, XIcon } from '@lucide/svelte';
+	
+	interface Props {
+		data?: any;
+	}
 
 	interface Work {
-		title: string;
-		slug: string;
-		published: { is: boolean; date: string };
-		description: string;
-		assets: { image: string[]; icon?: string; color?: string };
-		link: { src: string; showType: '' | 'mobile' | 'desktop' };
-		dateStart: string;
-		dateEnd: string;
-		status: { is: string; sticker: string };
+		title?: string;
+		slug?: string;
+		published?: { is: boolean; date: string };
+		description?: string;
+		assets?: { image?: string[]; icon?: string; color?: string };
+		link?: { src?: string; showType?: '' | 'mobile' | 'desktop' };
+		dateStart?: string;
+		dateEnd?: string;
+		status?: { is?: string; sticker?: string };
 		contentBlock?: Array<{
 			text?: string[];
 			images?: string[];
@@ -27,16 +31,40 @@
 	}
 
 	// throw new Error('test error');
-	let { data } = $props();
-	let { dataWorks, projects, delay } = $derived(data);
+	let { data } : Props = $props();
+	let {projects, delay = 0 } = $derived(data);
+	let dataWorks2 = $state<any[]>([]);
+
+	$effect(() => {
+		let cancelled = false;
+
+		(async () => {
+			if (!projects || typeof (projects as Promise<unknown>).then !== 'function') {
+				if (!cancelled) dataWorks2 = [];
+				return;
+			}
+
+			const result = await (projects as Promise<Work[]>);
+			if (!cancelled) {
+				dataWorks2 = result;
+			}
+		})();
+
+		return () => {
+			cancelled = true;
+		};
+	});
+
+	
+	
 	let firstLoad: boolean = $state(true);
 
-	let pagination = $derived(dataWorks[0].pagination);
+	let pagination = $derived(dataWorks2?.[0]?.pagination ?? 'none');
 	let openDetailsIndex = $state<number | null>(null);
 	let m4 = $derived(openDetailsIndex);
-	let works = $derived(dataWorks[1]?.works.filter((w: Work) => w.published.is === true));
-	let fileLinks = $derived(works[m4 ?? 0]?.link.src);
-
+	// let works = $derived(dataWorks[1]?.works?.filter((w: any) => w.published.is === true) ?? []);
+	let works = $derived(dataWorks2[1]?.works.filter((w: any) => w?.published.is === true).slice(0, 5) || []);
+	let fileLinks = $derived(works[m4 ?? 0]?.link.src || '');
 	let qrTimeout: ReturnType<typeof setTimeout> | null = $state(null);
 	let qrURL = $state('');
 	let showQr: boolean = $state(false);
@@ -114,7 +142,11 @@
 	}
 
 	onMount(() => {
-		// let m3 = document.querySelector('.file-1')?.setAttribute('open','');
+		tick(); 
+		projects.then(() => {
+			clearLoadAnimation();
+			// let m3 = document.querySelector('.file-4')?.setAttribute('open','');
+		});
 		return () => {
 			clearQRTimeoutOnUnmount();
 			works = [];
@@ -123,13 +155,7 @@
 	});
 
 	$effect(() => {
-		// loading animation clear after project is loaded
-		projects.then(() => {
-			clearLoadAnimation();
-			// let m3 = document.querySelector('.file-4')?.setAttribute('open','');
-		});
-
-		// Only generate QR code when fileLinks changes
+		
 		generateQRCode(fileLinks);
 
 		// Clear qr timeout
@@ -157,21 +183,21 @@
 
 {#snippet summaryContent(work: Work)}
 	<summary
-		class={work.status.is == 'experiment' ? 'experiment' : ''}
+		class={work?.status?.is == 'experiment' ? 'experiment' : ''}
 		onmouseenter={() => {
 			handleClose;
 		}}
 	>
-		{#if work.assets.icon?.trim()}
+		{#if work?.assets?.icon?.trim()}
 			<span class="work-icon-span">
-				<img src={work.assets.icon} alt={work.title} width="auto" height="30" />
+				<img src={work?.assets?.icon} alt={work.title} width="auto" height="30" />
 			</span>
 		{/if}
 		<span class="file-title">{work.title}</span>
 		<span class="small-description">{work.slug}</span>
 		<div class="side-description">
-			<span class="date-start">{work.dateEnd || work.dateStart || ''}</span>
-			<span class="status">{work.status.sticker || `an ${work.status.is}`}</span>
+			<span class="date-start">{work?.dateEnd || work.dateStart || ''}</span>
+			<span class="status">{work?.status?.sticker || `an ${work?.status?.is}`}</span>
 		</div>
 		<div class="close-file-icon">
 			<svg
@@ -301,16 +327,16 @@
 		</div>
 		<div class="description-links">
 			<a
-				class="{{ disabled: !work.link.src }} link-btn"
-				href={work?.link.src}
+				class="{{ disabled: !work?.link?.src }} link-btn"
+				href={work?.link?.src}
 				target="_blank"
 				rel="noopener noreferrer"
 			>
 				{showQr ? 'Link →' : 'Visit site'}
 			</a>
-			{#if work.link.showType != 'desktop'}
+			{#if work?.link?.showType != 'desktop'}
 				<button
-					class="{{ disabled: !work.link.src }} qr-btn"
+					class="{{ disabled: !work?.link?.src }} qr-btn"
 					onclick={toggleQR}
 					title={showQr ? 'close QR' : 'Qr code'}
 				>
@@ -415,7 +441,8 @@
 	{#await projects}
 		{@render loadingFiles()}
 	{:then dataWorks}
-		{@const works = dataWorks[1]?.works.slice(0).filter((w: Work) => w.published.is === true) || []}
+		<!-- {@render loadingFiles()} -->
+		<!-- {@const x = dataWorks[1]?.works.slice(0).filter((w: any) => w?.published.is === true).slice(0, 2) || []} -->
 		{#each works as work, i}
 			{#key work.slug}
 				<details
@@ -443,10 +470,7 @@
 	{:catch error}
 		<details class="work-cover">
 			<summary tabindex="-1" class="experiment">
-				<p class="cover-content sticker-label">something went wrong</p>
-				<span class="cover-content sticker-label"
-					><img src="/chris icon lowlowres.avif" alt="chris icon" /></span
-				>
+				<p class="cover-content sticker-label error">something went wrong: {error.message}</p>
 			</summary>
 		</details>
 	{/await}
@@ -510,12 +534,7 @@
 
 	/* Hover effect for the summary */
 	/* .work-section, */
-	.work-section:where(
-		:focus-within,
-		:focus-visible,
-		:hover,
-		.Orderedlist-container:is(:hover, :focus-within)
-	),
+	.work-section:where(:focus-within,:focus-visible,:hover,.Orderedlist-container:is(:hover, :focus-within)),
 	.work-section:where(:focus-within, :focus) {
 		--move-all: 17dvw;
 
@@ -849,9 +868,6 @@
 	/* files background textures  */
 	details.file:nth-of-type(odd) summary::before,
 	details.file summary.experiment::before {
-		/* background-image: url('/works-assets/material-assets/vertical-illustration-orange-graph-paper.avif'); */
-		/* background-image: url('/works-assets/material-assets/Chris website20.avif'); */
-		/* background-image: url('/works-assets/material-assets/Chris website1.avif'); */
 		/* for dark backgrounds */
 		background-blend-mode: lighten;
 		background-blend-mode: soft-light;
@@ -863,13 +879,20 @@
 	}
 
 	details.file:nth-of-type(even) summary::before {
-		/* background-image: url('/works-assets/material-assets/27e9691d-e326-425b-a06f-f7efc3dc8a2f.avif'); */
-
 		/* for dark backgrounds */
 		background-blend-mode: lighten;
 		/* for both */
 		background-blend-mode: saturation;
 		filter: opacity(0.5) contrast(150%) grayscale(0.8);
+	}
+
+	/* when hover or focus stops */
+	details.work-cover:not(:hover, :focus, :active) :is(summary, ::details-summary) {
+		transition: 600ms var(--transition-timing);
+	}
+
+	details.file:not(:hover, :focus, :active) :is(summary, ::details-summary) {
+		transition: 200ms var(--transition-timing);
 	}
 
 	/* files styling and animation - hover or focus*/
@@ -901,15 +924,8 @@
 		}
 	}
 
-	/* when hover or focus stops */
-	details.work-cover:not(:hover, :focus, :active) :is(summary, ::details-summary) {
-		transition: 600ms var(--transition-timing);
-	}
 
-	details.file:not(:hover, :focus, :active) :is(summary, ::details-summary) {
-		transition: 200ms var(--transition-timing);
-	}
-
+	/* /////////////////////////////////////// */
 	/* The content of the file - open state */
 	/* /////////////////////////////////// */
 	.work-section:has(details:nth-of-type(n)[open]) details {
@@ -1874,6 +1890,14 @@
 			bottom: 5%;
 			right: 5%;
 		}
+
+		&.error{
+			background-color: transparent;
+			inset:0;
+			width: fit-content;
+			height: fit-content;
+			font-size: 3rem;
+		}
 	}
 
 	/* //////////////// */
@@ -1902,12 +1926,9 @@
 		margin: 10px 30px;
 		min-width: var(--sticker-width, 30cqw);
 		min-height: var(--sticker-height, 20cqh);
-		/* height: var(--sticker-height, 20cqh); */
 		top: var(--sticker-top, 5%);
 		transform: rotate(var(--sticker-rotation, 0deg));
 		transform-origin: top center;
-		filter: drop-shadow(0.5px 12px 10px var(--sticker-shadow-color));
-		filter: drop-shadow(0.5px 0.5px 1px black);
 		filter: drop-shadow(0.5px 0.5px 1px var(--sticker-shadow-color))
 			drop-shadow(0.5px 12px 10px var(--sticker-shadow-color2));
 
@@ -1954,11 +1975,15 @@
 		);
 	}
 
-	.loading {
-		--_delay: calc(3s / var(--total-work, 6) * (var(--file-index)));
+	.loading.loading summary {
+		--_delay: calc(3.5s / var(--total-work, 6) * (var(--file-index)));
+		--file-primary-hue: var(--color-bg);
 		opacity: 0;
 		pointer-events: none;
-		animation: loading 3s var(--_delay) infinite steps(4, end);
+		animation: loading 3.2s var(--_delay) infinite steps(4, end);
+		border: solid 1px color-mix(in lab, var(--file-primary-hue), var(--color-text) 30%);
+		color: color-mix(in lab, var(--tritary-color), var(--color-bg) 80%);
+		background-color: color-mix(in oklch, var(--tritary-color) 80% , var(--color-text) 20%);
 
 		animation-timing-function: linear(
 			0,
@@ -2051,8 +2076,11 @@
 
 	@keyframes loading {
 		0%,
-		50% {
+		45% {
 			opacity: 1;
+		}
+		6%{
+			filter: brightness(.95);
 		}
 		100% {
 			z-index: calc(10 - var(--file-index));

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { menuOpen, contactsOpen, aboutOpen, aboutMoreOpen, modeDark } from '$lib/store';
+	import { onMount, tick } from 'svelte';
 	import { themeList } from '../atoms/theme-list';
-	// import {page} from '$app/state'
 	let openMenu = $derived($menuOpen);
 	let openContacts = $derived($contactsOpen);
 	let openAbout = $derived($aboutOpen);
@@ -72,8 +72,14 @@
 		return;
 	}
 
-	function handleDarkMode() {
+	function handleAboutMore() {
+		aboutMoreOpen.set(!$aboutMoreOpen);
+	}
+
+	function handleDarkMode(xTheme?: string) {
+		
 		dark = !dark;
+		dark = xTheme === 'dark' ? true : xTheme === 'reset' ? false : dark;
 		modeDark.set(dark);
 		const selectedThemeName = dark ? 'dark' : 'reset';
 		const selectedTheme = themeList.find((theme) => theme.name === selectedThemeName);
@@ -83,8 +89,10 @@
 		}
 
 		for (const [property, value] of Object.entries(selectedTheme.properties)) {
-			document.documentElement.style.setProperty(property, value);
+			document.documentElement.style.setProperty(property, value as string | null);
 		}
+
+		localStorage.setItem('selectedTheme', selectedThemeName);
 	}
 
 	function handleThemeToggle() {
@@ -93,21 +101,41 @@
 		}
 
 		const nextIndex = (currentThemeIndex + 1) % themeList.length;
-		const nextTheme = themeList[nextIndex];
+		const nextTheme : any =  themeList[nextIndex];
 		currentThemeIndex = nextIndex;
 
 		for (const [property, value] of Object.entries(nextTheme.properties)) {
-			document.documentElement.style.setProperty(property, value);
+			document.documentElement.style.setProperty(property, value as string | null);
 		}
 
 		dark = nextTheme.name === 'dark';
 		modeDark.set(dark);
+		localStorage.setItem('selectedTheme', nextTheme.name);
 		// console.log('Active theme:', nextTheme.name);
 	}
 
-	function handleAboutMore() {
-		aboutMoreOpen.set(!$aboutMoreOpen);
-	}
+	onMount(() => {
+		tick()
+		const savedTheme = localStorage.getItem('selectedTheme');
+		if (savedTheme) {
+			const theme: any = themeList.find((t) => t.name === savedTheme);
+				if(theme.name == 'reset'){
+				const darkModeMql = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+				if (darkModeMql && darkModeMql.matches) {
+					handleDarkMode('dark');
+				} else {
+					handleDarkMode('reset');
+				}
+			}else {
+				for (const [property, value]of Object.entries(theme.properties)) {
+					document.documentElement.style.setProperty(property, value as string | null);
+				}
+				dark = theme.name === 'dark';
+				modeDark.set(dark);
+				currentThemeIndex = themeList.indexOf(theme);
+			}
+		}
+	});
 
 	$effect(() => {
 		if (openMenu == false) {
@@ -600,6 +628,16 @@
 				transform: none;
 				scale: 1;
 			}
+		}
+
+		li button.menu-btn{
+			/* outline: solid greenyellow; */
+			display: grid;
+			place-content: center;
+			
+		}
+		li button.menu-btn svg{
+			min-width: 3rem;
 		}
 
 		li button:is(.contact-btn, .about-btn) {

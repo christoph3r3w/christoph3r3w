@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onMount, tick } from 'svelte'
 	import { fade, fly } from 'svelte/transition';
 	interface Props {
 		total?: number;
@@ -134,7 +134,7 @@
 	];
 
 	let visibleStickers = $derived(
-		stickerList.filter((sticker) => sticker.visible).slice(0, total ? total : stickerList.length)
+		stickerList.filter((sticker) => sticker.visible).slice(0, total !== undefined ? total : stickerList.length)
 	);
 	let moveX = $state(0);
 	let moveY = $state(0);
@@ -180,39 +180,45 @@
 	});
 </script>
 
+<svelte:head>
+	{#each visibleStickers as sticker}
+		{#if sticker.type === 'image' || sticker.type === 'shape'}
+			<link rel="preload" as="image" href={sticker.content} />
+		{/if}
+	{/each}
+</svelte:head>
+
 <!-- for later add a patern option, it will toggle a pattern based on a selected sticker or all in a specific grid area -->
+{#key total}
+	{#each visibleStickers as sticker}
+		{#if sticker.type === 'text'}
+			<p
+				class="cover-content sticker-label {sticker.id} text"
+				style=" transform: translate({sticker.offsetX || 0}px, {sticker.offsetY ||
+					0}px) rotate({sticker.rotation || 0}deg);"
+			>
+				{sticker.content}
+			</p>
+		{:else if sticker.type === 'shape'}
+			<span
+				class="cover-content sticker-label {sticker.id}"
+				style="transform: translate({sticker.offsetX || 0}px, {sticker.offsetY ||
+					0}px) rotate({sticker.rotation || 0}deg);"
+			>
+				<img src={sticker.content} alt={sticker.alt} loading="eager" />
+			</span>
+		{:else}
+			<img
+				src={sticker.content}
+				alt={sticker.alt}
+				class="cover-content sticker-label {sticker.id}"
+				style="transform: translate({sticker.offsetX || 0}px, {sticker.offsetY ||
+					0}px) rotate({sticker.rotation || 0}deg);"
+			/>
+		{/if}
+	{/each}
 
-{#each visibleStickers as sticker}
-	{#if sticker.type === 'text'}
-		<p
-			class="cover-content sticker-label {sticker.id} text"
-			style=" transform: translate({sticker.offsetX || 0}px, {sticker.offsetY ||
-				0}px) rotate({sticker.rotation || 0}deg);"
-		>
-			{sticker.content}
-		</p>
-	{:else if sticker.type === 'shape'}
-		<span
-			class="cover-content sticker-label {sticker.id}"
-			style="transform: translate({sticker.offsetX || 0}px, {sticker.offsetY ||
-				0}px) rotate({sticker.rotation || 0}deg);"
-		>
-			<img src={sticker.content} alt={sticker.alt} />
-		</span>
-	{:else}
-		<img
-			src={sticker.content}
-			alt={sticker.alt}
-			class="cover-content sticker-label {sticker.id}"
-			style="transform: translate({sticker.offsetX || 0}px, {sticker.offsetY ||
-				0}px) rotate({sticker.rotation || 0}deg);"
-		/>
-	{/if}
-{/each}
-
-<!-- {#key total}
-    <p in:fly|global={{duration: 500}}>{total ?? stickerList.length}</p>
-	{/key} -->
+{/key}
 
 <style>
 	/* sticker styling */

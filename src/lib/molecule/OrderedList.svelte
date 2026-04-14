@@ -1,7 +1,19 @@
-<script>
+<script lang="ts">
 	// import  {next} from '../../routes/work.remote'
 	// import {y} from '../molecule/pagination.svelte'
-	let { pagination, works } = $props();
+	interface Props {
+		pagination?: number | 'none';
+		works: Array<{
+			title: string;
+			slug?: string;
+			published?: { is: boolean; date: string };
+			dateStart: string;
+			dateEnd: string;
+			year?: string;
+			description?: string;
+		}>;
+	}
+	let { pagination, works } : Props = $props();
 
 	let tFolders = $derived(
 		works.map(({ title, published, dateStart, dateEnd }) => ({
@@ -11,8 +23,8 @@
 		}))
 	);
 
-	const grouped = Object.values(
-		tFolders.reduce((acc, { title, published, year }) => {
+	const grouped = $derived(Object.values(
+		tFolders.reduce((acc: Record<string, { year: string; files: string[]; published?: any }>, { title, published, year }) => {
 			if (!acc[year]) {
 				acc[year] = { year, files: [], published };
 			}
@@ -21,9 +33,9 @@
 
 			return acc;
 		}, {})
-	);
+	));
 
-	let mfolders = $state(
+	let mfolders = $derived(
 		grouped.reverse() || [
 			{
 				year: 2026,
@@ -51,23 +63,20 @@
 		]
 	);
 
-	const minYear = mfolders.reduce((min, item) =>
+	const minYear = $derived(mfolders.length ? mfolders.reduce((min, item) =>
 		item.year < min.year && item.year !== '' ? item : min
-	);
-	const maxYear = mfolders.reduce((max, item) =>
+	) : { year: '' });
+
+	const maxYear = $derived(mfolders.length ? mfolders.reduce((max, item) =>
 		item.year > max.year && item.year !== '' ? item : max
-	);
+	) : { year: '' });
 	let maxPagination = $state(() => {
 		let max = 7;
 		return typeof pagination === 'number' && pagination > max ? pagination : max;
 	});
 	const paginationToggle = $derived(() => {
-		if (tFolders.length <= maxPagination()) {
-			return '';
-		}
-		if (pagination != 'none') {
-			return '';
-		}
+		if (tFolders.length <= maxPagination()) return '';
+		if (pagination != 'none')	return '';
 		return 'no-pagination';
 	});
 
@@ -80,7 +89,7 @@
 	};
 </script>
 
-<!-- needs to send a post to the server na dupdtae the works component -->
+<!-- needs to send a post to the server na dupdate the works component -->
 <!-- or -->
 <!-- trigger specific showing with svlte and css  -->
 
@@ -158,10 +167,12 @@
 {/snippet}
 
 <div id="ol" class={paginationToggle()}>
-	{#if tFolders.length > maxPagination()}
-		{@render mList()}
-	{:else}
-		{@render sList()}
+	{#if mfolders.length}
+		{#if tFolders.length > maxPagination()}
+			{@render mList()}
+		{:else}
+			{@render sList()}
+		{/if}
 	{/if}
 </div>
 
