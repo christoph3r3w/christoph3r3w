@@ -44,7 +44,7 @@
 	function whoo(
 		node: HTMLElement,
 		params: { delay?: number; duration?: number; easing?: (t: number) => number }
-	) {
+		) {
 		const existingTransform = getComputedStyle(node).transform.replace('none', '');
 
 		return {
@@ -430,7 +430,7 @@
 		display: flex;
 		justify-content: end;
 		margin-top: calc(1rem + 0.5%);
-		min-width: 25cqw;
+		min-width: 21cqw;
 		width: var(--logo-width, 0);
 		/* height: var(--logo-width,0); */
 		/* height: 60cqh; */

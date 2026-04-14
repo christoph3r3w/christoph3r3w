@@ -5,6 +5,11 @@
 	let { children } = $props();
 </script>
 
+<svelte:head>
+	<link rel="preload" as="image" href="/cuttingmat55-33-2.svg" />
+</svelte:head>
+
+
 <Window role="window" styleOn="">
 	<Header />
 	<Menu2 />

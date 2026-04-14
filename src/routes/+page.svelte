@@ -4,7 +4,7 @@
 	import { menuOpen } from '$lib/store';
 
 	let { data } = $props();
-	let d = $derived(data);
+	let d = $derived(data);	
 
 	// Reactive variables using $state
 	let container = $state<HTMLElement | undefined>(undefined);
@@ -131,7 +131,7 @@
 			styleOn="--hoverC:var(--tritary-color)"
 			bind:this={sections[0]}
 		>
-			<Intro2 data={d} />
+			<Intro2 data={d || {}} />
 		</Window>
 		<!-- <Window role="child" class="contentContain" color="#e7c75e" styleOn="--hoverC:white" bind:this={sections[0]}>
       <Intro2 data={d}/>

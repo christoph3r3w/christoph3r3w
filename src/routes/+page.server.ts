@@ -25,7 +25,7 @@ export async function load() {
 				{
 					title: 'tile shifting',
 					slug: 'Grid experiment',
-					published: { is: false, date: '' },
+					published: { is: true, date: '' },
 					description:
 						'An experimentation I did to test out grid animation that in the future was used as an animatable grid layout. The idea was to have a grid of tiles that shift their position when hovered, creating a dynamic and interactive visual effect. The shifting is achieved through CSS transitions, allowing the tiles to smoothly move to new positions within the grid when the user interacts with them.',
 					assets: { image: [''], icon: '', color: 'pink' },
@@ -525,11 +525,13 @@ export async function load() {
 			resolve(dataWorks);
 			reject();
 		}, delaySimulation);
-		// fetchWithRetry();
-	});
+		fetchWithRetry();
+
+	}); 
+
 
 	return {
-		dataWorks,
+		// dataWorks,
 		projects,
 		delay: delaySimulation == 0 ? RETRY_DELAY_MS : delaySimulation
 	};
