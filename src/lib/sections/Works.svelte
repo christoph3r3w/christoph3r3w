@@ -2103,8 +2103,7 @@
 			top: var(--move);
 
 			&:nth-child(n) :global(:nth-child(n):not(.text)) {
-				/* display: none; */
-				border:solid red;
+				display: none;
 			}
 
 			@starting-style {
