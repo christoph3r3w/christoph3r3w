@@ -28,6 +28,7 @@
 		}>;
 		collaborators?: Record<string, string>;
 		tags?: string[];
+		m5?:(filenumber : number) => void;
 	}
 
 	// throw new Error('test error');
@@ -60,8 +61,9 @@
 	let pagination = $derived(dataWorks2?.[0]?.pagination ?? 'none');
 	let openDetailsIndex = $state<number | null>(null);
 	let m4 = $derived(openDetailsIndex);
+
 	// let works = $derived(dataWorks[1]?.works?.filter((w: any) => w.published.is === true) ?? []);
-	let works = $derived(dataWorks2[1]?.works.filter((w: any) => w?.published.is === true).slice(0, 5) || []);
+	let works = $derived(dataWorks2[1]?.works.filter((w: any) => w?.published.is === true).slice(0, 6) || []);
 	let fileLinks = $derived(works[m4 ?? 0]?.link.src || '');
 	let qrTimeout: ReturnType<typeof setTimeout> | null = $state(null);
 	let qrURL = $state('');
@@ -139,6 +141,17 @@
 		}, delay ?? 2000);
 	}
 
+	function handleContentButtonClick(e: MouseEvent) {
+		const fileNumber = (e.target as HTMLElement).closest('[data-open-file]')?.getAttribute('data-open-file');
+		if (!fileNumber) return;
+
+		const el = document.querySelector<HTMLElement>(`.file-${fileNumber}`);
+		if (!el) return;
+
+		el.setAttribute('open', '');
+		el.style.setProperty('z-index', '900');
+	}
+
 	onMount(() => {
 		tick(); 
 		projects.then(() => {
@@ -153,27 +166,24 @@
 	});
 
 	$effect(() => {
-		// projects.then(() => {
-		// 	clearLoadAnimation();
-		// 	let m3 = document.querySelector('.file-4')?.setAttribute('open','');
-		// });
-		generateQRCode(fileLinks);
+		projects.then(() => {
+			clearLoadAnimation();
+		// let m3 = document.querySelector('.file-3')?.setAttribute('open','');
+			let m6 =  document.querySelectorAll<HTMLElement>('.file:not([open])').forEach(file => {
+				file.style.removeProperty('z-index');
+			});
+		});
 
-		// Clear qr timeout
+		generateQRCode(fileLinks);
 		if (m4 === null) {
 			showQr = false;
-			if (qrTimeout !== null) {
-				clearTimeout(qrTimeout);
-				qrTimeout = null;
-			}
-		}
-
-		// set timeout to hide QR code after x seconds
-		if (showQr) {
+			clearTimeout(qrTimeout ?? undefined);
+			qrTimeout = null;
+		} else if (showQr) {
 			qrTimeout = setTimeout(() => {
 				showQr = false;
 				qrTimeout = null;
-			}, 9000);
+			}, 6000);
 		}
 
 		return () => {
@@ -223,22 +233,22 @@
 		<div class="asset-border b-bottom"></div>
 		{@render workDescription(work)}
 		{#if work.contentBlock}
-			{#if work.description}
+			{#if work.contentBlock.length === 0 && work.description}
 				<article class="content-block">
 					<p>{work.description}</p>
 				</article>
 			{/if}
 			{#each work.contentBlock as block, i}
-				<article class="content-block block-{i}">
+				<article class="content-block block-{i}" onclick={handleContentButtonClick}>
+					{#if block.h2}	<h2>{block?.h2}</h2>{/if}
 					{#if block.text && block.text.length > 1}
-						<h2>{block?.h2}</h2>
 						{#each block.text as textLine}
 							<p>{@html textLine}</p>
 						{/each}
 					{:else if block.text}
 						<p>{@html block.text}</p>
 					{/if}
-					{#if block.images}
+					{#if block.images || block.video }
 						{#each block.images as img}
 							<button
 								class="asset-img-ctnr"
@@ -249,26 +259,21 @@
 									});
 								}}
 							>
-
-								<picture>
-								
+								<picture>	
 									<img src={img} alt="" />
 								</picture>
 							</button>
 						{/each}
-					{/if}
-					{#if block.video}
-						<video class="asset-video" autoplay muted loop poster="/works-assets/redpers/Group.avif">
+					<!-- {#if block.video}
+						<video class="asset-video" autoplay muted loop x-webkit-airplay="deny" loading="lazy" poster="/stickers/in progresss-texture-clear.avif">
 							<source src={block.video} type="video/mp4" />
 							Your browser does not support the video tag.
 						</video>
+					{/if} -->
 					{/if}
 					{#if block.html}
 						{@html block.html}
 					{/if}
-					<!-- {#each block.images as img}
-					<input type="radio" name="toggle" id="toggle-{i}" style="position:absolute;">
-				{/each} -->
 				</article>
 			{/each}
 		{/if}
@@ -432,7 +437,7 @@
 	<section class="Orderedlist-container">
 		<OrderedList {pagination} {works} />
 	</section>
-
+	
 	<!-- onclick it will close all details -->
 	<details class="work-cover" id="folder-cover">
 		<summary tabindex="-1">
@@ -612,7 +617,7 @@
 		}
 
 		&::selection {
-			color: var(--color-text);
+			color: var(--black);
 			background-color: yellow;
 		}
 	}
@@ -917,7 +922,6 @@
 		}
 	}
 
-
 	/* /////////////////////////////////////// */
 	/* The content of the file - open state */
 	/* /////////////////////////////////// */
@@ -1023,6 +1027,7 @@
 
 		--bg-test: color-mix(in oklch, var(--file-primary-hue2) 90%, var(--file-primary-color) 90%);
 		--bg-test: color-mix(in oklch, var(--file-primary-hue2) 90%, var(--file-primary-color) 90%);
+		--file-contrast-color: contrast-color(var(--file-primary-hue));
 
 		position: absolute;
 		bottom: 0;
@@ -1213,6 +1218,7 @@
 			hsl(calc(var(--hue-number, 213) / var(--file-index)), calc(25% + 1% * var(--tag-id, 1)), 48%),
 			var(--file-primary-color) var(--file-primary-color-amount)
 		);
+		--tag-contrast-color: contrast-color(var(--file-primary-hue));
 		flex: 0 1 fit-content;
 		height: fit-content;
 		width: fit-content;
@@ -1222,24 +1228,24 @@
 		color: color-mix(in oklch, var(--file-line-color) 60%, black 45%);
 		border-radius: 50px;
 		background-color: color-mix(in oklch, var(--file-primary-hue), rgba(255, 255, 255, 0.566) 60%);
+		padding: 0.3rem 0.8rem;
 		margin-inline: 1%;
 		margin-bottom: 2%;
 
 		&:nth-child(-n + 3) {
-			/* mix-blend-mode: multiply; */
+			mix-blend-mode: multiply;
 			mix-blend-mode: overlay;
 			background-color: color-mix(
 				in oklch longer hue,
 				var(--file-primary-hue),
 				color-mix(
-						in hsl longer hue,
+						in oklch longer hue,
 						hsl(calc(var(--hue-number) / var(--file-index)), 45%, 28%),
 						var(--file-primary-color) 98%
 					)
 					96%
 			);
-			background-color: var(--file-primary-hue);
-			color: color-mix(in oklch, var(--file-primary-hue), var(--color-text) 80%);
+			color: color-mix(in oklch, var(--file-primary-hue), var(--tag-contrast-color) 80%);
 			border: solid 2px color-mix(in oklch, var(--file-primary-hue), rgba(255, 255, 255, 0.566) 60%);
 		}
 	}
@@ -1252,13 +1258,10 @@
 		overflow: visible;
 	}
 
-	details[open]:has(.work-description:not(.description-links):hover, .move-description)
-		.work-description.note {
+	details[open]:has(.work-description:not(.description-links):hover, .move-description) .work-description.note {
 		translate: 0.5rem;
-		/* overflow: visible; */
 		contain: none;
-		transition: 200ms
-			linear(0, 0.297 6.8%, 0.515 13.8%, 0.686 22%, 0.812 31.6%, 0.895 42.6%, 0.949 56.4%, 1);
+		transition: 200ms 20ms linear(0, 0.297 6.8%, 0.515 13.8%, 0.686 22%, 0.812 31.6%, 0.895 42.6%, 0.949 56.4%, 1);
 		.description-space {
 			overflow: visible;
 			transform: translateX(4.5rem);
@@ -1482,25 +1485,27 @@
 
 	details[open] .work-assets {
 		--file-primary-hue: color-mix(
-			in oklch,
+			in var(--_ct),
 			hsl(calc(213 * 680 / var(--file-index)), 0%, 80%),
 			var(--file-primary-color) 20%
 		);
 		--file-primary-hue2: color-mix(
-			in oklch,
+			in var(--_ct),
 			hsl(calc(213 * 701 / var(--file-index)), 55%, 98%),
 			var(--file-primary-color) 75%
 		);
 		--file-assets-background: color-mix(
-			in oklch,
+			in var(--_ct),
 			var(--file-primary-hue),
 			rgba(255, 255, 255, 0.073) 85%
 		);
+		--workassets-contrast-color: color-mix(in var(--_ct), var(--file-contrast-color),var(--file-primary-hue) 30%);
+
 		--s: 60px; /* control the size of the grid */
 		--t: 2px; /* the thickness */
-		--grid-line-color: color-mix(in oklch, var(--file-line-color2), var(--color-text) 20%);
-		--grid-color:
-			transparent 25%, color-mix(in oklch, var(--grid-line-color) 10%, transparent 70%) 0%;
+		--grid-line-color: color-mix(in var(--_ct), var(--file-line-color2), var(--color-text) 20%);
+		--grid-color:transparent 25%, color-mix(in var(--_ct), var(--grid-line-color) 10%, transparent 70%) 0%;
+		--_ct: oklch;
 
 		grid-column: 1/ -3;
 		grid-row: 1/-1;
@@ -1515,24 +1520,28 @@
 		border-radius: var(--wc-radius);
 		container-type: inline-size;
 		background:
-			conic-gradient(from 90deg at var(--t) var(--t), var(--grid-color)) 0 0 / var(--s) var(--s),
+			conic-gradient(from 0deg at var(--t) var(--t), var(--grid-color)) 0 0 / var(--s) var(--s),
 			linear-gradient(
 				90deg,
 				transparent 25%,
-				color-mix(in oklch longer hue, var(--file-primary-hue), rgba(255, 255, 255, 0.126) 88%) 53%,
-				color-mix(in oklch longer hue, var(--file-primary-hue), rgba(255, 255, 255, 0.092) 77%),
-				color-mix(in oklch longer hue, var(--file-primary-hue), rgba(255, 255, 255, 0.074) 88%) 73%,
+				color-mix(in var(--_ct) longer hue, var(--file-primary-hue), rgba(255, 255, 255, 0.126) 88%) 53%,
+				color-mix(in var(--_ct) longer hue, var(--file-primary-hue), rgba(255, 255, 255, 0.092) 77%),
+				color-mix(in var(--_ct) longer hue, var(--file-primary-hue), rgba(255, 255, 255, 0.074) 88%) 73%,
 				transparent 85%
 			);
 
-		scrollbar-color: color-mix(in oklch, var(--file-primary-color), transparent 55%) transparent;
-		scrollbar-color: color-mix(in oklch, var(--file-assets-background), white 15%) transparent;
+		scrollbar-color: color-mix(in var(--_ct), var(--file-primary-color), transparent 55%) transparent;
+		scrollbar-color: color-mix(in var(--_ct), var(--file-assets-background), white 15%) transparent;
 		scroll-timeline: --work-assets-timeline;
 
 		& > * {
 			padding-left: 43cqw;
 			scrollbar-width: none;
 			animation: content-reveal 0.4s var(--transition-timing);
+		}
+
+		&::first-letter {
+			text-transform: capitalize;
 		}
 	}
 
@@ -1569,7 +1578,7 @@
 			right: 0;
 			border-radius: 0 var(--wc-radius) var(--wc-radius) 0;
 			border-color: yellow;
-			left: 75dvw;
+			min-width: 7rem;
 			mask: linear-gradient(to left, var(--file-primary-hue) -2% 70%, transparent 85% 100%);
 		}
 
@@ -1626,15 +1635,22 @@
 		}
 	}
 
-	.work-assets .content-block h2 {
+	.work-assets .content-block :global(h2) {
 		font-weight: bold;
+		font-size: inherit;
+		line-height: 1.5;
 		margin-bottom: 1rem;
+		font-size: clamp(0.9rem, 4vw, 1.3rem);
+		color: var(--color-text);
+		color: var(--file-primary-color);
+		color: color-mix(in var(--_ct),var(--color-text, #ffffffc7),var(--file-primary-color) 50%);
 	}
 
-	.work-assets .content-block p {
+	.work-assets .content-block :global(p) {
 		line-height: 1.5;
 		font-size: clamp(0.9rem, 4vw, var(--text-size-s));
 		font-size: clamp(0.9rem, 4vw, 1.3rem);
+		color: var(--color-text);
 
 		max-width: 80cqw;
 		width: 80ch;
@@ -1652,15 +1668,84 @@
 	}
 
 	.work-assets :global(.content-block a) {
-		color: color-mix(in oklch, var(--file-primary-hue), rgba(255, 255, 255, 0.566) 60%);
-		/* text-decoration: underline; */
+		color: color-mix(in var(--_ct), var(--color-text) 70%, var(--workassets-contrast-color, #ffffff90) 50%);
+		text-decoration:underline dotted !important;
+		font-size: clamp(0.9rem, 4vw, 1.3rem);
 		cursor: pointer;
+		width: fit-content;
 
 		&::selection {
 			color: rgb(0, 0, 0);
 			background-color: rgba(255, 255, 255, 0.459);
 		}
 	}
+
+	.work-assets :global( .content-block > ul) {
+		/* flex: 0 0 26cqb; */
+		display: block flex;
+		flex-flow: column nowrap;
+		width: auto;
+		min-height: fit-content;
+		gap: 1rem;
+		font-size: clamp(0.9rem, 6vw, 1.4rem);
+		list-style:disc;
+		list-style-position: inside;
+		container-type: block-size;
+	}
+
+	.work-assets :global( .content-block > ul.flat-list) {
+		flex-flow: row wrap;
+		container-type: inline-size;
+	}
+
+
+	.work-assets :global( .content-block :is(li,.pill)) {
+		--_pill-hue: var(--file-primary-color);
+		--_pill-color2: color-mix(
+			in var(--_ct),
+			var(--_pill-hue, #ffffffc7),
+			color-mix(in lab, var(--color-bg), #ffffff98 50%) 70%
+		);
+
+		font-size: var(--text-size-s);
+		text-align: center;
+		place-content: center;
+		padding-inline: var(--pill-padding);
+		border-radius: var(--pill-radius);
+		color: color-mix(
+			in var(--_ct),
+			var(--color-text, #ffffff) 20%,
+			var(--_pill-hue, var(--black)) 80%
+		);
+		color: color-mix(
+			in var(--_ct),
+			black 20%,
+			var(--_pill-hue, var(--black)) 80%
+		);
+		border: solid 3px var(--_pill-hue);
+		border-color: color-mix(
+			in var(--_ct),
+			var(--_pill-hue, #ffffffc7) 70%,
+			color-mix(in srgb, var(--color-bg), #ffffff98 50%) 50%
+		);
+		background-color: color-mix(in var(--_ct),var(--_pill-hue, #ffffffc7),color-mix(in var(--_ct), var(--file-primary-hue), #ffffff98 30%) 80%);
+
+		max-width: fit-content;
+		min-height: 3rem;
+
+	}
+	.work-assets :global( .content-block [data-open-file]) {
+		--file-index: attr(data-open-file);
+		background-color: transparent;
+		color:currentColor;
+		border: dotted ;
+		padding: 1px 1%;
+		border-radius: 50px;
+		font-size: inherit;
+		cursor: pointer;
+	}
+
+
 
 	/* has no img */
 	.work-assets .content-block:has(p:nth-child(n)):has(p:nth-last-child(1)) {
@@ -1844,6 +1929,7 @@
 		}
 	}
 
+
 	@keyframes assets-scroll-button {
 		from {
 			opacity: 0;
@@ -1860,8 +1946,9 @@
 		}
 	}
 
+	/* //////////////// */
 	/* sticker styling */
-
+	/* /////////////// */
 	.cover-content {
 		transition:
 			0.4s var(--transition-timing) 1s,
@@ -2197,7 +2284,7 @@
 			.work-description.note {
 			overflow: visible;
 			contain: none;
-			border: solid red	;
+			/* border: solid red	; */
 			transition: 200ms
 				linear(0, 0.297 6.8%, 0.515 13.8%, 0.686 22%, 0.812 31.6%, 0.895 42.6%, 0.949 56.4%, 1);
 			.description-space {
@@ -2321,5 +2408,32 @@
 		.show-qr-qr {
 			transform: translate(0, 5cqh);
 		}
+	}
+
+	@media (height < 700px) and (width >= 950px) {
+
+		.work-section details.file :is(summary, ::details-summary),
+		details.file:is(:focus-within) summary {
+			--move: calc(46vh + (-43vh * (var(--file-index) / var(--total-work, 1))));
+			--move-all:170dvw;
+		}
+
+		details[open]:has(.experiment) .work-description {
+			translate: min(-100%,-30dvw) -25%;
+			width: 300px;
+			height: 60dvh;
+			max-height: 80dvh;
+
+			&.note{
+				translate: min(-100%,-30dvw) 0;
+				width: 300px;
+				height: 60dvh;
+			}
+		}
+
+		details[open]:has(.work-description:not(.description-links):hover, .move-description) .work-description.note {
+			translate: 0 0;
+		}
+
 	}
 </style>
