@@ -16,12 +16,14 @@ export async function load() {
 		contentBlock?: Array<{ text?: string[]; images?: string[]; h2?: string }>;
 		collaborators?: Record<string, string>;
 		tags?: string[];
+		m5?:(filenumber : number) => void;
 	}
 
 	let dataWorks: any[] = [
 		{ pagination: 'none' },
 		{
 			works: [
+				//TILE SHIFTING 
 				{
 					title: 'tile shifting',
 					slug: 'Grid experiment',
@@ -29,7 +31,11 @@ export async function load() {
 					description:
 						'An experimentation I did to test out grid animation that in the future was used as an animatable grid layout. The idea was to have a grid of tiles that shift their position when hovered, creating a dynamic and interactive visual effect. The shifting is achieved through CSS transitions, allowing the tiles to smoothly move to new positions within the grid when the user interacts with them.',
 					assets: { image: [''], icon: '', color: 'pink' },
-					contentBlock: [{}],
+					contentBlock: [
+							{
+								text:['An experimentation I did to test out grid animation that in the future was used as an animatable grid layout. The idea was to have a grid of tiles that shift their position when hovered, creating a dynamic and interactive visual effect. The shifting is achieved through CSS transitions, allowing the tiles to smoothly move to new positions within the grid when the user interacts with them.'],
+							}
+						],
 					collaborators: {
 						owner: 'Christopher'
 					},
@@ -40,6 +46,7 @@ export async function load() {
 					dateEnd: '2023',
 					status: { is: 'experiment', sticker: '' }
 				},
+				// WINDOWS
 				{
 					title: 'windows',
 					slug: 'School project',
@@ -85,6 +92,9 @@ export async function load() {
 								'/works-assets/windows/Screenshot 2024-02-11 174723.avif',
 								'/works-assets/windows/Screenshot 2024-03-01 125947.avif'
 							]
+						},
+						{
+							text:["The result of this project was a fun and responsive UI interface that mimicked a lot of the interactions of Windows XP while containing all the information and features to showcase my skills and the skills of my teammates. and....."]
 						}
 					],
 					collaborators: {
@@ -98,73 +108,7 @@ export async function load() {
 					dateEnd: '',
 					status: { is: 'experiment', sticker: '' }
 				},
-				{
-					title: 'monytri-3',
-					slug: 'PWA MVP',
-					published: { is: false, date: '' },
-
-					description: `An MVP designed to showcase the services, capabilities, and adaptability of the Monytri financial platform to stakeholders and investors. It is a progressive web app that centralizes stock gifting, asset transfers, and payment requests, while also allowing users to practice and learn about financial literacy.
-									The platform encourages users to stay up to date with their personal portfolios, learn from curated educational content on portfolio management, and exchange assets through built-in services.`,
-					assets: {
-						image: [
-							'/works-assets/monytri/monytri 2233 2026-01-18 025839.avif',
-							'/works-assets/monytri/Arc_jwNAJXUzVf.gif'
-						],
-						icon: '/pwa-64x64.avif',
-						color: '#497951'
-					},
-					contentBlock: [
-						{
-							text: ['test content block 1']
-						},
-						{
-							text: [
-								'test content block 2',
-								'lorem400 ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-							],
-							images: ['/works-assets/monytri/Arc_jwNAJXUzVf.gif']
-						},
-						{
-							text: [
-								'lorem2000 ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-							]
-						},
-						{
-							// text: ['test content block 4'],
-							images: [
-								'/works-assets/monytri/Arc_jwNAJXUzVf.gif',
-								'/works-assets/monytri/monytri 2233 2026-01-18 025839 (Custom).avif',
-								'/works-assets/monytri/Vector 6.avif',
-								'/works-assets/monytri/Screenshot 2026-01-23 224045.avif'
-							]
-						},
-						{
-							text: ['test content block 5', 'another line in block'],
-							images: ['/works-assets/monytri/Arc_jwNAJXUzVf.gif']
-						},
-						{
-							text: ['test content block 6']
-						},
-						{
-							images: [
-								'/works-assets/monytri/Arc_jwNAJXUzVf.gif',
-								'/works-assets/monytri/monytri 2233 2026-01-18 025839 (Custom).avif',
-								'/works-assets/monytri/Vector 6.avif',
-								'/works-assets/monytri/Screenshot 2026-01-23 224045.avif'
-							]
-						}
-					],
-					collaborators: {
-						employer: 'David Dick, Chiara lung',
-						designer: 'Amy Frost',
-						collaboratorA: 'collaboratorA',
-						collaboratorB: 'collaboratorB'
-					},
-					link: { src: 'https://www.monytri.app/', showType: '' },
-					dateStart: '2024',
-					dateEnd: '2026',
-					status: { is: '', sticker: '' }
-				},
+				// MERLIN
 				{
 					title: 'potion game',
 					slug: 'Project for Merlin studios',
@@ -173,17 +117,68 @@ export async function load() {
 					assets: {
 						image: ['works-assets/8a92efbb8245058d9558606619b4ba46.avif'],
 						icon: '/works-assets/merlin/m-black2.avif',
-						color: 'orange'
-						// color:'#f7eab5'
+						// color: 'orange'
+						color:'#ffab2e'
 					},
 					contentBlock: [
 						{
+							// text: [
+							// 	`During a school sprint, i got a project to create a game using web fundamentals for Merlin Studio. They sought out creative coding to test out alternative ways for user interfaces, and it took the opportunity to build an interactive game that runs server-side.`
+							// ],
 							text: [
-								`During a final school sprint, we've gotten a project to create a game using web fundamentals for Merlin Studio you.They wanted to test out alternative ways for user interfaces, and it took the opportunity to build an interactive game that runs fully on the server.`
+								`During a school sprint, I was given a brief by Merlin Studio to build a potion brewing game using web fundamentals.`,
+								"The project was framed as a chance for developers to demonstrate creative coding and accessible UI thinking.",
 							]
 						},
 						{
 							images: ['/works-assets/merlin/chrome_fXsSOsVsKm.gif']
+						},
+						{
+							// html:[` <p>They provided some assets for the ingridiends and potions, and a flat design as a starter,and had as criteria </p> <blockquote> creativity, accessibility, animations, design, and effects to showcase your digital magic</blockquote>. <p>but the UI and game logic was open for creative interpitation</p>
+							
+							// 		<p>With these in mind i thought to create a simple game where the player had a caldron and a book of potion, where They had to memorize the code of each potion and had only one chance per potion to seek and select the ingridients out by image around the cauldron</p> 
+							// 		<p>the cauldron would be a dynamic grid that had areas of random ingridients that unlock per level</p>
+									
+							// 		 <p> but also to implement most of the logic within a server. 
+							// 		 Also to use a dynamic grid layout system that I've been experimenting with.</p>
+							// 		`
+							// 		]
+							html:[` 
+									<p>They provided an API with assets for ingredients and potions, a flat design as a starting point, and a set of criteria: </p>
+									<ul class="flat-list"><li>creativity</li> <li>accessibility</li> <li>animations</li> <li>design</li><li>effects to showcase your digital magic</li></ul>.
+									<p>And the game logic and UI were left open to interpretation,and I ran with it.</p>
+									`
+									]
+						},
+						{
+							html:[` 
+									<p>The game runs on a Node server that tracks all brewing attempts, successful or failed, via REST. with Directus handling the game state.</p>
+									<p>For the UI, I leaned into CSS <button data-open-file="1">Shifting grid</button> concepts I'd been experimenting with: </p>
+									<p> - A cauldron that sits at the center surrounded by ingredient areas arranged in a dynamic grid layout.</p>
+									<p> - An animated potion book, where players have to learn and memorize the ingredient combination for each potion.</p>
+									`
+									]
+						},
+						{
+							images: [
+								'/works-assets/merlin/chrome_fXsSOsVsKm.gif',
+								'/works-assets/merlin/Screenshot 2026-01-23 223247.avif',
+								'/works-assets/merlin/m-black.webp',
+							
+							]
+						},
+						{
+							images: [
+								'/works-assets/merlin/chrome_fXsSOsVsKm.gif',
+								'/works-assets/merlin/Screenshot 2026-01-23 223247.avif',
+								'/works-assets/merlin/m-black.webp',
+							
+							]
+						},
+						{
+							text:["The result is a simple but intentional web-based game with three levels. Each level has you collecting ingredients to brew a specific potion, with only one attempt per level to get it right and move on to the next.",
+									"It was a good opportunity to combine interesting frontend concepts with a lightweight backend, and showcase to merlin my creative coding angle."
+							],
 						},
 						{
 							video: ['/works-assets/merlin/Recording 2024-06-21 014548.mp4']
@@ -208,6 +203,7 @@ export async function load() {
 					dateEnd: '',
 					status: { is: '', sticker: '' }
 				},
+				// ZUZA
 				{
 					title: 'zuza website',
 					slug: 'Portfolio',
@@ -226,11 +222,12 @@ export async function load() {
 					dateEnd: '',
 					status: { is: '', sticker: '' }
 				},
+				// MONYTRI
 				{
 					title: 'Monytri',
 					slug: 'PWA MVP',
 					published: { is: true, date: '' },
-					// description: `An MVP designed to showcase the services, capabilities, and adaptability of the Monytri financial platform to stakeholders and investors. `,
+					description: `An MVP designed to showcase the services, capabilities, and adaptability of the Monytri financial platform to stakeholders and investors. `,
 					assets: {
 						image: [
 							'/works-assets/monytri/monytri 2233 2026-01-18 025839.avif',
@@ -242,7 +239,6 @@ export async function load() {
 					},
 					contentBlock: [
 						{
-							h2: 'intro',
 							text: [
 								`
 								The Monytri app is a cross-platform MVP built to communicate and illustarte a stock gifting concept clearly to investors and stakeholders. The goal was to translate <a>their</a> idea into something tangible and testable.								
@@ -296,26 +292,21 @@ export async function load() {
 							text: [
 								'On the backend, I designed a minimal but scalable infrastructure using Appwrite. This included RESTful endpoints, authentication flows, role management, and a CMS structure to support',
 								`						
-						Beyond core development, I implemented webhooks and service integrations to keep the system resilient. Routine user testing and version testing ensured that each iteration aligned with the intended user stories and evolving market expectations.
-						`
+								Beyond core development, I implemented webhooks and service integrations to keep the system resilient. 
+								Routine user testing and version testing ensured that each iteration aligned with the intended user stories and evolving market expectations.
+								`
 							]
-						}
-						// {
-						// 	text: [
-						// 	`<h2>bo mama</h2>`,
-						// 	`<ul>
-						// 	<li>
-						// 	1233
-						// 	</li>
-						// 	<li>
-						// 	3456
-						// 	</li>
-						// 	<li>
-						// 	6789
-						// 	</li>
-						// 	</ul> `
-						// 	],
-						// },
+						},
+						{
+							text: [
+							`<h2>bo mama</h2>`,
+							`<ul>
+								<li>1233</li>
+								<li>3456</li>
+								<li>6789</li>
+							</ul> `
+							],
+						},
 					],
 					collaborators: {
 						employer: 'David Dick, Chiara lung',
@@ -337,11 +328,12 @@ export async function load() {
 					dateEnd: '2026',
 					status: { is: '', sticker: '' }
 				},
+				// REDPERS
 				{
 					title: 'Redpers',
 					slug: 'UI overhaul',
 					published: { is: true, date: '' },
-					description: 'School project',
+					description: '',
 					assets: {
 						image: [''],
 						icon: '/works-assets/redpers/Group 1.avif',
@@ -353,7 +345,7 @@ export async function load() {
 						{
 							text: [
 								'Redpers is an online journalistic platform that provides a platform for young and upcoming journalists to write and to collaborate on stories happening within Holland. ',
-								'During a school sprint my group and I got Repers as a client, and we had to introduce potential redesign or enrich the exsiting user interface for there main website with the using the ejs framework. '
+								'During a school sprint my group and I got Repers as a client, and we had to introduce potential user interface enhancements for there main website. '
 							]
 							// video:['/works-assets/redpers/Recording 2024-05-24 105739.mp4']
 						},
@@ -362,17 +354,21 @@ export async function load() {
 						},
 						{
 							text: [
-								'My task was to find potential enhancements for the article page, test these with users, and to present how these can be integrated on to the website',
-								'My propositions were'
+								'Within my group my task was to propose and create potential enhancements for the article page, test these with users, and to present how these can be integrated on to the website',
 							],
 							html: [
-								`<ul>
-								<li>A progress</li>
-								<li>dark mode state</li>
-								<li>the ability to like or copy an article</li>
-								<li>small enhancements to the hero section</li>
-							</ul>`
+								`
+								<h2>My propositions were :</h2>
+								<ul>
+									<li>A progress bar</li>
+									<li>The ability to like or copy an article</li>
+									<li>Alternative hero sections</li>
+									<li>User preference theme state</li>
+								</ul>`
 							]
+						},
+						{
+							text:["The main consideration for these propositions was finding the right balance between accessibel and plesurable UI, keeping users oriented without losing their interest."]
 						},
 						{
 							images: [
@@ -389,18 +385,28 @@ export async function load() {
 							video: ['/works-assets/redpers/Recording 2024-05-24 105739.mp4']
 						},
 						{
-							text: ['']
+							text: ['After a round of testing and feedback with the client and users of the prototype, we refined and showcased each enhancement as its own component. ']
+						},
+						{
+							text: ["The public database that populated the custom version of the site and all its components has been discontinued.",
+							"- You can visit the Redpers site to see some of the components or check out the GitHub repos to view the conclusions we reached for the project."]
 						},
 						{
 							html: [
 								`<a href="https://github.com/christoph3r3w/user-experience-enhanced-website/wiki/Iteration-1">
-						https://github.com/christoph3r3w/user-experience-enhanced-website/wiki/Iteration-1
+						Github link - iterations
 						</a>
 						<br>
 						<a href="https://github.com/christoph3r3w/pleasurable-ui/wiki/Team%E2%80%90Ontwerp">
-						https://github.com/christoph3r3w/pleasurable-ui/wiki/Team%E2%80%90Ontwerp
+						Some designs 
 						</a>`
 							]
+						},
+						{
+							html:[`
+								<p>- I've recreated a simplified version of the API to populate an explorable version of the site, available here.</p> 
+								<a href="/">Respers projec site</a>
+							`]
 						}
 					],
 					collaborators: {
@@ -424,6 +430,7 @@ export async function load() {
 					dateEnd: '2024',
 					status: { is: '', sticker: '' }
 				},
+				// PORTFOLIO WEBSITE
 				{
 					title: 'portfolio site',
 					slug: 'portfolio site',
@@ -478,7 +485,7 @@ export async function load() {
 	let works = dataWorks[1].works;
 	works = workStatus(works);
 	let delaySimulation = 9000;
-	// delaySimulation = 0;
+	delaySimulation = 0;
 	// delaySimulation = 5000
 
 	// Timeout and Retry System
