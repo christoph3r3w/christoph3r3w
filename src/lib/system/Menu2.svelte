@@ -4,6 +4,7 @@
 	import { onMount } from 'svelte';
 	import { elasticOut } from 'svelte/easing';
 	import { CornerDownRight, ArrowBigDown,Mail } from '@lucide/svelte';
+	
 	let openMenu = $derived($menuOpen);
 	let openContacts = $derived($contactsOpen);
 	let openAbout = $derived($aboutOpen);
@@ -260,7 +261,8 @@
 	</article>
 	{#if openAboutMore !== true}
 		<article class="text-bubble" in:whoo={{ duration: 200 }}>
-			here below im hightlighting some projects that I have done.
+			<!-- Interact with folder below to see projects. -->
+			Have a look at some projects in the folder below.
 		</article>
 	{/if}
 {/snippet}
@@ -285,10 +287,13 @@
 						/>
 					{/if}
 				</picture>
-
-				<!-- <picture class="profile profile-2 flower" >
-					<img src="./25acb22a-22a3-41d5-a0eb-c91529c4c6c8 (Custom).avif" alt="icon of my face me">
-				</picture> -->
+				{#if $aboutMoreOpen == true}
+					<picture class="profile profile-2 flower"
+					style="translate:0 -100%; z-index: 0;"
+					 >
+						<img src="./25acb22a-22a3-41d5-a0eb-c91529c4c6c8 (Custom).avif" alt="icon of my face me">
+					</picture>				
+				{/if}
 			</a>
 		</li>
 		<li
@@ -359,7 +364,7 @@
 		container-name: menu;
 
 		@starting-style {
-			translate: 0 -100%;
+			translate: 0 -10%;
 		}
 	}
 
@@ -383,7 +388,7 @@
 		display: none;
 		min-height: 0;
 		z-index: 3;
-		/* translate:0 calc(-1.2 * var(--H-top)); */
+		translate:0 calc(-1.2 * var(--H-top));
 
 		@starting-style {
 			translate: 0 100%;
@@ -404,11 +409,11 @@
 		bottom: 0;
 		margin-left: 22cqw;
 		container-type: inline-size;
-		/* outline: solid rgb(81, 255, 0); */
+		transition: 300ms ease-in-out;
 	}
 
 	.headerUl > li {
-		flex: 1 1 inherit;
+		flex: 0 1 auto;
 		container-type: inline-size;
 	}
 
@@ -505,6 +510,12 @@
 		}
 	}
 
+	:global(.menu-container:has(.head-about, .head-contacts)) {
+		.header-logo a {
+			translate: 0 calc(var(--intro-element-displacement) - 1rem);
+		}
+	}
+
 	/* .headerUl > li:not(.header-logo){ */
 	li:is(.head-contacts, .head-about, .read-more) {
 		display: flex;
@@ -521,6 +532,7 @@
 	.text-bubble {
 		/* --_btn-shadow-color: color-mix(in srgb, var(--color-bg,#ffffff), rgba(65, 60, 39, 0.181) 70%); */
 		/* --_btn-shadow-color: color-mix(in srgb, var(--accent-color,#ffffff), rgba(90, 86, 70, 0.181) 95%); */
+		/* --_btn-border-color: color-mix(in srgb, var(--accent-color,#ffffff), rgba(90, 86, 70, 0.181) 65%); */
 		--_btn-shadow-color: color-mix(
 			in srgb,
 			var(--color-bg-muted, #ffffff),
@@ -534,10 +546,9 @@
 
 		padding: clamp(1rem, 1.5cqw, 2rem) clamp(1.5rem, 3cqw, 4rem);
 		border-radius: 10px 23.7px 23.7px 23.7px;
-		border: solid 2px var(--color-bg-muted);
-		border: solid 2px var(--tritary-color-muted);
-		border: solid 2px var(--_btn-border-color);
-		/* border-style: solid groove groove solid; */
+		border: solid 1.9px var(--color-bg-muted);
+		/* border: solid 1px var(--_btn-border-color); */
+		border-style: solid groove groove solid;
 		width: fit-content;
 		min-height: 3rem;
 		height: fit-content;
@@ -548,14 +559,15 @@
 			var(--tritary-color, #ffffffc7) 5%,
 			color-mix(in srgb, var(--color-bg), #ffffff60 90%) 90%
 		);
-		/* background-color: color-mix(in lab, var(--accent-color, #ffffffc7)50% ,color-mix(in srgb, var(--color-bg), #ffffff60 90% ) 90%); */
 
+		opacity: 0;
 		filter: drop-shadow(var(--_btn-shadow-color) 0px 28px 10px);
-		animation: buble-text-in 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+		animation: buble-text-in 700ms 220ms cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 
 		@starting-style {
 			opacity: 0;
 			translate: -50% 0;
+			scale: 0.8;
 		}
 	}
 
@@ -599,7 +611,7 @@
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
-		font-size: clamp(1.5rem, -1.1304rem + 5.6522cqw, var(--text-size-l));
+		font-size: clamp(1.5rem, -0.4304rem + 5.6522cqw, var(--text-size-l));
 		font-weight: 600;
 		gap: min(1rem, 1cqh);
 		color: var(--color-text);
@@ -621,7 +633,7 @@
 		}
 
 		svg {
-			width: clamp(25px, -0.2rem + 12cqw, 4cqw);
+			width: clamp(25px, -0.2rem + 12cqw, 6cqw);
 			aspect-ratio: 1;
 			fill: var(--color-text);
 		}
@@ -707,17 +719,18 @@
 	.head-about button.read-more-btn {
 		--_btn-hue: var(--accent-color);
 		--_btn-color2: color-mix(
-			in srgb,
+			in oklch,
 			var(--_btn-hue, #ffffffc7),
-			color-mix(in lab, var(--color-bg), #ffffff98 50%) 90%
+			color-mix(in lab, var(--color-bg), #ffffffc6 50%) 90%
 		);
 		place-content: center;
 		padding-inline: var(--pill-padding);
 
 		background-color: var(--_btn-color2);
 		color: color-mix(in srgb, var(--color-text, #ffffff) 70%, var(--_btn-hue, var(--black)) 90%);
-		border: solid 2px;
+		border: solid 1px;
 		border-color: var(--_btn-color2);
+		border-color: var(--_btn-hue);
 		border-radius: var(--pill-radius);
 
 		max-width: fit-content;
@@ -826,6 +839,7 @@
 	.read-more .text-bubble {
 		--_ct: oklch;
 	}
+
 	.read-more .text-bubble > p {
 		max-width: 45ch;
 		height: fit-content;
@@ -913,7 +927,7 @@
 				color-mix(in lab, var(--color-bg), #ffffff98 50%) 90%
 			);
 
-			all: unset !;
+			all: unset;
 			font-size: var(--text-size-m);
 			font-weight: 200;
 			text-align: center;
@@ -945,10 +959,12 @@
 			min-height: 3rem;
 		}
 
-		/* li:has(p){
+		li:has(p){
 			background-color: transparent;
 			border: none;
 			padding: none;
+			display: flex;
+			flex-flow: column nowrap;
 
 			p{
 				all: unset;
@@ -1131,7 +1147,7 @@
 			width: 100%;
 			height: 100%;
 			justify-self: end;
-			padding-top: 4cqh;
+			/* padding-top: 2cqh; */
 			padding-inline: var(--Padding-genral);
 			gap: 2cqh;
 		}
@@ -1167,8 +1183,7 @@
 			animation:
 				sway 10s linear infinite 0.5s,
 				flip 12s ease-out 3s both;
-			isolation: isolate;
-			/* view-transition-name: header-figure; */
+			view-transition-name: header-figure;
 		}
 
 		.headerUl:has(li:nth-of-type(n) a:hover) .flower {
@@ -1229,9 +1244,14 @@
 		}
 
 		:global(.menu-container:has(.head-about)) {
-			
+			--header-height: 75cqh;
+			--menu-height: var(--header-height);
 			.headerUl .header-logo {
 				width: 100%;
+			}
+
+			.headerUl li.head-about {
+				margin-top:0;
 			}
 
 			.head-about .text-bubble:nth-of-type(2){
@@ -1263,7 +1283,7 @@
 			.read-more {
 				flex-direction: column;
 				overflow-y: scroll;
-				height: 60cqh;
+				min-height: 60cqh;
 
 				margin: 0;
 				padding: 0;
@@ -1271,7 +1291,7 @@
 
 			.text-bubble {
 				width: 100%;
-				height: 340svh;
+				min-height: 340lvh;
 				padding-bottom: var(--container-block-padding);
 			}
 
@@ -1303,6 +1323,20 @@
 			display: flex;
 			flex-flow: column;
 			line-height: 1.7;
+		}
+
+		:global(.menu-container:has(.menu-routes)) {
+			--menu-height: 90cqh;
+			height: fit-content;
+			gap: 0;
+
+			.headerUl li.menu-routes{
+				margin-top: 0;
+			}
+
+			li.header-logo{
+				margin-bottom: 0;
+			}
 		}
 	}
 
