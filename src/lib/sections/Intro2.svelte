@@ -163,8 +163,6 @@
 		:global(.contentContain:has([open] summary:not(.experiment))) {
 			width: 100dvw !important;
 			max-width: 1400px !important;
-			/* border: solid red 10px ; */
-			/* align-self: center !important; */
 		}
 	}
 
@@ -267,5 +265,16 @@
 	.switchFileType button:is(:hover, :active, :focus-within) p {
 		max-width: 8ch;
 		opacity: 1;
+	}
+
+	@media (height < 700px) and (width >= 950px) {
+
+	:global(.mainContain:has(.contentContain:first-child:nth-last-of-type(1))) {
+		justify-content: end;
+	}
+		:global(.contentContain:has(:is(#works, #workList))) {
+			--file-section-height: 80lvh;
+			max-width: 700px;
+		}
 	}
 </style>

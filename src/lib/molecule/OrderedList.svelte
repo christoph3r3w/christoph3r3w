@@ -1,6 +1,7 @@
 <script lang="ts">
 	// import  {next} from '../../routes/work.remote'
 	// import {y} from '../molecule/pagination.svelte'
+
 	interface Props {
 		pagination?: number | 'none';
 		works: Array<{
@@ -13,6 +14,7 @@
 			description?: string;
 		}>;
 	}
+	
 	let { pagination, works } : Props = $props();
 
 	let tFolders = $derived(
@@ -257,11 +259,11 @@
 		svg ~ p {
 			display: none;
 		}
-		&:hover {
+		/* &:hover {
 			p {
 				display: block;
 			}
-		}
+		} */
 	}
 
 	.main-list ol {

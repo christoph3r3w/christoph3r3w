@@ -175,15 +175,15 @@
 
 {#snippet buttonNav()}
 	<li class="D-menu">
-		<button onmouseup={toggleContacts} class="contact-btn">Contact</button>
-		<button onmouseup={toggleMenu} class="menu-btn" aria-label="menu button">
+		<button onmouseup={toggleMenu} onkeydown={toggleMenu} class="menu-btn" aria-label="menu button">
 			<svg width="" height="" viewBox="0 0 77 62" fill="none" xmlns="http://www.w3.org/2000/svg">
 				<path d="M25 31.25L25 30.75" stroke="black" stroke-width="5" stroke-linecap="round" />
 				<path d="M39 31.25L39 30.75" stroke="black" stroke-width="5" stroke-linecap="round" />
 				<path d="M52 31.25L52 30.75" stroke="#555555" stroke-width="5" stroke-linecap="round" />
 			</svg>
 		</button>
-		<button onmouseup={toggleAbout} class="about-btn">About</button>
+		<button onmouseup={toggleContacts} onkeydown={toggleContacts} class="contact-btn">Contact</button>
+		<button onmouseup={toggleAbout} onkeydown={toggleAbout} class="about-btn">About</button>
 		{#if openMenu == true}
 			<button
 				class="themes icon-btn"
@@ -505,6 +505,9 @@
 	li button:active {
 		filter: drop-shadow(var(--_btn-shadow-color) 0px 15px 10px);
 		scale: 0.97;
+		rotate: random(2turn, 10turn, 20deg) !important;
+		transition: .4s;
+
 	}
 
 	li button.icon-btn {

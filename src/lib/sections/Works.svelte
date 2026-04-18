@@ -55,8 +55,6 @@
 		};
 	});
 
-	
-	
 	let firstLoad: boolean = $state(true);
 
 	let pagination = $derived(dataWorks2?.[0]?.pagination ?? 'none');
@@ -1221,9 +1219,7 @@
 		white-space: nowrap;
 		font-size: 0.88rem;
 		font-weight: 500;
-		color: color-mix(in oklch, var(--file-line-color) 60%, var(--color-text) 45%);
 		color: color-mix(in oklch, var(--file-line-color) 60%, black 45%);
-		padding: 0.3rem 0.8rem;
 		border-radius: 50px;
 		background-color: color-mix(in oklch, var(--file-primary-hue), rgba(255, 255, 255, 0.566) 60%);
 		margin-inline: 1%;
@@ -1232,8 +1228,6 @@
 		&:nth-child(-n + 3) {
 			/* mix-blend-mode: multiply; */
 			mix-blend-mode: overlay;
-			/* mix-blend-mode:hard-light; */
-			background-color: color-mix(in oklch, var(--file-primary-hue), rgba(214, 60, 60, 0.566) 80%);
 			background-color: color-mix(
 				in oklch longer hue,
 				var(--file-primary-hue),
@@ -1551,8 +1545,6 @@
 		transition: 200ms 100ms
 			linear(0, 0.297 6.8%, 0.515 13.8%, 0.686 22%, 0.812 31.6%, 0.895 42.6%, 0.949 56.4%, 1);
 	}
-
-	
 
 	details[open] .asset-border {
 		position: absolute;

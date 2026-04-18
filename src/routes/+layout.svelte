@@ -101,6 +101,11 @@
 		:global(body) {
 			height: 100lvh;
 		}
+		
+		:global(main::after) {
+			content: none;
+			display: none;
+		}
 
 		:global(footer) {
 			display: none;
