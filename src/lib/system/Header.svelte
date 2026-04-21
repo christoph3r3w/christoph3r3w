@@ -76,7 +76,7 @@
 		aboutMoreOpen.set(!$aboutMoreOpen);
 	}
 
-	function handleDarkMode(xTheme?: string) {
+	function handleDarkMode(xTheme?:string ) {
 		
 		dark = !dark;
 		dark = xTheme === 'dark' ? true : xTheme === 'reset' ? false : dark;
@@ -484,6 +484,12 @@
 		}
 	}
 
+	header:not(.down):has( li.D-menu .menu-btn) li.D-menu .menu-btn svg path {
+		fill: var(--accent-color, #000000);
+		stroke: var(--accent-color, #000000);
+		transition: 0.3s ease-out;
+	}
+
 	/* button.menu-btn{
 		width: 6vw;
 		height: 3rem;
@@ -505,7 +511,7 @@
 	li button:active {
 		filter: drop-shadow(var(--_btn-shadow-color) 0px 15px 10px);
 		scale: 0.97;
-		rotate: random(2turn, 10turn, 20deg) !important;
+		/* rotate: random(2turn, 10turn, 20deg) !important; */
 		transition: .4s;
 
 	}
@@ -524,6 +530,7 @@
 		svg path {
 			fill: transparent;
 			stroke: var(--color-text, #000000);
+			stroke-width: 7px;
 		}
 	}
 
@@ -634,11 +641,10 @@
 		}
 
 		li button.menu-btn{
-			/* outline: solid greenyellow; */
 			display: grid;
-			place-content: center;
-			
+			place-content: center;	
 		}
+
 		li button.menu-btn svg{
 			min-width: 3rem;
 		}

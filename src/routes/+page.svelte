@@ -17,20 +17,36 @@
 	let currentSection = $state(0);
 	let totalSections = $state(0);
 
+
 	$effect(() => {
 		if (!scroller) return;
+		let s = scroller as HTMLElement;
 
-		const handleClick = () => {
+		const BodyFocus = () => {
 			if ($menuOpen == true) {
+			startViewTransition(function () {
 				menuOpen.set(false);
+			});
 			}
 		};
 
-		scroller.onclick = handleClick;
+		const handleFocusIn = (e: FocusEvent) => {
+			if (s.contains(e.target as Node)) {
+				BodyFocus();
+			}
+		};
+
+		s.onclick = BodyFocus;
+		s.addEventListener('wheel', (e) => {
+			if(e.deltaY > 0){	BodyFocus(); }
+		});
+		s.addEventListener('focusin', handleFocusIn);
 
 		return () => {
-			if (scroller) {
-				scroller.onclick = null;
+			if (s) {
+				s.onclick = null;
+				s.removeEventListener('wheel', BodyFocus);
+				s.removeEventListener('focusin', handleFocusIn);
 			}
 		};
 	});
@@ -133,6 +149,7 @@
 		>
 			<Intro2 data={d || {}} />
 		</Window>
+
 		<!-- <Window role="child" class="contentContain" color="#e7c75e" styleOn="--hoverC:white" bind:this={sections[0]}>
 			<Intro2 data={d}/>
 		</Window> -->
@@ -182,7 +199,7 @@
 		position: relative;
 		inset: 0;
 		width: 100vw;
-		height: 100%;
+		height: 100lvh;
 		overflow: hidden;
 		z-index: 0;
 	}
@@ -217,9 +234,9 @@
 
 			position: fixed;
 			/* top: anchor(top);
-      left: anchor(left);
-      right: anchor(right);
-      bottom: anchor(bottom); */
+      	left: anchor(left);
+      	right: anchor(right);
+      	bottom: anchor(bottom); */
 			bottom: 4%;
 			margin-inline: 6%;
 			background: rgba(197, 197, 197, 0.762);
@@ -230,7 +247,9 @@
 			border-radius: 50%;
 			width: 40px;
 			aspect-ratio: 1;
-			font-size: 20px;
+			font-size: 30px;
+			display: grid;
+			place-content: center;
 			cursor: pointer;
 			z-index: 10;
 			transition:
@@ -262,6 +281,7 @@
 			width: 5rem;
 		}
 	}
+
 	/* :global(body:has(.at-end)) {
     .scroller::scroll-button(left){
       width: 6rem;
@@ -290,10 +310,8 @@
 
 		/* box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset; */
 		/* box-shadow: rgba(224, 224, 238, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.177) 0px -2px 6px 0px inset,rgba(212, 211, 203, 0.505) 0px 30px 60px -12px inset, rgba(211, 188, 131, 0.3) 0px 18px 36px -18px inset; */
-		/* box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset; */
-		/* box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset; */
+		/* box-shadow: rgba(224, 224, 238, 0.25) 0px 50px 100px -20px, rgba(33, 33, 33, 0.23) 0px 30px 60px -30px, rgba(10, 37, 64, 0.121) 0px -2px 6px 0px inset,rgba(212, 211, 203, 0.505) 0px 30px 60px -28px inset, rgba(211, 188, 131, 0.3) 0px 18px 36px -30px inset; */
 		box-shadow: rgba(0, 0, 0, 0.1) -4px 9px 25px -6px;
-		/* box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset; */
 	}
 
 	:global(.contentContain:hover) {

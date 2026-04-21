@@ -297,7 +297,6 @@
 			</a>
 		</li>
 		<li
-			class=""
 			class:head-contacts={openContacts}
 			class:head-about={openAbout}
 			class:read-more={openAbout && openAboutMore}
@@ -315,6 +314,11 @@
 			{/if}
 		</li>
 	</ul>
+	{#if !openAboutMore}
+	<button class="close-menu-btn" onclick={() =>{menuOpen.set(false)}}>
+		<span>View Projects</span>
+	</button>
+	{/if}
 {/snippet}
 
 {#snippet menuContent()}
@@ -350,11 +354,11 @@
 	.menu-container {
 		position: relative;
 		display: flex;
+		flex-flow: column nowrap;
 		justify-content: center;
 		min-height: var(--menu-height);
 		height: fit-content;
 		padding-inline: var(--Padding-genral);
-		background-color: inherit;
 		background-color: transparent;
 
 		backdrop-filter: blur(5px);
@@ -363,9 +367,46 @@
 		container-type: inline-size;
 		container-name: menu;
 
+
 		@starting-style {
 			translate: 0 -10%;
 		}
+	}
+
+	.menu-container .close-menu-btn{
+		--_btn-hue: var(--accent-color);
+		position: relative;
+		flex:1 1 100%;
+		color: var(--color-text);
+		color: var(--_btn-hue);
+		background: transparent;
+		border: none;
+		padding:0;
+		margin: 0;
+		place-content: center;
+		display: none;
+	}
+
+	.menu-container .close-menu-btn span{
+		display: grid;
+		place-content: center;
+		min-width: fit-content;
+		min-height: fit-content;
+		height: 20cqh;
+		width: 90cqw;
+
+		border-radius: 10pc;
+		border: 2px solid var(--_btn-hue);
+		
+		font-size: var(--text-size-m);
+		font-weight: 500;
+		letter-spacing: .7cqw;
+		background:url("/stickers/sticker squaer2.webp");
+		background-position: center;
+		background-blend-mode: overlay;
+		background-size: cover;
+		background-repeat: no-repeat;
+		backdrop-filter: blur(5px);
 	}
 
 	.close-menu-container {
@@ -511,6 +552,10 @@
 	}
 
 	:global(.menu-container:has(.head-about, .head-contacts)) {
+		.headerUl {
+			margin-left: 21cqw;
+		}
+
 		.header-logo a {
 			translate: 0 calc(var(--intro-element-displacement) - 1rem);
 		}
@@ -651,6 +696,10 @@
 		box-shadow: none;
 		transition: 0.5s cubic-bezier(0.575, 0.005, 0.32, 1.175) 100ms;
 
+		.headerUl {
+			margin-left: 17cqw;
+		}
+
 		.header-logo {
 			animation: none !important;
 			height: auto;
@@ -718,15 +767,12 @@
 
 	.head-about button.read-more-btn {
 		--_btn-hue: var(--accent-color);
-		--_btn-color2: color-mix(
-			in oklch,
-			var(--_btn-hue, #ffffffc7),
-			color-mix(in lab, var(--color-bg), #ffffffc6 50%) 90%
-		);
+		--_btn-color2: color-mix(in oklch,var(--_btn-hue, #ffffffc7) 15%,color-mix(in lab, var(--color-bg), #ffffffe1 60%) 90%	);
 		place-content: center;
 		padding-inline: var(--pill-padding);
 
 		background-color: var(--_btn-color2);
+		backdrop-filter: blur(5px);
 		color: color-mix(in srgb, var(--color-text, #ffffff) 70%, var(--_btn-hue, var(--black)) 90%);
 		border: solid 1px;
 		border-color: var(--_btn-color2);
@@ -832,8 +878,8 @@
 	.read-more h2 {
 		font-size: clamp(1.5rem, -0.1304rem + 3.6522cqw, var(--text-size-l));
 		height: fit-content;
-		color: color-mix(in hsl, var(--color-text), var(--color-bg) 60%);
-		margin-block: 2rem 1rem;
+		color: color-mix(in hsl, var(--color-text), var(--color-bg) 50%);
+		margin-block: 5rem 0;
 	}
 
 	.read-more .text-bubble {
@@ -1125,31 +1171,48 @@
 	@media (width < 650px) {
 		.menu-container {
 			--container-block-padding: calc(var(--H-top) + 12cqh);
+			height: 100lvh;
+			min-height: min(60lvh,var(--menu-height));
+			min-height: clamp(60cqh, var(--menu-height), 95lvh);
+		}
+
+		.menu-container:has(.close-menu-btn){
+			--menu-height: 100lvh;
+		}
+
+		.menu-container .close-menu-btn {
+			display: grid;
 		}
 
 		.active {
-			flex: 1 1 auto;
-			min-height: min(60lvh,var(--menu-height));
-			min-height: clamp(60cqh, var(--menu-height), 95lvh);
-			height: fit-content;
+			flex: 0 1 auto;
+			/* min-height: min(60lvh,var(--menu-height)); */
+			/* min-height: clamp(60cqh, var(--menu-height), 95lvh); */
+			/* height: fit-content; */
 			background-color: color-mix(in oklch, var(--color-bg, #ffffff82) 60%, #ffffff33 80%);
 			border-bottom: solid 5px color-mix(in oklch, var(--color-bg, #ffffff82) 50%, #ffffff33 80%);
 		}
 
 		.active ul.headerUl {
+			flex: 0 1 auto;
 			flex-direction: column;
 			height: 100%;
 			padding: 0;
 			margin-left: 0;
+
 		}
 
 		.headerUl > li:nth-of-type(n + 2) {
+			flex: 0 1 auto;
 			width: 100%;
 			height: 100%;
-			justify-self: end;
+			/* height: fit-content; */
+			/* justify-self: end; */
 			/* padding-top: 2cqh; */
-			padding-inline: var(--Padding-genral);
-			gap: 2cqh;
+			/* padding-inline: var(--Padding-genral); */
+			/* gap: 2cqh; */
+
+
 		}
 
 		/* .headerUl > li{
@@ -1190,6 +1253,12 @@
 			transition: all 1s 0.1s;
 			transform: rotateY(0deg) !important;
 			/* animation:flip 1s alternate forwards .1s   ; */
+		}
+
+		:global(.menu-container:has(.head-about, .head-contacts)) {
+			.headerUl {
+				margin-left: 0;
+			}
 		}
 
 		:global(.menu-container:has(.head-contacts)) {
@@ -1252,6 +1321,7 @@
 
 			.headerUl li.head-about {
 				margin-top:0;
+				height: fit-content;
 			}
 
 			.head-about .text-bubble:nth-of-type(2){
