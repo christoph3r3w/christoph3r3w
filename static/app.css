@@ -177,12 +177,10 @@ a:selection {
 	--color-bg: var(--tan-light);
 	--color-bg: #cacaca;
 	--color-bg: var(--gray-bg2);
-	/* --color-bg: var(--kindabrown); */
 	--color-bg-muted: var(--gray-bg3);
 	--color-text: var(--inherit, var(--black));
 	--color-text-invert: var(--inherit, var(--white));
 	/* --primary-color: var(--vibrant-blue); */
-	/* --primary-color: none; */
 	--secondary-color: #6c757d;
 	--tritary-color: var(--tan-soft);
 	--tritary-color-muted: color-mix(in oklch, var(--tritary-color) 95%, var(--color-text));

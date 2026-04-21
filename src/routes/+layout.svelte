@@ -27,10 +27,20 @@
 		--primary-gray: var(--color-bg);
 	}
 
+
+
+	:global(html) {
+		height: 100lvh;
+	}
+
 	:global(body) {
 		display: flex;
 		flex-direction: column;
 		height: 100lvh;
+		padding-top: calc(0 - env(titlebar-area-width));
+		padding-top: calc(0 - env(safe-area-inset-top));
+		padding-bottom: calc(0 - env(safe-area-inset-bottom));
+		padding-bottom: calc(0 - env(titlebar-area-y, 40px));
 		overflow: hidden;
 		touch-action: none;
 	}
@@ -99,7 +109,8 @@
 		}
 
 		:global(body) {
-			height: 100lvh;
+			min-height: 100lvh;
+			min-height: calc(100lvh - env(safe-area-inset-top, 40px));
 		}
 		
 		:global(main::after) {

@@ -62,7 +62,7 @@ export const themeList: Theme[] = [
 			'--color-bg': '#1a0a00',
 			'--color-bg-muted': '#1a0a00',
 			// '--color-text': '#ffe4c4',
-			'--color-text': '#fff1df',
+			'--color-text': '#e2d6c5',
 			'--color-text-invert': 'var(--black)',
 			'--primary-color': '#ff6b35',
 			'--secondary-color': '#ff9e40',

@@ -38,8 +38,9 @@
 	
 </script>
 
-<div class="switchFileType {pagination == 'none' ? 'disabled' : ''}">
+<div class="switchFileType {pagination == 'none' ? 'disabled' : ''}" >
 	<button
+		tabindex={pagination == 'none' ? -1 : 0}
 		onclick={() => {
 			fileType.set($fileType === 'files' ? 'list' : 'files');
 		}}
