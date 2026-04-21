@@ -241,7 +241,7 @@ export async function load() {
 						{
 							text: [
 								`
-								The Monytri app is a cross-platform MVP built to communicate and illustarte a stock gifting concept clearly to investors and stakeholders. The goal was to translate <a>their</a> idea into something tangible and testable.								
+								The Monytri app project is a cross-platform MVP built to communicate and illustarte a novel stock gifting interface. The goal was to translate the cleints vision of monytri into something tangible and testable idea for investors and stakeholders.								
 								`
 							]
 						},
@@ -297,16 +297,7 @@ export async function load() {
 								`
 							]
 						},
-						{
-							text: [
-							`<h2>bo mama</h2>`,
-							`<ul>
-								<li>1233</li>
-								<li>3456</li>
-								<li>6789</li>
-							</ul> `
-							],
-						},
+						
 					],
 					collaborators: {
 						employer: 'David Dick, Chiara lung',
@@ -389,17 +380,16 @@ export async function load() {
 						},
 						{
 							text: ["The public database that populated the custom version of the site and all its components has been discontinued.",
-							"- You can visit the Redpers site to see some of the components or check out the GitHub repos to view the conclusions we reached for the project."]
-						},
-						{
+							"- You can visit the Redpers site to see some of the components or check out the GitHub repos to view the conclusions we reached for the project."
+							],
 							html: [
 								`<a href="https://github.com/christoph3r3w/user-experience-enhanced-website/wiki/Iteration-1">
-						Github link - iterations
-						</a>
-						<br>
-						<a href="https://github.com/christoph3r3w/pleasurable-ui/wiki/Team%E2%80%90Ontwerp">
-						Some designs 
-						</a>`
+								Github link - iterations
+								</a>
+								<br>
+								<a href="https://github.com/christoph3r3w/pleasurable-ui/wiki/Team%E2%80%90Ontwerp">
+								Some designs 
+								</a>`
 							]
 						},
 						{

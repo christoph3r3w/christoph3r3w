@@ -3,7 +3,7 @@
 	import { OrderedList, ContactForm, StickerBed } from '$lib';
 	import { fade, fly } from 'svelte/transition';
 	import QRCode from 'qrcode';
-	import { ListCollapse, ListIndentDecrease, QrCode, XIcon } from '@lucide/svelte';
+	import { ListCollapse, ListIndentDecrease, QrCode, XIcon,ArrowUpRight } from '@lucide/svelte';
 	
 	interface Props {
 		data?: any;
@@ -63,7 +63,7 @@
 	let m4 = $derived(openDetailsIndex);
 
 	// let works = $derived(dataWorks[1]?.works?.filter((w: any) => w.published.is === true) ?? []);
-	let works = $derived(dataWorks2[1]?.works.filter((w: any) => w?.published.is === true).slice(0, 6) || []);
+	let works = $derived(dataWorks2[1]?.works.filter((w: any) => w?.published.is === true).slice(0, 5) || []);
 	let fileLinks = $derived(works[m4 ?? 0]?.link.src || '');
 	let qrTimeout: ReturnType<typeof setTimeout> | null = $state(null);
 	let qrURL = $state('');
@@ -339,7 +339,12 @@
 				target="_blank"
 				rel="noopener noreferrer"
 			>
-				{showQr ? 'Link →' : 'Visit site'}
+				<!-- {showQr ? 'Link →' : 'Visit site'} -->
+				{#if showQr}
+					Link <ArrowUpRight size="16" />
+				{:else}
+					Visit site
+				{/if}
 			</a>
 			{#if work?.link?.showType != 'desktop'}
 				<button
@@ -379,7 +384,7 @@
 	<details
 		transition:fade
 		class="file file-{works.length} file-contact"
-		style="--file-index:calc(var(--total-work) ); --work-icon: url('/works-assets/material-assets/Chris website14.avif'); --file-primary-color:green;"
+		style="--total-work:{works.length + 1}; --file-index:calc(var(--total-work) + 1); --work-icon: url('/works-assets/material-assets/Chris website14.avif'); --file-primary-color:green;"
 	>
 		<summary tabindex="-1" class="experiment">
 			<span class="file-title"> your project here ??? </span>
@@ -1258,7 +1263,7 @@
 		overflow: visible;
 	}
 
-	details[open]:has(.work-description:not(.description-links):hover, .move-description) .work-description.note {
+	details[open]:has(.work-description:not(.description-links):is(:hover,:focus-within), .move-description) .work-description.note {
 		translate: 0.5rem;
 		contain: none;
 		transition: 200ms 20ms linear(0, 0.297 6.8%, 0.515 13.8%, 0.686 22%, 0.812 31.6%, 0.895 42.6%, 0.949 56.4%, 1);
@@ -1266,7 +1271,7 @@
 			overflow: visible;
 			transform: translateX(4.5rem);
 			outline: none;
-			/* transition:	transform 250ms linear(0, 0.297 6.8%, 0.515 13.8%, 0.686 22%, 0.812 31.6%, 0.895 42.6%, 0.949 56.4%, 1); */
+			transition:	transform 250ms linear(0, 0.297 6.8%, 0.515 13.8%, 0.686 22%, 0.812 31.6%, 0.895 42.6%, 0.949 56.4%, 1);
 		}
 	}
 
@@ -1323,7 +1328,7 @@
 			background-color: color-mix(
 				in oklch,
 				var(--file-primary-hue, var(--primary-gray-bg)),
-				rgba(255, 255, 255, 0.566) 60%
+				rgba(255, 255, 255, 0.693) 80%
 			);
 		}
 	}
@@ -1422,19 +1427,15 @@
 		}
 
 		a.link-btn {
+			--_link-color: color-mix(in oklch longer hue,var(--file-primary-hue, var(--description-bg)),color-mix(in hsl longer hue,hsl(calc(var(--hue-number) / var(--file-index)), 45%, 68%),var(--file-primary-color) 98%)63%);
+			--_link-color: color-mix(in oklch longer hue,var(--file-primary-hue, var(--description-bg)),color-mix(in hsl shorter hue,hsl(calc(var(--hue-number) / var(--file-index)), 85%, 88%),var(--file-primary-color) 98%)64%);
 			flex: 1 1 60%;
 			height: 100%;
 			border-radius: 10px;
-			background-color: color-mix(
-				in oklch longer hue,
-				var(--file-primary-hue, var(--description-bg)),
-				color-mix(
-						in hsl longer hue,
-						hsl(calc(var(--hue-number) / var(--file-index)), 45%, 68%),
-						var(--file-primary-color) 98%
-					)
-					63%
-			);
+			font-size: 1.25rem;
+			letter-spacing: .5cqw;			
+			color:contrast-color(var(--_link-color));
+			background-color:var(--_link-color) ;
 
 			@supports (corner-shape: superellipse(0)) {
 				& {
@@ -1620,7 +1621,7 @@
 		position: relative;
 		display: flex;
 		flex-direction: column;
-		margin-bottom: 2rem;
+		margin-bottom: 4cqh;
 
 		contain: layout style paint;
 		container-type: inline-size;
@@ -1648,7 +1649,7 @@
 
 	.work-assets .content-block :global(p) {
 		line-height: 1.5;
-		font-size: clamp(0.9rem, 4vw, var(--text-size-s));
+		font-size: clamp(0.9rem, 4vw, var(--text-size-m));
 		font-size: clamp(0.9rem, 4vw, 1.3rem);
 		color: var(--color-text);
 
@@ -1696,6 +1697,7 @@
 	.work-assets :global( .content-block > ul.flat-list) {
 		flex-flow: row wrap;
 		container-type: inline-size;
+		list-style: none;
 	}
 
 
@@ -1707,7 +1709,9 @@
 			color-mix(in lab, var(--color-bg), #ffffff98 50%) 70%
 		);
 
-		font-size: var(--text-size-s);
+		font-size: clamp(0.9rem, 4vw, var(--text-size-m));
+		font-size: clamp(0.9rem, 4vw, 1.3rem);
+
 		text-align: center;
 		place-content: center;
 		padding-inline: var(--pill-padding);
@@ -1734,13 +1738,23 @@
 		min-height: 3rem;
 
 	}
+
+	.work-assets :global( .content-block li::marker) {
+		margin: 0 !important;
+		padding: 0 !important;
+		border: solid red 5px !important;
+	}
+
+
 	.work-assets :global( .content-block [data-open-file]) {
 		--file-index: attr(data-open-file);
 		background-color: transparent;
 		color:currentColor;
-		border: dotted ;
-		padding: 1px 1%;
-		border-radius: 50px;
+		border: dotted 2px ;
+		/* border-inline: dotted 2px ; */
+		/* border-block: none ; */
+		padding: .2% 5px;
+		border-radius: 5px;
 		font-size: inherit;
 		cursor: pointer;
 	}
