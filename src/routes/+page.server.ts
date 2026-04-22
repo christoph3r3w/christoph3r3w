@@ -1,5 +1,5 @@
-import { text } from 'node:stream/consumers';
 
+import { Buttons } from "$lib";
 /** @type {import('./$types').PageServerLoad} */
 export async function load() {
 	
@@ -9,7 +9,7 @@ export async function load() {
 		published: { is: boolean; date: string };
 		description: string;
 		assets: { image: string[]; icon?: string; color?: string };
-		link: { src: string; showType: '' | 'mobile' | 'desktop' };
+		link: { src: string; showType: '' | 'mobile' | 'desktop' | 'none' };
 		dateStart: string;
 		dateEnd: string;
 		status: { is: string; sticker: string };
@@ -34,14 +34,29 @@ export async function load() {
 					contentBlock: [
 							{
 								text:['An experimentation I did to test out grid animation that in the future was used as an animatable grid layout. The idea was to have a grid of tiles that shift their position when hovered, creating a dynamic and interactive visual effect. The shifting is achieved through CSS transitions, allowing the tiles to smoothly move to new positions within the grid when the user interacts with them.'],
-							}
+							},
+							// {
+							// 	html:[`
+							// 		<iframe height="700" style="width: 100%;" scrolling="no" title="grid test" src="https://codepen.io/Christopher-the-animator/embed/NWoeXRo?default-tab=result" frameborder="no" loading="lazy" allowtransparency="true">
+							// 		See the Pen <a href="https://codepen.io/Christopher-the-animator/pen/NWoeXRo">
+							// 		grid test</a> by Christopher (<a href="https://codepen.io/Christopher-the-animator">@Christopher-the-animator</a>)
+							// 		on <a href="https://codepen.io">CodePen</a>.
+							// 		</iframe>
+							// 	`],
+							// },
+							{
+								html:["<Buttons />"],
+							},
+							{
+								html:[`<button data-open-file="3">...</button>`],
+							},
 						],
 					collaborators: {
 						owner: 'Christopher'
 					},
 					tags: ['Experiment', 'Grid Motion', 'responsive design'],
 
-					link: { src: 'https://www.google.com', showType: '' },
+					link: { src: 'https://codepen.io/Christopher-the-animator/pen/NWoeXRo', showType: '' },
 					dateStart: '2023',
 					dateEnd: '2023',
 					status: { is: 'experiment', sticker: '' }
@@ -59,14 +74,14 @@ export async function load() {
 							'works-assets/chris landing page portfolio ideas-02.avif'
 						],
 						icon: '/works-assets/windows/pngwing.com.avif',
-						color: 'skyblue'
-						// color:'#c0c0d7',
+						// color: 'skyblue'
+						color:'#94c5f8',
 					},
 					contentBlock: [
 						{
-							h2: ['intro'],
 							text: [
-								'I got to create a profile card that showcased my understanding of the web fundamentals in the form of a profilecard. I took this opportunity to experiemnt with toen die tijd the new <a target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/API/Popover_API">popover api</a> and styled it in the look and feel of the Windows XP interface.'
+								// 'I created a profile card that showcased my understanding of some web fundamentals. I took this opportunity to experiment with the new <a target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/API/Popover_API">popover api</a> and styled it in the look and feel of the Windows XP interface.'
+								'I created a profile card that showcased my understanding of some web fundamentals using <a target="_blank" href="https://www.npmjs.com/package/ejs">ejs</a>, and styled it in the look and feel of the Windows XP interface.'
 							]
 						},
 						{
@@ -80,10 +95,28 @@ export async function load() {
 							]
 						},
 						{
-							text: [
-								'The popover API seemed to be really reliable for such a project. The ability to toggle components without having to use JavaScript, and also the ability to drag and save the coordinates of the window without having to use JavaScript, made styling and the layout more approachable and accessible. ',
-								'Me and some other schoolmates decided to to use concept as the fundation for a game based on our classmates That resembled a Pokemon card game. '
+							text:['I took this opportunity to experiment with "at that time" new web features:'],
+							html: [`
+							<ul class="flat-list">
+								<li>Popover Api</li>
+								<li>Anchor Api</li>
+								<li>Iframes</li>
+								<li>Embed</li>
+								<li>Clip-mask</li>
+								<li>Preferred color scheme </li>
+								<li>Dynamic grid </li>
+							</ul>
+								`
 							]
+						},
+						{
+							text: [
+								'- The <a target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/API/Popover_API">Popover Api</a> was a natural fit, since it handles component toggling and window coordinate persistence natively, removing the need for JavaScript and keeping the implementation clean. ',
+								'- The <a target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Anchor_positioning">Anchor positioning Api</a> was also essential to this project, as it reduced the need for manual precise positioning typically required for tethered components.',
+							]
+						},
+						{
+							text: ['Afterwards these features and styling was used as the fundation for a game based on our classmates that resembles a Pokemon card game. ']
 						},
 						{
 							images: [
@@ -94,7 +127,7 @@ export async function load() {
 							]
 						},
 						{
-							text:["The result of this project was a fun and responsive UI interface that mimicked a lot of the interactions of Windows XP while containing all the information and features to showcase my skills and the skills of my teammates. and....."]
+							text:["The result of this project was a playful and responsive UI that mimicked some of the interactions of Windows XP, an opportunity to implement new web features at that time, while showcasing the skills of my teammates and me"]
 						}
 					],
 					collaborators: {
@@ -103,15 +136,15 @@ export async function load() {
 						collaborator: 'Anna-kyra'
 					},
 					tags: ['Svelte', 'NodeJS', 'Responsive ui', 'UI/UX', 'popover'],
-					link: { src: 'https://brilletjes-squad-page.vercel.app/', showType: '' },
+					link: { src: 'https://brilletjes-squad-page.vercel.app/', showType: 'desktop' },
 					dateStart: '2023',
 					dateEnd: '',
 					status: { is: 'experiment', sticker: '' }
 				},
 				// MERLIN
 				{
-					title: 'potion game',
-					slug: 'Project for Merlin studios',
+					title: 'Merlin studios',
+					slug: 'Potion game',
 					published: { is: true, date: '' },
 					description: 'A server based game',
 					assets: {
@@ -145,15 +178,15 @@ export async function load() {
 							// 		]
 							html:[` 
 									<p>They provided an API with assets for ingredients and potions, a flat design as a starting point, and a set of criteria: </p>
-									<ul class="flat-list"><li>creativity</li> <li>accessibility</li> <li>animations</li> <li>design</li><li>effects to showcase your digital magic</li></ul>.
-									<p>And the game logic and UI were left open to interpretation,and I ran with it.</p>
+									<ul class="flat-list"><li>create coding</li> <li>accessibility</li> <li>animations</li> <li>design</li><li>effects to showcase "digital magic"</li></ul>.
+									<p>The game logic and UI were left open to interpretation, and I didn't hold back.</p>
 									`
 									]
 						},
 						{
 							html:[` 
-									<p>The game runs on a Node server that tracks all brewing attempts, successful or failed, via REST. with Directus handling the game state.</p>
-									<p>For the UI, I leaned into CSS <button data-open-file="1">Shifting grid</button> concepts I'd been experimenting with: </p>
+									<p>The game runs on a Node server that tracks all brewing attempts, successful or failed, via REST. With the game state being stored in a Directus database.</p>
+									<p>For the UI, I leaned into CSS <button data-open-file="1">...</button> concepts I'd been experimenting with: </p>
 									<p> - A cauldron that sits at the center surrounded by ingredient areas arranged in a dynamic grid layout.</p>
 									<p> - An animated potion book, where players have to learn and memorize the ingredient combination for each potion.</p>
 									`
@@ -164,7 +197,6 @@ export async function load() {
 								'/works-assets/merlin/chrome_fXsSOsVsKm.gif',
 								'/works-assets/merlin/Screenshot 2026-01-23 223247.avif',
 								'/works-assets/merlin/m-black.webp',
-							
 							]
 						},
 						{
@@ -176,7 +208,7 @@ export async function load() {
 							]
 						},
 						{
-							text:["The result is a simple but intentional web-based game with three levels. Each level has you collecting ingredients to brew a specific potion, with only one attempt per level to get it right and move on to the next.",
+							text:["The result of this project within that sprint was a simple but intentional web-based game with three levels. Each level has you collecting ingredients to brew a specific potion, with only one attempt per level to get it right and move on to the next.",
 									"It was a good opportunity to combine interesting frontend concepts with a lightweight backend, and showcase to merlin my creative coding angle."
 							],
 						},
@@ -335,7 +367,7 @@ export async function load() {
 					contentBlock: [
 						{
 							text: [
-								'Redpers is an online journalistic platform that provides a platform for young and upcoming journalists to write and to collaborate on stories happening within Holland. ',
+								'Redpers is an online journalistic outlet that gives young and upcoming journalists a space to write and collaborate on stories happening across the Netherlands.',
 								'During a school sprint my group and I got Repers as a client, and we had to introduce potential user interface enhancements for there main website. '
 							]
 							// video:['/works-assets/redpers/Recording 2024-05-24 105739.mp4']
@@ -345,7 +377,7 @@ export async function load() {
 						},
 						{
 							text: [
-								'Within my group my task was to propose and create potential enhancements for the article page, test these with users, and to present how these can be integrated on to the website',
+								'Within my group, my task was to propose and create potential enhancements for the article page In tandem with some user stories , test these with users, and to present how these can be integrated on to the website',
 							],
 							html: [
 								`
@@ -359,7 +391,9 @@ export async function load() {
 							]
 						},
 						{
-							text:["The main consideration for these propositions was finding the right balance between accessibel and plesurable UI, keeping users oriented without losing their interest."]
+							// text:["The main consideration for these propositions was to find the right balance between accessibel and plesurable UI, keeping users oriented without losing their interest."]
+							// text:["For me these propositions were the right balance between accessibel and plesurable UI, keeping users oriented without losing their interest."]
+							text:["Due to prior user testing feedback and personal experience i concluded that these propositions were the right balance between accessibel and plesurable UI, with the intent of keeping the users oriented without losing their interest."]
 						},
 						{
 							images: [
@@ -376,7 +410,8 @@ export async function load() {
 							video: ['/works-assets/redpers/Recording 2024-05-24 105739.mp4']
 						},
 						{
-							text: ['After a round of testing and feedback with the client and users of the prototype, we refined and showcased each enhancement as its own component. ']
+							// text: ['After a round of testing and feedback with the client and users of the prototype, We refined and showcased each enhancement as its own component. ']
+							text: ['The project concluded with a round of testing and feedback with the client and users, and then We refined and deliverd each enhancement as its own component. ']
 						},
 						{
 							text: ["The public database that populated the custom version of the site and all its components has been discontinued.",
@@ -437,7 +472,7 @@ export async function load() {
 						owner: 'Christopher'
 					},
 					tags: ['Experiment', 'Grid Motion', 'responsive design', 'UI/UX'],
-					link: { src: 'https://www.google.com', showType: '' },
+					link: { src: 'https://www.google.com', showType: 'mobile' },
 					dateStart: '2026',
 					dateEnd: '2026',
 					status: { is: 'experiment', sticker: '' }
