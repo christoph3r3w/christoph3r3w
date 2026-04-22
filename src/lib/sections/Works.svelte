@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount,tick } from 'svelte';
-	import { OrderedList, ContactForm, StickerBed } from '$lib';
+	import { OrderedList, ContactForm, StickerBed,Buttons } from '$lib';
 	import { fade, fly } from 'svelte/transition';
 	import QRCode from 'qrcode';
 	import { ListCollapse, ListIndentDecrease, QrCode, XIcon,ArrowUpRight } from '@lucide/svelte';
@@ -15,7 +15,7 @@
 		published?: { is: boolean; date: string };
 		description?: string;
 		assets?: { image?: string[]; icon?: string; color?: string };
-		link?: { src?: string; showType?: '' | 'mobile' | 'desktop' };
+		link?: { src?: string; showType?: '' | 'mobile' | 'desktop' | 'none' };
 		dateStart?: string;
 		dateEnd?: string;
 		status?: { is?: string; sticker?: string };
@@ -63,7 +63,7 @@
 	let m4 = $derived(openDetailsIndex);
 
 	// let works = $derived(dataWorks[1]?.works?.filter((w: any) => w.published.is === true) ?? []);
-	let works = $derived(dataWorks2[1]?.works.filter((w: any) => w?.published.is === true).slice(0, 5) || []);
+	let works = $derived(dataWorks2[1]?.works.filter((w: any) => w?.published.is === true).slice(0, 6) || []);
 	let fileLinks = $derived(works[m4 ?? 0]?.link.src || '');
 	let qrTimeout: ReturnType<typeof setTimeout> | null = $state(null);
 	let qrURL = $state('');
@@ -149,7 +149,7 @@
 		if (!el) return;
 
 		el.setAttribute('open', '');
-		el.style.setProperty('z-index', '900');
+		el.style.setProperty('z-index', '90');
 	}
 
 	onMount(() => {
@@ -168,10 +168,21 @@
 	$effect(() => {
 		projects.then(() => {
 			clearLoadAnimation();
-		// let m3 = document.querySelector('.file-3')?.setAttribute('open','');
+			// let m3 = document.querySelector('.file-1')?.setAttribute('open','');
 			let m6 =  document.querySelectorAll<HTMLElement>('.file:not([open])').forEach(file => {
 				file.style.removeProperty('z-index');
 			});
+
+			(() => {
+				const el = document.querySelectorAll<HTMLElement>('button[data-open-file]');
+
+				for (const btn of el) {
+					const fileNumber = btn.getAttribute('data-open-file');
+					const linkedFiles = document.querySelector<HTMLElement>(`.file-${fileNumber}`)
+					let title = linkedFiles?.querySelector('.file-title')?.textContent;
+					btn.textContent = title || '...';
+				}
+			})();
 		});
 
 		generateQRCode(fileLinks);
@@ -324,7 +335,7 @@
 				{/if}
 				<img src={qrURL} alt="QR Code" class="qr-code" />
 				{#if work.link.showType != 'desktop'}
-					<button class="{{ disabled: !work.link.src }} qr-btn" onclick={toggleQR}>
+					<button class="{{ disabled: !work.link.src?.trim() }} qr-btn" onclick={toggleQR}>
 						{showQr ? 'Hide QR' : 'QR'}
 					</button>
 				{/if}
@@ -333,32 +344,34 @@
 			{/if}
 		</div>
 		<div class="description-links">
-			<a
-				class="{{ disabled: !work?.link?.src }} link-btn"
-				href={work?.link?.src}
-				target="_blank"
-				rel="noopener noreferrer"
-			>
-				<!-- {showQr ? 'Link →' : 'Visit site'} -->
-				{#if showQr}
-					Link <ArrowUpRight size="16" />
-				{:else}
-					Visit site
+			{#if work?.link?.showType != 'none'}			
+				{#if work.link?.showType != 'mobile' && work?.link?.src?.trim()}
+					<a
+						class="{{ disabled: !work?.link?.src }} link-btn"
+						href={work?.link?.src}
+						target="_blank"
+						rel="noopener noreferrer"
+					>
+						{#if showQr}
+							Link <ArrowUpRight size="16" />
+						{:else}
+							Visit site
+						{/if}
+					</a>
 				{/if}
-			</a>
-			{#if work?.link?.showType != 'desktop'}
-				<button
-					class="{{ disabled: !work?.link?.src }} qr-btn"
-					onclick={toggleQR}
-					title={showQr ? 'close QR' : 'Qr code'}
-				>
-					<!-- {showQr ? 'X' : 'QR'} -->
-					{#if showQr}
-						<XIcon />
-					{:else}
-						<QrCode />
-					{/if}
-				</button>
+				{#if work?.link?.showType != 'desktop' }
+					<button
+						class="{{ disabled: !work?.link?.src?.trim() }} qr-btn"
+						onclick={toggleQR}
+						title={showQr ? 'close QR' : 'Qr code'}
+					>
+						{#if showQr}
+							<XIcon />
+						{:else}
+							<QrCode />
+						{/if}
+					</button>
+				{/if}
 			{/if}
 		</div>
 	</article>
@@ -1009,6 +1022,11 @@
 		}
 	}
 
+	.work-section:has(details:nth-of-type(n)[open]) details[open].file > summary.experiment {
+		background-color: color-mix(in lab, var(--file-primary-hue), var(--color-bg) 30%);
+	}
+
+
 	/* ////////////////////////////// */
 	/* The content of each project is */
 	/* ////////////////////////////// */
@@ -1048,6 +1066,7 @@
 		background-color: color-mix(in oklch, var(--file-primary-hue), rgba(255, 255, 255, 0.466) 50%);
 		/* background-color: color-mix(in oklch, var(--file-primary-hue) , white 20% ); */
 		background-color: color-mix(in lab, var(--file-primary-hue), var(--color-bg) 30%);
+		/* background-color: color-mix(in lch, var(--file-primary-hue), var(--color-bg) 30%); */
 		/* background-color: color-mix(in oklch, var(--bg-test) 90% , rgba(255, 255, 255, 0.719) 70% ); */
 	}
 
@@ -1429,12 +1448,14 @@
 		a.link-btn {
 			--_link-color: color-mix(in oklch longer hue,var(--file-primary-hue, var(--description-bg)),color-mix(in hsl longer hue,hsl(calc(var(--hue-number) / var(--file-index)), 45%, 68%),var(--file-primary-color) 98%)63%);
 			--_link-color: color-mix(in oklch longer hue,var(--file-primary-hue, var(--description-bg)),color-mix(in hsl shorter hue,hsl(calc(var(--hue-number) / var(--file-index)), 85%, 88%),var(--file-primary-color) 98%)64%);
+			--_link-contrast-color: contrast-color(var(--_link-color));
 			flex: 1 1 60%;
 			height: 100%;
 			border-radius: 10px;
+			font-weight: 500;
 			font-size: 1.25rem;
 			letter-spacing: .5cqw;			
-			color:contrast-color(var(--_link-color));
+			color:color-mix(in srgb , var(--_link-contrast-color) 90% , var(--file-primary-hue) 20%);
 			background-color:var(--_link-color) ;
 
 			@supports (corner-shape: superellipse(0)) {
@@ -1448,16 +1469,8 @@
 		button.qr-btn {
 			flex: 0 1 fit-content;
 			border-radius: 0 0 var(--stamp-radius) var(--stamp-radius);
-			background-color: color-mix(
-				in oklch,
-				var(--file-primary-hue, var(--description-bg)),
-				var(--_white-toggle, white) 60%
-			);
-			background-color: color-mix(
-				in oklch,
-				var(--file-primary-hue, var(--primary-gray-bg)),
-				rgba(255, 255, 255, 0.566) 60%
-			);
+			background-color: color-mix(in oklch,var(--file-primary-hue, var(--description-bg)),var(--_white-toggle, white) 60%);
+			background-color: color-mix(in oklch,var(--file-primary-hue, var(--primary-gray-bg)),#ffffff90 60%	);
 			height: 111.5%;
 			min-width: 20%;
 			border-top: none;
@@ -1474,7 +1487,8 @@
 		}
 
 		.disabled {
-			opacity: 0;
+			opacity: 0.5;
+			translate:0 -100%;
 			pointer-events: none;
 		}
 	}
@@ -1671,9 +1685,11 @@
 	.work-assets :global(.content-block a) {
 		color: color-mix(in var(--_ct), var(--color-text) 70%, var(--workassets-contrast-color, #ffffff90) 50%);
 		text-decoration:underline dotted !important;
+		text-underline-offset: 6px;
 		font-size: clamp(0.9rem, 4vw, 1.3rem);
 		cursor: pointer;
 		width: fit-content;
+		color: #87b7eb;
 
 		&::selection {
 			color: rgb(0, 0, 0);
@@ -1748,11 +1764,11 @@
 
 	.work-assets :global( .content-block [data-open-file]) {
 		--file-index: attr(data-open-file);
+		max-width: 40ch;
+		width: fit-content;
 		background-color: transparent;
 		color:currentColor;
 		border: dotted 2px ;
-		/* border-inline: dotted 2px ; */
-		/* border-block: none ; */
 		padding: .2% 5px;
 		border-radius: 5px;
 		font-size: inherit;
