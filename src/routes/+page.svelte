@@ -2,6 +2,7 @@
 	import { Window, Intro, Intro2, Works } from '$lib';
 	import { onMount, onDestroy } from 'svelte';
 	import { menuOpen } from '$lib/store';
+	import {Temporal, toTemporalInstant} from '@js-temporal/polyfill';
 
 	let { data } = $props();
 	let d = $derived(data);	

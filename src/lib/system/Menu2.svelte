@@ -350,7 +350,6 @@
 	}
 
 	/* menu contaiter styling and logic */
-
 	.menu-container {
 		position: relative;
 		display: flex;
@@ -430,6 +429,7 @@
 		min-height: 0;
 		z-index: 3;
 		translate:0 calc(-1.2 * var(--H-top));
+		transition: 300ms ease-in-out;
 
 		@starting-style {
 			translate: 0 100%;
@@ -450,12 +450,13 @@
 		bottom: 0;
 		margin-left: 22cqw;
 		container-type: inline-size;
-		transition: 300ms ease-in-out;
+		transition: height 0.3s ease-in-out;
 	}
 
 	.headerUl > li {
 		flex: 0 1 auto;
 		container-type: inline-size;
+		max-width: fit-content;
 	}
 
 	/* //////////////// */
@@ -807,7 +808,7 @@
 		}
 
 		.headerUl {
-			margin-left: 0;
+			margin-left: 0cqw;
 			justify-content: center;
 		}
 
