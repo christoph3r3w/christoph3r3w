@@ -4,7 +4,7 @@
 	import {firstLoad} from '$lib/store';
 	import { fade, fly } from 'svelte/transition';
 	import QRCode from 'qrcode';
-	import { ListCollapse, ListIndentDecrease, QrCode, XIcon,ArrowUpRight } from '@lucide/svelte';
+	import { ListCollapse, ListIndentDecrease, QrCode, XIcon,ArrowUpRight,BookText } from '@lucide/svelte';
 	
 	interface Props {
 		data?: any;
@@ -75,19 +75,16 @@
 	};
 
 	async function generateQRCode(text: string): Promise<string> {
-		if (!text) {
-			qrURL = '';
-			return qrURL;
-		}
+		if (!text) {qrURL = '';	return qrURL;}
+
 		try {
 			qrURL = await QRCode.toDataURL(text, {
 				width: 200,
 				margin: 1,
 				color: { dark: showQr ? '#000000' : '#00000010', light: '#00000000' }
-			});
-		} catch (err) {
-			console.error(err);
-		}
+			});} 
+		catch (err) {console.error(err);}
+		
 		return qrURL;
 	}
 
@@ -168,7 +165,7 @@
 	$effect(() => {
 		projects.then(() => {
 			clearLoadAnimation();
-			// let m3 = document.querySelector('.file-1')?.setAttribute('open','');
+			// let m3 = document.querySelector('.file-5')?.setAttribute('open','');
 			let m6 =  document.querySelectorAll<HTMLElement>('.file:not([open])').forEach(file => {
 				file.style.removeProperty('z-index');
 			});
@@ -288,6 +285,14 @@
 				</article>
 			{/each}
 		{/if}
+		<button class="show-info" onclick={moveDescription}>
+				{#if showDescription}
+					<ListIndentDecrease size="20" />
+				{:else}
+					<!-- <ListCollapse size="20" /> -->
+					<BookText size="20" />
+				{/if}
+			</button>
 	</article>
 {/snippet}
 
@@ -330,13 +335,16 @@
 		</div>
 		<div class="qr-container">
 			{#if work.link}
+				{@const isDisabled = !work.link.src?.trim() || work.link.showType == 'desktop' }
 				{#if showQr}
 					<p>Scan the QR code to visit the site</p>
 				{/if}
-				<img src={qrURL} alt="QR Code" class="qr-code" />
 				{#if work.link.showType != 'desktop'}
-					<button class="{{ disabled: !work.link.src?.trim() }} qr-btn" onclick={toggleQR}>
-						{showQr ? 'Hide QR' : 'QR'}
+				<img src={qrURL} alt="QR Code" class="qr-code" />
+					<button class="{{ disabled: isDisabled }} qr-btn" onclick={() => toggleQR()} style={showQr ? 'opacity: 0' : 'opacity: 1'} >
+						{#if !showQr}
+							<QrCode size="50" color="var(--black)" />
+						{/if}
 					</button>
 				{/if}
 			{:else}
@@ -362,7 +370,7 @@
 				{#if work?.link?.showType != 'desktop' }
 					<button
 						class="{{ disabled: !work?.link?.src?.trim() }} qr-btn"
-						onclick={toggleQR}
+						onclick={() => toggleQR()}
 						title={showQr ? 'close QR' : 'Qr code'}
 					>
 						{#if showQr}
@@ -460,7 +468,7 @@
 	<details class="work-cover" id="folder-cover">
 		<summary tabindex="-1">
 			<p class="cover-content text">Portfolio</p>
-			<StickerBed />
+				<StickerBed />
 		</summary>
 	</details>
 	{#await projects}
@@ -471,7 +479,7 @@
 		{#each works as work, i}
 			{#key work.slug}
 				<details
-					class="file file-{i + 1} {firstLoad ? 'jump' : ''}"
+					class="file file-{i + 1} {$firstLoad ? 'jump' : ''}"
 					style="--file-index:{i + 1}; --work-icon: url('{work.assets.icon}'); {work.assets.color
 						? `--file-primary-color:${work?.assets.color}`
 						: ''}"
@@ -551,6 +559,7 @@
 	}
 
 	.work-section {
+	position: relative;
 		border-radius: inherit;
 		gap: 1rem;
 		container-type: inline-size;
@@ -625,8 +634,6 @@
 			filter: saturate(0.3);
 			scale: 1.1;
 			opacity: 0;
-			/* transform: translate(0, 3rem ) rotate(4deg); */
-			/* transform: translate(0) rotate(4deg); */
 			transition: all 500ms ease;
 		}
 
@@ -802,7 +809,7 @@
 			rgba(255, 255, 255, 0.466) 33%
 		);
 		background-image: url('/works-assets/material-assets/paper 1 black&white transparent cropped again (Custom flipped).avif');
-		background-attachment: fixed !important ;
+		background-attachment: fixed  ;
 		background-size: none, cover;
 		backdrop-filter: blur(2px);
 		pointer-events: none;
@@ -984,6 +991,8 @@
 		.close-file-icon {
 			opacity: 1;
 			color: black;
+			color:color-mix(in oklch, var(--black), var(--file-primary-color) 50%);
+
 			right: 0;
 			padding-bottom: 7%;
 
@@ -1009,14 +1018,13 @@
 			width: 2.5rem;
 			height: 2.7rem;
 			border-radius: 10px 40px 10px var(--wc-radius);
-			background-color: burlywood;
 			background-color: color-mix(in oklch, var(--file-primary-hue), rgba(25, 25, 31, 0.503) 10%);
 			filter: drop-shadow(rgba(50, 47, 30, 0.921) 0px 2px 1px);
 			z-index: -1;
 
 			@supports (corner-shape: superellipse(0)) {
 				& {
-					corner-shape: round superellipse(0) round round;
+					corner-shape: round superellipse(2) round round;
 				}
 			}
 		}
@@ -1257,18 +1265,20 @@
 		margin-bottom: 2%;
 
 		&:nth-child(-n + 3) {
+			--_3tag-color:color-mix(in oklch, var(--black), var(--file-primary-color) 20%);
+			--tag-contrast-color: contrast-color(var(--_3tag-color));
 			mix-blend-mode: multiply;
 			mix-blend-mode: overlay;
 			background-color: color-mix(
 				in oklch longer hue,
 				var(--file-primary-hue),
-				color-mix(
-						in oklch longer hue,
+				color-mix(in oklch longer hue,
 						hsl(calc(var(--hue-number) / var(--file-index)), 45%, 28%),
 						var(--file-primary-color) 98%
 					)
 					96%
 			);
+			background-color: color-mix(in oklch, var(--black), var(--file-primary-color) 50%);
 			color: color-mix(in oklch, var(--file-primary-hue), var(--tag-contrast-color) 80%);
 			border: solid 2px color-mix(in oklch, var(--file-primary-hue), rgba(255, 255, 255, 0.566) 60%);
 		}
@@ -1456,6 +1466,7 @@
 			font-size: 1.25rem;
 			letter-spacing: .5cqw;			
 			color:color-mix(in srgb , var(--_link-contrast-color) 90% , var(--file-primary-hue) 20%);
+			color:color-mix(in oklch , var(--_link-contrast-color), var(--file-primary-hue) 15%);
 			background-color:var(--_link-color) ;
 
 			@supports (corner-shape: superellipse(0)) {
@@ -1474,7 +1485,7 @@
 			height: 111.5%;
 			min-width: 20%;
 			border-top: none;
-			/* color: color-mix(in oklch, var(--file-primary-hue) , rgb(255, 255, 255) 95% ); */
+			color: color-mix(in oklch, var(--black), var(--file-primary-color) 50%);
 			cursor: pointer;
 			z-index: 4;
 
@@ -1564,7 +1575,7 @@
 		display: none;
 	}
 
-	details[open]:has(.move-description) .work-assets > * {
+	details[open]:has(.move-description) .work-assets > *.content-block {
 		padding-left: 33cqw;
 		transition: 200ms 100ms
 			linear(0, 0.297 6.8%, 0.515 13.8%, 0.686 22%, 0.812 31.6%, 0.895 42.6%, 0.949 56.4%, 1);
@@ -1642,6 +1653,7 @@
 
 		scroll-snap-align: center;
 		scroll-snap-stop: normal;
+		overflow: visible;
 
 		&:nth-of-type(1),
 		&:nth-last-of-type(1) {
@@ -1683,17 +1695,25 @@
 	}
 
 	.work-assets :global(.content-block a) {
-		color: color-mix(in var(--_ct), var(--color-text) 70%, var(--workassets-contrast-color, #ffffff90) 50%);
-		text-decoration:underline dotted !important;
+		color: color-mix(in var(--_ct), var(--color-text) 70%, var(--workassets-contrast-color, #87b7eb) 10%);
+		text-decoration:underline dotted;
+		font-style: italic;
 		text-underline-offset: 6px;
 		font-size: clamp(0.9rem, 4vw, 1.3rem);
 		cursor: pointer;
 		width: fit-content;
-		color: #87b7eb;
+		line-height: 1.5;
+		overflow-y: visible;
 
 		&::selection {
 			color: rgb(0, 0, 0);
 			background-color: rgba(255, 255, 255, 0.459);
+		}
+
+		&:hover {
+			color: color-mix(in var(--_ct), var(--file-primary-color) 50%, var(--workassets-contrast-color, #87b7eb) 90%);
+			text-decoration-thickness: 3px ;
+			transition: 180ms ease;
 		}
 	}
 
@@ -1716,27 +1736,23 @@
 		list-style: none;
 	}
 
-
 	.work-assets :global( .content-block :is(li,.pill)) {
 		--_pill-hue: var(--file-primary-color);
+		--pill-padding: clamp(7px, 36.5px - 2cqw, 21.5px);
 		--_pill-color2: color-mix(
 			in var(--_ct),
 			var(--_pill-hue, #ffffffc7),
 			color-mix(in lab, var(--color-bg), #ffffff98 50%) 70%
 		);
 
-		font-size: clamp(0.9rem, 4vw, var(--text-size-m));
 		font-size: clamp(0.9rem, 4vw, 1.3rem);
 
 		text-align: center;
 		place-content: center;
+		max-width: fit-content;
+		min-height: 3rem;
 		padding-inline: var(--pill-padding);
 		border-radius: var(--pill-radius);
-		color: color-mix(
-			in var(--_ct),
-			var(--color-text, #ffffff) 20%,
-			var(--_pill-hue, var(--black)) 80%
-		);
 		color: color-mix(
 			in var(--_ct),
 			black 20%,
@@ -1749,18 +1765,11 @@
 			color-mix(in srgb, var(--color-bg), #ffffff98 50%) 50%
 		);
 		background-color: color-mix(in var(--_ct),var(--_pill-hue, #ffffffc7),color-mix(in var(--_ct), var(--file-primary-hue), #ffffff98 30%) 80%);
-
-		max-width: fit-content;
-		min-height: 3rem;
-
 	}
 
 	.work-assets :global( .content-block li::marker) {
-		margin: 0 !important;
-		padding: 0 !important;
-		border: solid red 5px !important;
+		margin-right: 0  ;
 	}
-
 
 	.work-assets :global( .content-block [data-open-file]) {
 		--file-index: attr(data-open-file);
@@ -1774,8 +1783,6 @@
 		font-size: inherit;
 		cursor: pointer;
 	}
-
-
 
 	/* has no img */
 	.work-assets .content-block:has(p:nth-child(n)):has(p:nth-last-child(1)) {
@@ -1812,7 +1819,7 @@
 		}
 	}
 
-	/* block withimage container */
+	/* block with image container */
 	.work-assets .content-block .asset-img-ctnr {
 		position: relative;
 		display: flex;
@@ -1830,6 +1837,8 @@
 		overflow: hidden;
 		container-type: inline-size;
 
+		background-color: var(--file-primary-hue);
+
 		img {
 			object-fit: cover;
 			object-position: 100% 100%;
@@ -1838,7 +1847,6 @@
 			/* max-width:700px; */
 
 			height: auto;
-			/* outline:solid yellow; */
 		}
 
 		@supports (corner-shape: superellipse(0)) {
@@ -1857,10 +1865,19 @@
 			width: 90cqw;
 			height: auto;
 			outline: #ffffff93 2px solid;
+			/* outline: solid yellow; */
 			outline-offset: -2px;
 			margin-bottom: 3rem;
 			margin-right: 24%;
 		}
+
+		@container (width < 500px) {
+			.asset-img-ctnr{
+				/* border-radius: 3pc; */
+				/* background: linear-gradient( 0deg, var(--file-primary-color) 20%,transparent 40% ); */
+				min-height: fit-content !important;
+			}			
+		}	
 	}
 
 	/* block has multiple images */
@@ -1959,7 +1976,6 @@
 		}
 	}
 
-
 	@keyframes assets-scroll-button {
 		from {
 			opacity: 0;
@@ -1974,6 +1990,25 @@
 			opacity: 0;
 			transform: translate(0, -50%) scale(0.8);
 		}
+	}
+
+	.work-assets button.show-info {
+		all: unset;
+		position: fixed;
+		display: grid;
+		display: none;
+		place-content: center;
+		width: 20px ;
+		height: 20px ;
+		aspect-ratio: 1/1;
+		border-radius: 50%;
+		bottom: .5rem;
+		right: .5rem;
+		border: solid 2px;
+		padding: 10px;
+		background-color: color-mix(in oklch, var(--black), var(--file-primary-color) 50%);
+		color: var(--file-primary-color);
+		z-index: 10;
 	}
 
 	/* //////////////// */
@@ -2134,6 +2169,7 @@
 
 	.move-description {
 		transform: translate(-25cqw, 0) rotate(-5deg) !important;
+		/* transform: translate(-25cqw, 0) rotate(-5deg) ; */
 	}
 
 	.grid-lines {
@@ -2207,6 +2243,10 @@
 			all: unset;
 		}
 
+		.work-assets button.show-info{
+			display: grid;
+		}
+
 		.work-section details.work-cover :is(summary, ::details-summary) {
 			--move: calc(50dvh + 1dvw * var(--total-work));
 			top: var(--move);
@@ -2235,12 +2275,7 @@
 			/* transform : rotate(calc(-2deg + .5deg * var(--file-index))) translate(0); */
 			transform: rotate(0deg) translate(0);
 			transition-property: top, left, rotate, height;
-			transition:
-				300ms var(--transition-timing),
-				box-shadow 0s,
-				filter 0s,
-				transform-origin 0s;
-			cursor: pointer;
+			transition:	300ms var(--transition-timing),box-shadow 0s,filter 0s,transform-origin 0s;cursor: pointer;
 
 			@container (width < 950px) {
 				transform-origin: bottom left;
@@ -2249,125 +2284,118 @@
 		}
 
 		.work-section:has(details:nth-of-type(n)[open]) details.file > summary {
-			top: -2%;
+			top: -4%;
 			left: 0%;
-
-			.small-description {
-				display: none;
-			}
+			right: 0;
+			bottom: -4%;
+			.small-description {	display: none;	}
 		}
 
 		details[open]::details-content {
-			top: 6%;
-			right: 2%;
+			top: 5%;
+			bottom:-2%;
+			inset-inline: 1.5%;
 			overflow: visible;
 			/* background-color: transparent ; */
 		}
 
 		details[open] > .work-description {
 			grid-column: 3/ -3;
-			grid-row: 2 / span 10;
-			border: solid green;
-			display:none;
+			grid-row: 2 / span 29;
+			translate: -130%;
+			display: flex;
+			max-width: 320px;
+
+			@starting-style {
+				translate: -130% -10%;
+			}
 		}
 
 		details[open] .work-assets > .work-description {
 			min-height: 20cqh;
 			padding: 0;
 			padding-inline: 2%;
-		}
-
-		details[open] .work-assets .work-description h2 {
-			text-align: center;
-		}
-
-		details[open] .work-assets .work-description .description-info {
-			padding: 0;
-			flex: 0;
-		}
-
-		details[open] .work-assets .work-description .description-info ul.collaborators li {
-			margin-bottom: 3px;
-		}
-
-		details[open] .work-assets .work-description ul.tools.stamp {
-			display: none;
-		}
-
-		details[open] .work-description:not(.note) .description-space {
-			flex: 0 1 5%;
+			order: 3;
 		}
 
 		details[open] > .work-description.note {
 			grid-column: 3/ -3;
-			grid-row: 3 / span 10;
+			grid-row: 2 / span 31;
 			flex-flow: row;
+			justify-content: end;
+			align-items: end;
 			gap: 2%;
-			display: none;
+			opacity: 1;
 		}
-		details[open] .work-assets > .work-description.note {
-			flex-flow: row;
-			gap: 2%;
-			translate: 0 -15cqh;
+
+		.work-description.note.stamp::after {
+			--stamp-radius: 15px;
 		}
-		details[open]:has(.work-description:not(.description-links):hover, .move-description)
-			.work-description.note {
+
+
+		.work-description.note > :nth-child(n) {
+			/* border: solid yellow; */
+			flex: 1 1 auto;
+			min-height: fit-content;
+			margin: 0;
+			height: 20%;
+		}
+
+		details[open]:has(.work-description:not(.description-links):is(:hover,:focus), .move-description) .work-description.note {
 			overflow: visible;
 			contain: none;
+			translate:0;
+			transition: none ;
 			/* border: solid red	; */
-			transition: 200ms
-				linear(0, 0.297 6.8%, 0.515 13.8%, 0.686 22%, 0.812 31.6%, 0.895 42.6%, 0.949 56.4%, 1);
 			.description-space {
-				display: none;			
+				transform: none ;
 			}
 		}
 
-		details[open] .work-assets .work-description.note.stamp .description-space {
-			/* display: none; */
-			flex-basis: 100%;
-			order: 3;
+		details[open] .work-description.note.stamp .description-space {
+			display: none;
 		}
 
 		.work-description.note.stamp .description-links {
-			flex: 1 1 5rem;
-			align-self: end;
-			flex-direction: row-reverse;
-			gap: 2%;
-			min-height: fit-content;
-			height: 20%;
-			margin-top: 1cqh;
+			/* border: solid blue; */
 			:is(a, button) {
 				flex: 0 1 100%;
-				max-width: 30cqw;
+				max-width: 20cqw;
 			}
+
 			.qr-btn {
 				border-radius: var(--stamp-radius);
 				display: none;
 			}
 
 			.link-btn {
-				min-width: fit-content;
+				max-width: 100%;
+				border-radius: 30px ;
+				max-height: 10cqh;
+	
+			}
+
+			@supports not (corner-shape: superellipse(0)) {
+				.link-btn {				
+					border-radius: 10px ;
+				}
 			}
 		}
 
-		.work-description.note.stamp::after {
-			--stamp-radius: 5px;
-			padding: var(--stamp-radius);
-		}
 
 		.work-description.note .qr-container {
-			flex: 1 2 20%;
-			justify-self: end;
-			align-self: end;
+			position: relative;
+			max-width:fit-content;
+			align-items: start;
 			justify-content: start;
-			align-items: bottom;
-			width: 10%;
-			max-width: 250px;
-			height: fit-content;
-			padding-right: 0;
-			/* translate: 0% 12px; */
+			border-radius: inherit;
+			border-radius: 10px ;
+			max-height: 2rem;
+
+			/* border: solid red; */
 			img {
-				width: 12cqh;
+				max-width: 9cqh;
+				opacity: 1;
 			}
 			p {
 				display: none;
@@ -2375,13 +2403,11 @@
 		}
 
 		.work-description.note .qr-container .qr-btn {
-			display: flex;
-			font-size: 1.125rem;
-			text-wrap: nowrap;
-			border: none;
-			padding: 0.5rem 1rem;
-			color: color-mix(in oklch, var(--file-primary-hue) 10%, rgba(33, 15, 15, 0.932) 100%);
+			display: block;
+			position: absolute;
+			inset: 0;
 			background-color: transparent;
+			border: none;
 		}
 
 		/* main content */
@@ -2403,6 +2429,11 @@
 			}
 		}
 
+		details[open]:has(.move-description) .work-assets > *.content-block {
+			--content-padding: 10cqw;
+			padding-left: var(--content-padding);	
+		}
+
 		.work-assets .content-block p {
 			max-width: calc(100cqw - 2 * var(--content-padding));
 		}
@@ -2413,6 +2444,29 @@
 			height: auto;
 			border-radius: 50px;
 		}
+
+		.work-assets .content-block .asset-img-ctnr{
+			border-radius: var(--wc-radius);
+			border-radius: 13pt;
+			min-height: fit-content ;
+		}
+
+		.content-block	.asset-img-ctnr > :nth-child(n){
+			height: fit-content;
+			height: 23cqh;
+			width: auto;
+		}
+
+		.content-block	.asset-img-ctnr > :nth-child(n) img{
+			border-radius: inherit;
+			max-height: 100%;
+			height: fit-content;
+			height: 100%;
+			width: 100%;
+			object-position: center;
+			object-fit: contain;
+		}
+
 
 		details[open] .work-assets :is(.b-left.b-left, .b-right.b-right) {
 			display: none;
@@ -2431,13 +2485,23 @@
 		/* utils */
 
 		.show-qr-links {
-			transform: translate(0, -4cqh);
+			transform: translate(0 ,0);
 			filter: blur(0px) brightness(0.8);
+			translate: 0% !important;
+
 		}
 
 		.show-qr-qr {
-			transform: translate(0, 5cqh);
+			transform: translate(0 ,0) ;
+			translate: 0% !important;
+
 		}
+
+		.move-description {
+			transform: translateX(0%) rotate(0) !important;
+			translate: 0% !important;
+		}
+
 	}
 
 	@media (height < 700px) and (width >= 950px) {
@@ -2462,7 +2526,19 @@
 		}
 
 		details[open]:has(.work-description:not(.description-links):hover, .move-description) .work-description.note {
-			translate: 0 0;
+			translate: 0%;
+		}
+
+		.show-qr-links.show-qr-links {
+			transform: translate(0 ,0);
+			filter: blur(0px) brightness(0.8);
+			translate: 0% ;
+		}
+
+		.show-qr-qr.show-qr-qr {
+			transform: translate(0 ,0);
+			translate: 0% ;
+
 		}
 
 	}
