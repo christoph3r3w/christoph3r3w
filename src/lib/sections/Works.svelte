@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount,tick } from 'svelte';
 	import { OrderedList, ContactForm, StickerBed,Buttons } from '$lib';
+	import {firstLoad} from '$lib/store';
 	import { fade, fly } from 'svelte/transition';
 	import QRCode from 'qrcode';
 	import { ListCollapse, ListIndentDecrease, QrCode, XIcon,ArrowUpRight } from '@lucide/svelte';
@@ -56,7 +57,6 @@
 		};
 	});
 
-	let firstLoad: boolean = $state(true);
 
 	let pagination = $derived(dataWorks2?.[0]?.pagination ?? 'none');
 	let openDetailsIndex = $state<number | null>(null);
@@ -137,7 +137,7 @@
 
 	function clearLoadAnimation() {
 		setTimeout(() => {
-			firstLoad = false;
+			firstLoad.set(false);
 		}, delay ?? 2000);
 	}
 

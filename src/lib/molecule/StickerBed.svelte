@@ -1,6 +1,9 @@
 <script lang="ts">
 	import { onMount, tick } from 'svelte'
 	import { fade, fly } from 'svelte/transition';
+	import { firstLoad } from '$lib/store';
+	import { elasticOut } from 'svelte/easing';
+
 	interface Props {
 		total?: number;
 		patern?: 'random' | 'grid';
@@ -153,6 +156,38 @@
 		}));
 	}
 
+	function stick(
+		node: HTMLElement,
+		params: { delay?: number; duration?: number; easing?: (t: number) => number; sticker?: any }
+		) {
+
+		// if ($firstLoad == true) {
+		// 	return { delay: 0, duration: 0, css: () => 'display: none; opacity: 0;' };
+		// }
+
+		const existingTransform = getComputedStyle(node).transform.replace('none', '');
+		const sticker = (params as any)?.sticker;
+		tick()
+		return {
+			delay: params.delay || 0,
+			duration: params.duration || 400,
+			easing: params.easing || elasticOut,
+			css: (t: any, u: any) =>
+				`
+				display: block;
+				opacity: ${t * 0.6};
+				blur: ${u * 10}px;	
+				filter: saturate(0.3);
+				scale: 1.1;
+				border:red solid 1px;
+				${(() => {
+					const extra = `translate(${sticker?.offsetX || 0}px, ${sticker?.offsetY || 0}px) rotate(${sticker?.rotation || 0}deg)`;
+					return `transform: ${existingTransform ? existingTransform + ' ' : ''}${extra} translate(0, ${u * 3}rem) rotate(${u * 4}deg);`;
+				})()}
+			`
+		};
+	}
+
 	onMount(() => {
 		// const handleMouseMove = (event: MouseEvent) => {
 		// 	moveX = event.clientX;
@@ -182,7 +217,7 @@
 
 <svelte:head>
 	{#each visibleStickers as sticker}
-		{#if sticker.type === 'image' || sticker.type === 'shape'}
+		{#if (sticker.type === 'image' || sticker.type === 'shape') && sticker.visible === true}
 			<link rel="preload" as="image" href={sticker.content} />
 		{/if}
 	{/each}
@@ -194,6 +229,7 @@
 		{#if sticker.type === 'text'}
 			<p
 				class="cover-content sticker-label {sticker.id} text"
+				in:stick={{ duration: 800}}
 				style=" transform: translate({sticker.offsetX || 0}px, {sticker.offsetY ||
 					0}px) rotate({sticker.rotation || 0}deg);"
 			>
@@ -202,6 +238,7 @@
 		{:else if sticker.type === 'shape'}
 			<span
 				class="cover-content sticker-label {sticker.id}"
+				in:stick={{ duration: 800}}
 				style="transform: translate({sticker.offsetX || 0}px, {sticker.offsetY ||
 					0}px) rotate({sticker.rotation || 0}deg);"
 			>
@@ -212,6 +249,7 @@
 				src={sticker.content}
 				alt={sticker.alt}
 				class="cover-content sticker-label {sticker.id}"
+				in:stick={{ duration: 800}}
 				style="transform: translate({sticker.offsetX || 0}px, {sticker.offsetY ||
 					0}px) rotate({sticker.rotation || 0}deg);"
 			/>
@@ -221,8 +259,6 @@
 {/key}
 
 <style>
-	/* sticker styling */
-
 	.cover-content {
 		transition:
 			0.4s var(--transition-timing) 1s,

@@ -6,7 +6,11 @@ export const menuOpen = writable(false);
 export const contactsOpen = writable(false);
 export const aboutOpen = writable(false);
 export const aboutMoreOpen = writable(false);
+
 // dark mode toggle
 export const modeDark = writable(false);
+
+// other
 // export const userAnswers = writable([]);
 export const fileType = writable('files');
+export const firstLoad = writable(true)
