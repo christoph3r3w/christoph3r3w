@@ -340,7 +340,8 @@
 		--intro-element-displacement: calc(var(--H-top) + 11cqb);
 		--intro-element-transition: 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275) 100ms;
 		--pill-radius: 107.59px;
-		--pill-padding: 21.5px;
+		/* --pill-padding: 21.5px; */
+		--pill-padding: clamp(7px, 36.5px - 4cqw, 21.5px);
 
 		@property --menu-height {
 			syntax: '<length>';

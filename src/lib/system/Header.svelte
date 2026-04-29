@@ -111,7 +111,6 @@
 		dark = nextTheme.name === 'dark';
 		modeDark.set(dark);
 		localStorage.setItem('selectedTheme', nextTheme.name);
-		// console.log('Active theme:', nextTheme.name);
 	}
 
 	onMount(() => {
@@ -232,7 +231,7 @@
 			class="dark-mode icon-btn"
 			title="theme toggle"
 			aria-label="theme toggle"
-			onclick={handleDarkMode}
+			onclick={() => handleDarkMode()}
 		>
 			<svg
 				width="24"

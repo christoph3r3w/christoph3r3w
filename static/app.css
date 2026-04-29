@@ -125,13 +125,11 @@ table {
 }
 
 a {
-	text-decoration: initial !important;
+	text-decoration: initial ;
 	color: black;
 }
 
 a:hover {
-	color: red;
-	color: hsl(46, 79%, 57%);
 	color: #ffe91e;
 }
 
