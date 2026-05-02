@@ -30,25 +30,39 @@ export async function load() {
 					published: { is: true, date: '' },
 					description:
 						'An experimentation I did to test out grid animation that in the future was used as an animatable grid layout. The idea was to have a grid of tiles that shift their position when hovered, creating a dynamic and interactive visual effect. The shifting is achieved through CSS transitions, allowing the tiles to smoothly move to new positions within the grid when the user interacts with them.',
-					assets: { image: [''], icon: '', color: 'pink' },
-					contentBlock: [
+					assets: { image: [''], icon: '', color: 'hsl(258, 30%, 75%)'},
+					contentBlock: [		
 							{
-								text:['An experimentation I did to test out grid animation that in the future was used as an animatable grid layout. The idea was to have a grid of tiles that shift their position when hovered, creating a dynamic and interactive visual effect. The shifting is achieved through CSS transitions, allowing the tiles to smoothly move to new positions within the grid when the user interacts with them.'],
-							},
-							// {
-							// 	html:[`
-							// 		<iframe height="700" style="width: 100%;" scrolling="no" title="grid test" src="https://codepen.io/Christopher-the-animator/embed/NWoeXRo?default-tab=result" frameborder="no" loading="lazy" allowtransparency="true">
-							// 		See the Pen <a href="https://codepen.io/Christopher-the-animator/pen/NWoeXRo">
-							// 		grid test</a> by Christopher (<a href="https://codepen.io/Christopher-the-animator">@Christopher-the-animator</a>)
-							// 		on <a href="https://codepen.io">CodePen</a>.
-							// 		</iframe>
-							// 	`],
-							// },
-							{
-								html:["<Buttons />"],
+								images:["/works-assets/shifting tiles/chrome_oc2JnQLqyG.gif"],
 							},
 							{
-								html:[`<button data-open-file="3">...</button>`],
+								text:["Working on a previous project, I kept running into the same wall, CSS Grid is great for layouts, but animating individual grid sections purely in CSS just isn't something it supports out of the box. You can use it for column-based page layouts or more abstract element positioning, but that's more or less where it stops."]
+							},
+							{
+								html:[`
+									<p>So I decided to run some experiments and try to build a baseline system for animating any kind of grid in CS</p>
+									<ul class="flat-list">
+										<li>standard grid</li>
+										<li>subgrid</li>
+										<li> masonry</li>
+									</ul>
+								`]
+							},
+							{
+								text:[
+									"The idea was to have a grid of tiles that shift position on hover, using CSS transitions to move them smoothly within the layout.",
+									"I'm still iterating on this concept, with the goal of making it work consistently across every browser, as a solid foundation for more dynamic and alternative layout systems."
+								],
+							},
+							{
+								html:[`
+									<h2>Examples</h2>
+									<ul>
+										<li><button data-open-file="3">...</button></li>
+										<li><button data-open-file="2">...</button></li>
+										<li><a target="_blank" href="https://your-tribe-for-life-profile-card-livid.vercel.app/#cover-3">layout test</a></li>
+									</ul>																		
+								`],
 							},
 						],
 					collaborators: {
@@ -56,14 +70,14 @@ export async function load() {
 					},
 					tags: ['Experiment', 'Grid Motion', 'responsive design'],
 
-					link: { src: 'https://codepen.io/Christopher-the-animator/pen/NWoeXRo', showType: '' },
+					link: { src: 'https://codepen.io/Christopher-the-animator/pen/NWoeXRo', showType: 'none' },
 					dateStart: '2023',
 					dateEnd: '2023',
 					status: { is: 'experiment', sticker: '' }
 				},
 				// WINDOWS
 				{
-					title: 'windows',
+					title: 'Windows',
 					slug: 'School project',
 					published: { is: true, date: '' },
 					// description: 'I got to create a profile card that showcased my understanding of the web fundamentals in the form of a profilecard. I took this opportunity to experiemnt with toen die tijd the new popover api and styled it in the look and feel of the Windows XP interface.',
@@ -116,7 +130,7 @@ export async function load() {
 							]
 						},
 						{
-							text: ['Afterwards these features and styling was used as the fundation for a game based on our classmates that resembles a Pokemon card game. ']
+							text: ['Afterwards these features and styling was used for a game based on our classmates that resembles a Pokemon card game. ']
 						},
 						{
 							images: [
@@ -127,7 +141,7 @@ export async function load() {
 							]
 						},
 						{
-							text:["The result of this project was a playful and responsive UI that mimicked some of the interactions of Windows XP, an opportunity to implement new web features at that time, while showcasing the skills of my teammates and me"]
+							text:["The result of this project was a playful and responsive UI that mimicked some of the interactions of Windows XP, an opportunity to implement new web features at that time, while showcasing the skills of my teammates and me."]
 						}
 					],
 					collaborators: {
@@ -151,7 +165,8 @@ export async function load() {
 						image: ['works-assets/8a92efbb8245058d9558606619b4ba46.avif'],
 						icon: '/works-assets/merlin/m-black2.avif',
 						// color: 'orange'
-						color:'#ffab2e'
+						// color:'hsl(36, 100%, 59%)'
+						color:'hsl(43, 78%, 50%)'
 					},
 					contentBlock: [
 						{
@@ -178,7 +193,7 @@ export async function load() {
 							// 		]
 							html:[` 
 									<p>They provided an API with assets for ingredients and potions, a flat design as a starting point, and a set of criteria: </p>
-									<ul class="flat-list"><li>create coding</li> <li>accessibility</li> <li>animations</li> <li>design</li><li>effects to showcase "digital magic"</li></ul>.
+									<ul class="flat-list"><li>creative coding</li> <li>accessibility</li> <li>animations</li> <li>design</li><li>effects to showcase "digital magic"</li></ul>.
 									<p>The game logic and UI were left open to interpretation, and I didn't hold back.</p>
 									`
 									]
@@ -195,16 +210,10 @@ export async function load() {
 						{
 							images: [
 								'/works-assets/merlin/chrome_fXsSOsVsKm.gif',
-								'/works-assets/merlin/Screenshot 2026-01-23 223247.avif',
+								'/works-assets/merlin/xLwRNI3PxJ.gif',
+								'/works-assets/merlin/Arc_ee7dOhdnBU.gif',
+								'/works-assets/merlin/chrome_gFb5dlPbFH.gif',
 								'/works-assets/merlin/m-black.webp',
-							]
-						},
-						{
-							images: [
-								'/works-assets/merlin/chrome_fXsSOsVsKm.gif',
-								'/works-assets/merlin/Screenshot 2026-01-23 223247.avif',
-								'/works-assets/merlin/m-black.webp',
-							
 							]
 						},
 						{
@@ -266,7 +275,8 @@ export async function load() {
 							'/works-assets/monytri/Arc_jwNAJXUzVf.gif'
 						],
 						icon: '/pwa-64x64.avif',
-						color: '#497951'
+						// color: 'hsl(130, 25%, 38%)'
+						color: 'hsl(130, 18%, 49%)'
 						// color:'#b2b857',
 					},
 					contentBlock: [
@@ -285,7 +295,8 @@ export async function load() {
 							text: [
 								`After some iterating with a designer, I proposed building it as a Progressive Web App, A cost-effective approach that would work seamlessly across mobile and desktop without maintaining separate codebases. 
 								`,
-								`From there, I stepped into the role of technical owner, shaping both the frontend experience and the underlying architecture.`
+								`From there, I stepped into the role of technical owner, shaping both the frontend experience and the underlying architecture.
+								`
 							]
 
 							// images:['/works-assets/monytri/Arc_jwNAJXUzVf.gif']
@@ -360,9 +371,9 @@ export async function load() {
 					assets: {
 						image: [''],
 						icon: '/works-assets/redpers/Group 1.avif',
-						// icon: '/works-assets/redpers/logo.svg',
 						// color:'#e85340',
-						color: '#971b1e'
+						// color: '#971b1e'
+						color: 'hsl(359, 60%, 39%)'
 					},
 					contentBlock: [
 						{
@@ -370,14 +381,13 @@ export async function load() {
 								'Redpers is an online journalistic outlet that gives young and upcoming journalists a space to write and collaborate on stories happening across the Netherlands.',
 								'During a school sprint my group and I got Repers as a client, and we had to introduce potential user interface enhancements for there main website. '
 							]
-							// video:['/works-assets/redpers/Recording 2024-05-24 105739.mp4']
 						},
 						{
 							images: ['/works-assets/redpers/ezgif-2-71870b8477.gif']
 						},
 						{
 							text: [
-								'Within my group, my task was to propose and create potential enhancements for the article page In tandem with some user stories , test these with users, and to present how these can be integrated on to the website',
+								'Within my group, my task was to propose and create potential enhancements for the article page In tandem with some user stories, test these with users, and to present how these can be integrated on to the website',
 							],
 							html: [
 								`
@@ -397,12 +407,26 @@ export async function load() {
 						},
 						{
 							images: [
+								'/works-assets/redpers/chrome_jhRaErubhv.avif',
 								'/works-assets/redpers/ezgif-2-71870b8477.gif',
+								'/works-assets/redpers/chrome_37lumu5UOk.gif',								
+								'/works-assets/redpers/Figma_TYfYtZfbH72.avif',								
+							]
+						},
+						{
+							images: [
+								'/works-assets/redpers/chrome_TThso22zfZ.avif',
+								'/works-assets/redpers/Arc_FwdWXvIFuE.gif',
+								'/works-assets/redpers/Figma_7ZeokABRGy22.avif',
+								'/works-assets/redpers/chrome_qBWt4euOe0.avif',
+								'/works-assets/redpers/chrome_Ji1CNss5Yj.png',						
+							]
+						},
+						{
+							images: [
 								'/works-assets/redpers/Screenshot 2024-04-24 142200.avif',
 								'/works-assets/redpers/Screenshot 2024-04-19 001126.avif',
-								'/works-assets/redpers/Screenshot 2024-03-18 1543318.avif',
-								'/works-assets/redpers/redpers css.gif',
-								'/works-assets/redpers/Recording 2024-05-24 105739.mp4'
+								'/works-assets/redpers/Screenshot 2024-03-18 1543318.avif',							
 							]
 							// video:['/works-assets/redpers/Recording 2024-05-24 105739.mp4']
 						},
@@ -410,8 +434,8 @@ export async function load() {
 							video: ['/works-assets/redpers/Recording 2024-05-24 105739.mp4']
 						},
 						{
-							// text: ['After a round of testing and feedback with the client and users of the prototype, We refined and showcased each enhancement as its own component. ']
-							text: ['The project concluded with a round of testing and feedback with the client and users, and then We refined and deliverd each enhancement as its own component. ']
+							// text: ['After a round of testing and feedback with the client and users of the prototype, we refined and showcased each enhancement as its own component. ']
+							text: ['The project concluded with a round of testing and feedback with the client and users, and then we refined and deliverd each enhancement as its own component. ']
 						},
 						{
 							text: ["The public database that populated the custom version of the site and all its components has been discontinued.",
@@ -430,7 +454,7 @@ export async function load() {
 						{
 							html:[`
 								<p>- I've recreated a simplified version of the API to populate an explorable version of the site, available here.</p> 
-								<a href="/">Respers projec site</a>
+								<a href="/">Redpers projec site</a>
 							`]
 						}
 					],
@@ -459,7 +483,7 @@ export async function load() {
 				{
 					title: 'portfolio site',
 					slug: 'portfolio site',
-					published: { is: true, date: '' },
+					published: { is: false, date: '' },
 					description: '',
 					assets: {
 						image: [''],
