@@ -1,8 +1,15 @@
 <script lang="ts">
 	import { Header, Footer, Window, Menu, Menu2, StickerBed, CuttingBoard } from '$lib';
+	import {setup} from '$lib/atoms/themeToggleFn.svelte';
+	import { onMount } from 'svelte';
+
 	let svg = CuttingBoard;
 
 	let { children } = $props();
+
+	onMount(() => {
+		setup();
+	});
 </script>
 
 <svelte:head>
