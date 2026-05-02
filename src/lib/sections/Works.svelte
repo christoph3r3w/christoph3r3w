@@ -165,7 +165,7 @@
 	$effect(() => {
 		projects.then(() => {
 			clearLoadAnimation();
-			// let m3 = document.querySelector('.file-5')?.setAttribute('open','');
+			// let m3 = document.querySelector('.file-3')?.setAttribute('open','');
 			let m6 =  document.querySelectorAll<HTMLElement>('.file:not([open])').forEach(file => {
 				file.style.removeProperty('z-index');
 			});
@@ -174,10 +174,16 @@
 				const el = document.querySelectorAll<HTMLElement>('button[data-open-file]');
 
 				for (const btn of el) {
+					const btnParent: HTMLElement | null = btn.parentElement;
 					const fileNumber = btn.getAttribute('data-open-file');
 					const linkedFiles = document.querySelector<HTMLElement>(`.file-${fileNumber}`)
+					let fileColor = linkedFiles?.style.getPropertyValue('--file-primary-color') || getComputedStyle(linkedFiles ?? document.documentElement).getPropertyValue('--file-primary-hue');
 					let title = linkedFiles?.querySelector('.file-title')?.textContent;
 					btn.textContent = title || '...';
+					if (btnParent) {
+						btnParent.style.setProperty('--file-pill-color', fileColor);
+						btnParent.setAttribute('data-file-pill-color', fileColor);
+					}
 				}
 			})();
 		});
@@ -480,9 +486,8 @@
 			{#key work.slug}
 				<details
 					class="file file-{i + 1} {$firstLoad ? 'jump' : ''}"
-					style="--file-index:{i + 1}; --work-icon: url('{work.assets.icon}'); {work.assets.color
-						? `--file-primary-color:${work?.assets.color}`
-						: ''}"
+					style="--file-index:{i + 1}; --work-icon: url('{work.assets.icon}'); 
+						{work.assets.color ? `--file-primary-color:${work?.assets.color}`: ''}"
 					ontoggle={(e) => {
 						if (e.currentTarget.open) {
 							openDetailsIndex = i;
@@ -612,9 +617,9 @@
 			top: calc(var(--move));
 			left: calc(0.1dvw * var(--total-work) + 10px * tan(var(--file-index)) + var(--move-all));
 
-			box-shadow:
+			/* box-shadow:
 				var(--shadow-1-color) 0px 5px 8px -5px,
-				rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+				rgba(0, 0, 0, 0.2) 0px -3px 0px inset; */
 
 			transition-property: color, top, left, rotate;
 
@@ -759,6 +764,8 @@
 			width: 100%;
 			/* max-width: max(30px,3%); */
 			height: fit-content;
+			/* outline: solid red; */
+			filter: drop-shadow(var(--file-line-color2) 0 0px 8px);
 		}
 
 		.work-icon-span > img {
@@ -1695,7 +1702,7 @@
 	}
 
 	.work-assets :global(.content-block a) {
-		color: color-mix(in var(--_ct), var(--color-text) 70%, var(--workassets-contrast-color, #87b7eb) 10%);
+		color: color-mix(in var(--_ct), var(--color-text) 80%, var(--workassets-contrast-color, #87b7eb) 10%);
 		text-decoration:underline dotted;
 		font-style: italic;
 		text-underline-offset: 6px;
@@ -1735,40 +1742,113 @@
 		container-type: inline-size;
 		list-style: none;
 	}
+	
 
-	.work-assets :global( .content-block :is(li,.pill)) {
+	.work-assets :global( .content-block :is(li,.pill)),.content-block :is(li,.pill) {
 		--_pill-hue: var(--file-primary-color);
 		--pill-padding: clamp(7px, 36.5px - 2cqw, 21.5px);
-		--_pill-color2: color-mix(
-			in var(--_ct),
+		--_pill-color2: color-mix(in var(--_ct),
 			var(--_pill-hue, #ffffffc7),
 			color-mix(in lab, var(--color-bg), #ffffff98 50%) 70%
 		);
 
 		font-size: clamp(0.9rem, 4vw, 1.3rem);
-
 		text-align: center;
 		place-content: center;
 		max-width: fit-content;
 		min-height: 3rem;
 		padding-inline: var(--pill-padding);
 		border-radius: var(--pill-radius);
+		
+		border: solid 3px var(--_pill-hue);
+		border-color: color-mix(in var(--_ct),
+			var(--_pill-hue, #ffffffc7) 70%,
+			color-mix(in srgb, var(--color-bg), #ffffff98 50%) 80%
+		);
 		color: color-mix(
 			in var(--_ct),
-			black 20%,
+			black 60%,
 			var(--_pill-hue, var(--black)) 80%
 		);
-		border: solid 3px var(--_pill-hue);
-		border-color: color-mix(
-			in var(--_ct),
-			var(--_pill-hue, #ffffffc7) 70%,
-			color-mix(in srgb, var(--color-bg), #ffffff98 50%) 50%
+		background-color: color-mix(in var(--_ct),
+			var(--_pill-hue, #ffffffc7),color-mix(in var(--_ct), 
+			var(--file-primary-hue), #ffffff98 30%) 80%
 		);
-		background-color: color-mix(in var(--_ct),var(--_pill-hue, #ffffffc7),color-mix(in var(--_ct), var(--file-primary-hue), #ffffff98 30%) 80%);
+		background-color: color-mix(in var(--_ct),
+			var(--_pill-hue, #ffffffc7),
+			color-mix(in var(--_ct),var(--file-primary-hue), #ffffff98 30%) 90%
+		);
+
+		
+		&::first-letter {
+			text-transform: uppercase;
+		}
+	}
+
+	.work-assets :global( .content-block > ul.flat-list :is(li,.pill)) {
+			--r-flat: 8px; 
+			border-radius:calc(var(--r-flat) * 2.8 + 1px) ;
+			border: none;
+			box-sizing: content-box;
+			padding-block: var(--r-flat);
+			mask: 
+				linear-gradient(#000 0 0) no-repeat
+				50%/calc(100% - 2*var(--r-flat)) calc(100% - 1*var(--r-flat)), 
+				radial-gradient(farthest-side,#000 97%,#0000) 
+				0 0/calc(2*var(--r-flat)) calc(2*var(--r-flat)) round;
+
+	}
+
+
+	.work-assets :global(.content-block :is(li,.pill):has(:is(button,a))){
+		--file-pill-color:attr(data-file-pill-color,var(--black));
+		/* border-style: solid none groove; */
+		box-shadow: 
+		black 0 5px 15px -10px;
+		transition: 150ms ease;
+
+		&:hover {
+			box-shadow: 
+			black 0 5px 11px -10px,
+			inset 0 0 0 1px color-mix(in var(--_ct), var(--file-pill-color,var(--black)) 80%, transparent 20%);
+
+		}
+
+		&:active{
+			box-shadow: 
+			black 0 2px 9px -10px,
+			inset 0 0 0 1px color-mix(in var(--_ct), var(--file-pill-color,var(--black)) 80%, transparent 20%);
+
+		}
+
+		&:nth-last-child(1) {
+			margin-bottom: 2rem;
+		}
+		
+
+		&::marker {
+			color: var(--file-pill-color);
+		}
+	}
+
+	.work-assets :global(.content-block :is(li,.pill) :is(button,a)) {
+		color: inherit;
+		border: none;
+		text-decoration: none;
+		font-style: italic;
+		font-size: inherit;
+	}
+
+	.work-assets :global(.content-block :is(li,.pill):has(:is(button,a):hover)) {
+		/* translate: 2px 0; */
+		transition: translate 250ms ease;
+		color:var(--black);
+		color: color-mix(in var(--_ct), var(--file-pill-color) 90%, var(--black) 30%);
+		backdrop-filter: blur(4px);
 	}
 
 	.work-assets :global( .content-block li::marker) {
-		margin-right: 0  ;
+		margin-right: 0;
 	}
 
 	.work-assets :global( .content-block [data-open-file]) {
@@ -1777,7 +1857,7 @@
 		width: fit-content;
 		background-color: transparent;
 		color:currentColor;
-		border: dotted 2px ;
+		border: dotted 2px var(--file-pill-color,currentColor) ;
 		padding: .2% 5px;
 		border-radius: 5px;
 		font-size: inherit;
