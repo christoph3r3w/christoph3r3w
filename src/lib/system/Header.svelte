@@ -193,6 +193,7 @@
 	</li>
 {/snippet}
 
+
 <header class={openMenu === false ? 'down' : ''}>
 	<ul class="headerUl">
 		{@render headerLogo()}
@@ -580,6 +581,10 @@
 				transform: none;
 				scale: 1;
 			}
+		}
+		
+		li:is(.D-menu, .head-extra) button {
+			filter: none;
 		}
 
 		li button.menu-btn{

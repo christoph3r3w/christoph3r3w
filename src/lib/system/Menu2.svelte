@@ -341,7 +341,7 @@
 		--intro-element-transition: 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275) 100ms;
 		--pill-radius: 107.59px;
 		/* --pill-padding: 21.5px; */
-		--pill-padding: clamp(7px, 36.5px - 4cqw, 21.5px);
+		--pill-padding: clamp(7px, 46.5px - 2cqw, 21.5px);
 
 		@property --menu-height {
 			syntax: '<length>';
@@ -775,9 +775,8 @@
 
 		background-color: var(--_btn-color2);
 		backdrop-filter: blur(5px);
-		color: color-mix(in srgb, var(--color-text, #ffffff) 70%, var(--_btn-hue, var(--black)) 90%);
+		color: color-mix(in srgb, var(--color-text, #ffffff) 50%, var(--_btn-hue, var(--black)) 90%);
 		border: solid 1px;
-		border-color: var(--_btn-color2);
 		border-color: var(--_btn-hue);
 		border-radius: var(--pill-radius);
 
@@ -937,6 +936,7 @@
 			);
 			place-content: center;
 			padding-inline: var(--pill-padding);
+			padding-block:clamp(7px, 4vh,21px) ;
 			margin-bottom: 1rem;
 			border-radius: var(--pill-radius);
 
