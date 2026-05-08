@@ -14,17 +14,16 @@
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^3.3.1",
-		"@sveltejs/kit": "^2.57.1",
+		"@sveltejs/kit": "^2.59.1",
 		"@sveltejs/vite-plugin-svelte": "^4.0.4",
 		"@types/qrcode": "^1.5.6",
 		"playwright": "^1.59.1",
 		"prettier": "^3.8.3",
 		"prettier-plugin-svelte": "^3.5.1",
-		"svelte": "^5.55.4"
+		"svelte": "^5.55.5"
 	},
 	"dependencies": {
-		"@js-temporal/polyfill": "^0.5.1",
-		"@lucide/svelte": "^1.8.0",
+		"@lucide/svelte": "^1.14.0",
 		"@sveltejs/adapter-vercel": "^6.3.3",
 		"geist": "^1.7.0",
 		"gsap": "^3.15.0",
