@@ -2,7 +2,7 @@
 	import { onMount,tick } from 'svelte';
 	import { OrderedList, ContactForm, StickerBed,Carousel } from '$lib';
 	import {firstLoad} from '$lib/store';
-	import { fade, fly } from 'svelte/transition';
+	import { fade} from 'svelte/transition';
 	import QRCode from 'qrcode';
 	import { ListCollapse, ListIndentDecrease, QrCode, XIcon,ArrowUpRight,BookText } from '@lucide/svelte';
 	
@@ -32,11 +32,11 @@
 		m5?:(filenumber : number) => void;
 	}
 
-	// throw new Error('test error');
 	let { data } : Props = $props();
-	let {projects, delay = 0 } = $derived(data);
+	let { projects, delay = 0 } = $derived(data);
 	let dataWorks2 = $state<any[]>([]);
 
+	// Promise Handling Session 
 	$effect(() => {
 		let cancelled = false;
 
@@ -59,10 +59,10 @@
 
 
 	let pagination = $derived(dataWorks2?.[0]?.pagination ?? 'none');
+	let contentLoad = $state<boolean[]>([]);
 	let openDetailsIndex = $state<number | null>(null);
 	let m4 = $derived(openDetailsIndex);
 
-	// let works = $derived(dataWorks[1]?.works?.filter((w: any) => w.published.is === true) ?? []);
 	let works = $derived(dataWorks2[1]?.works.filter((w: any) => w?.published.is === true).slice(0, 6) || []);
 	let fileLinks = $derived(works[m4 ?? 0]?.link.src || '');
 	let qrTimeout: ReturnType<typeof setTimeout> | null = $state(null);
@@ -138,7 +138,7 @@
 		}, delay ?? 2000);
 	}
 
-	function handleContentButtonClick(e: MouseEvent) {
+	function handleProjectToggle(e: MouseEvent) {
 		const fileNumber = (e.target as HTMLElement).closest('[data-open-file]')?.getAttribute('data-open-file');
 		if (!fileNumber) return;
 
@@ -147,6 +147,14 @@
 
 		el.setAttribute('open', '');
 		el.style.setProperty('z-index', '90');
+	}
+
+	function bigPicture(e: MouseEvent,i: number) {
+		const imgBtn = e.currentTarget as HTMLElement;
+		const parentBlock = imgBtn.closest(`.block-${i}`);
+		parentBlock?.querySelectorAll('.asset-img-ctnr').forEach((btn) => {
+			btn.classList.toggle('big-asset');
+		});
 	}
 
 	onMount(() => {
@@ -159,13 +167,14 @@
 			clearQRTimeoutOnUnmount();
 			works = [];
 			fileLinks = '';
+			delay = 0;
 		};
 	});
 
 	$effect(() => {
 		projects.then(() => {
 			clearLoadAnimation();
-			// let m3 = document.querySelector('.file-3')?.setAttribute('open','');
+			// let m3 = document.querySelector('.file-5')?.setAttribute('open','');
 			let m6 =  document.querySelectorAll<HTMLElement>('.file:not([open])').forEach(file => {
 				file.style.removeProperty('z-index');
 			});
@@ -206,12 +215,19 @@
 	});
 </script>
 
+<svelte:head>
+	<link rel="preload" fetchpriority="auto" as="image" href="/works-assets/material-assets/paper 1 black&white transparent cropped (Custom).avif" />
+	<link rel="preload" fetchpriority="low" as="image" href="/works-assets/material-assets/Chris website14.avif" />
+</svelte:head>
+
 {#snippet summaryContent(work: Work)}
 	<summary
 		class={work?.status?.is == 'experiment' ? 'experiment' : ''}
 		onmouseenter={() => {
 			handleClose;
+			// contentLoad = true;
 		}}
+		
 	>
 		{#if work?.assets?.icon?.trim()}
 			<span class="work-icon-span">
@@ -240,12 +256,37 @@
 	</summary>
 {/snippet}
 
-{#snippet workAssets(work: Work)}
+{#snippet files(work: Work, i: number)}
+	{#key work.slug}
+		<details
+			class="file file-{i + 1} {$firstLoad ? 'jump' : ''}"
+			style="--file-index:{i + 1}; --work-icon: url('{work?.assets?.icon}'); 
+				{work?.assets?.color ? `--file-primary-color:${work?.assets?.color}`: ''}"
+			ontoggle={(e) => {
+				if (e.currentTarget.open) {
+					openDetailsIndex = i;
+					contentLoad[i] = true;
+				} else if (openDetailsIndex === i) {
+					openDetailsIndex = null;
+					contentLoad[i] = false;
+				}
+			}}
+		>
+			{@render summaryContent(work)}
+			{@render workDescription(work)}
+			{@render workAssets(work, i)}
+		</details>
+	{/key}
+	
+{/snippet}
+
+{#snippet workAssets(work: Work, index: number)}
 	<article class="work-assets">
 		<div class="asset-border b-left"></div>
 		<div class="asset-border b-right"></div>
 		<div class="asset-border b-bottom"></div>
 		{@render workDescription(work)}
+		
 		{#if work.contentBlock}
 			{#if work.contentBlock.length === 0 && work.description}
 				<article class="content-block">
@@ -253,7 +294,9 @@
 				</article>
 			{/if}
 			{#each work.contentBlock as block, i}
-				<article class="content-block block-{i}" onclick={handleContentButtonClick}>
+				<!-- svelte-ignore a11y_click_events_have_key_events -->
+				<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+				<article class="content-block block-{i}" onclick={(e) => handleProjectToggle(e)} >
 					{#if block.h2}	<h2>{block?.h2}</h2>{/if}
 					{#if block.text && block.text.length > 1}
 						{#each block.text as textLine}
@@ -290,7 +333,6 @@
 				{#if showDescription}
 					<ListIndentDecrease size="20" />
 				{:else}
-					<!-- <ListCollapse size="20" /> -->
 					<BookText size="20" />
 				{/if}
 			</button>
@@ -323,7 +365,7 @@
 			</ul>
 		</div>
 	</article>
-
+	<!-- the section behind the description -->
 	<article class="work-description note stamp {showQr ? 'show-qr-qr' : ''}">
 		<div class="description-space">
 			<button onclick={moveDescription}>
@@ -452,10 +494,7 @@
 {#snippet noFiles()}
 	<details class="work-cover" style="--file-index:4">
 		<summary tabindex="-1" class="experiment">
-			<p class="cover-content">it seems quite here</p>
-			<span class="cover-content sticker-label"
-				><img src="/chris icon lowlowres.avif" alt="chris icon" /></span
-			>
+			<p class="cover-content no-files">it seems quite here</p>
 		</summary>
 	</details>
 {/snippet}
@@ -469,37 +508,20 @@
 	<details class="work-cover" id="folder-cover">
 		<summary tabindex="-1">
 			<p class="cover-content text">Portfolio</p>
-				<StickerBed />
+			<StickerBed />
 		</summary>
 	</details>
+
 	{#await projects}
 		{@render loadingFiles()}
 	{:then dataWorks}
 		<!-- {@render loadingFiles()} -->
-		<!-- {@const x = dataWorks[1]?.works.slice(0).filter((w: any) => w?.published.is === true).slice(0, 2) || []} -->
+		<!-- {@render contactForm()} -->
 		{#each works as work, i}
-			{#key work.slug}
-				<details
-					class="file file-{i + 1} {$firstLoad ? 'jump' : ''}"
-					style="--file-index:{i + 1}; --work-icon: url('{work.assets.icon}'); 
-						{work.assets.color ? `--file-primary-color:${work?.assets.color}`: ''}"
-					ontoggle={(e) => {
-						if (e.currentTarget.open) {
-							openDetailsIndex = i;
-						} else if (openDetailsIndex === i) {
-							openDetailsIndex = null;
-						}
-					}}
-				>
-					{@render summaryContent(work)}
-					{@render workDescription(work)}
-					{@render workAssets(work)}
-				</details>
-			{/key}
+			{@render files(work, i)}
 		{:else}
 			{@render noFiles()}
 		{/each}
-		<!-- {@render contactForm()} -->
 	{:catch error}
 		<details class="work-cover">
 			<summary tabindex="-1" class="experiment">
@@ -512,10 +534,7 @@
 <style>
 	:root {
 		--total-work: 0;
-		/* --file-index:1; */
 		--move: 0;
-		/* --file-primary-color:#df3188; */
-		/* --file-primary-color:oklab(82.281% -0.10253 0.16777); */
 		--file-primary-color-amount: 99%;
 		--hue-number: 913;
 
@@ -538,6 +557,12 @@
 		--sticker-width: 0;
 		--sticker-height: 0;
 		--sticker-rotation: 0deg;
+
+		--content-assets-left-gap:43cqw; 
+		--content-assets-right-gap:20cqw; 
+
+		--carousel-bottom-gap:0rem;
+
 		font-family: 'Geist Sans', sans-serif;
 
 		@property --file-primary-hue {
@@ -559,11 +584,16 @@
 	}
 
 	.work-section {
-	position: relative;
+		position: relative;
 		border-radius: inherit;
 		gap: 1rem;
 		container-type: inline-size;
 		will-change: transform, filter, top, left;
+
+		&::selection {
+			color: var(--black);
+			background-color: yellow;
+		}
 	}
 
 	/* Hover effect for the summary */
@@ -579,7 +609,7 @@
 		/* folder cover animation */
 		details.work-cover :is(summary, ::details-summary),
 		details.work-cover summary {
-			--transition-duration: 900ms;
+			--transition-duration: 700ms;
 			--move: calc(40dvh + 1dvw * var(--total-work));
 
 			top: var(--move);
@@ -612,9 +642,9 @@
 			top: calc(var(--move));
 			left: calc(0.1dvw * var(--total-work) + 10px * tan(var(--file-index)) + var(--move-all));
 
-			/* box-shadow:
+			box-shadow:
 				var(--shadow-1-color) 0px 5px 8px -5px,
-				rgba(0, 0, 0, 0.2) 0px -3px 0px inset; */
+				rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
 
 			transition-property: color, top, left, rotate;
 
@@ -623,10 +653,7 @@
 				opacity: 0;
 			}
 
-			@container (width < 900px) {
-				/* --move:calc(53dvh - 45vh * (var(--file-index) / var(--total-work)));  */
-				inset-inline: 2%;
-			}
+			@container (width < 900px) {inset-inline: 2%;}
 		}
 
 		/* content on cover animation */
@@ -641,10 +668,6 @@
 			opacity: 1;
 		}
 
-		&::selection {
-			color: var(--black);
-			background-color: yellow;
-		}
 	}
 
 	/* the details component */
@@ -652,9 +675,7 @@
 		border-radius: inherit;
 		user-select: text;
 
-		&[open] {
-			display: none;
-		}
+		&[open] {display: none;	}
 	}
 
 	/* file and folder styling */
@@ -730,8 +751,6 @@
 			flex: 2 1 auto;
 			flex: 1 1 30%;
 			text-wrap: nowrap;
-			/* color: color-mix(in oklch, var(--file-primary-hue), rgb(14, 14, 14) 55%); */
-			/* color: color-mix(in oklch, var(--file-primary-hue), var(--color-text) 95%); */
 		}
 
 		.close-file-icon {
@@ -757,9 +776,7 @@
 			position: relative;
 			width: fit-content;
 			width: 100%;
-			/* max-width: max(30px,3%); */
 			height: fit-content;
-			/* outline: solid red; */
 			filter: drop-shadow(var(--file-line-color2) 0 0px 8px);
 		}
 
@@ -801,10 +818,7 @@
 		display: block !important;
 		font-size: clamp(2rem, 20vw, 10rem);
 		color: var(--color-text);
-		/* background-color: color-mix(in oklch longer hue, var(--hoverC,hsl(calc(213 - 90 / var(--file-index)), 55%, 38%)) , var(--primary-color,rgba(255, 255, 255, 0.466)) 30% ); */
-		/* background-color: color-mix(in oklch longer hue, var(--hoverC,var(--primary-color,hsl(calc(213 - 90 / var(--file-index)), 55%, 38%))) , rgba(255, 255, 255, 0.466) 30% ); */
-		/* background-color: var(--file-cover-color, color-mix(in oklch longer hue, var(--hoverC,var(--primary-color,hsl(calc(213 - 90 / var(--file-index)), 55%, 38%))) , rgba(255, 255, 255, 0.466) 30% )); */
-		/* background-color: var(--file-cover-color); */
+		background-color: var(--file-cover-color, color-mix(in oklch longer hue, var(--hoverC,var(--primary-color,hsl(calc(213 - 90 / var(--file-index)), 55%, 38%))) , rgba(255, 255, 255, 0.338) 70% ));
 		background-color: color-mix(
 			in oklch,
 			var(--hoverC, var(--primary-color, hsl(calc(213 - 90 / var(--file-index)), 55%, 38%))) 60%,
@@ -827,14 +841,16 @@
 			display: none;
 		}
 
+		/* future content */
 		/* &::after{
-			content: '';
+			content: 'cool';
 			position: absolute;
 			inset: 0;
-			opacity: 0;
+			opacity: 1;
 			pointer-events:none;
 			cursor: pointer;
-			z-index: 100;
+			color: var(--file-cover-color, color-mix(in oklch longer hue, var(--hoverC,var(--primary-color,hsl(calc(213 - 90 / var(--file-index)), 55%, 38%))) , rgba(255, 255, 255, 0.338) 70% ));
+			z-index: -1;
 		} */
 
 		@container (width < 900px) {
@@ -857,12 +873,10 @@
 		--move: calc(50vh + (-6.9svh * var(--file-index)));
 		top: var(--move);
 		right: 0;
-		color: black;
+		color: var(--black);
 
 		background-color: color-mix(in oklch, var(--file-primary-hue), rgba(255, 255, 255, 0.466) 10%);
 		background-color: color-mix(in lab, var(--file-primary-hue), var(--color-bg) 20%);
-		border-radius: var(--wc-radius) var(--wc-radius) var(--wc-radius) 0;
-		border-radius: var(--wc-radius);
 		border-radius: var(--wc-radius) var(--wc-radius) var(--wc-radius) 5px;
 		backdrop-filter: blur(50px);
 
@@ -876,10 +890,9 @@
 	/* files background overlay */
 	details.file summary:nth-of-type(n)::before {
 		content: '';
-		background-color: color-mix(in oklch, var(--file-primary-hue), hsla(204, 93%, 33%, 0.566) 60%);
-		background-color: color-mix(in oklch, var(--file-primary-hue), rgba(238, 130, 238, 0.462) 60%);
+		/* background-color: color-mix(in oklch, var(--file-primary-hue), hsla(204, 93%, 33%, 0.566) 60%); */
+		/* background-color: color-mix(in oklch, var(--file-primary-hue), rgba(238, 130, 238, 0.462) 60%); */
 		background-color: color-mix(in lab, var(--file-primary-hue), rgba(173, 130, 238, 0.462) 55%);
-		/* background-color: rgba(238, 130, 238, 0.462); */
 
 		position: absolute;
 		inset: 1rem;
@@ -897,7 +910,7 @@
 		background-blend-mode: lighten;
 		background-blend-mode: soft-light;
 		/* for both */
-		/* background-blend-mode:saturation; */
+		background-blend-mode:saturation;
 		background-size: cover;
 		background-position: 90% 0%;
 		filter: opacity(0.5) contrast(150%) grayscale(0.8);
@@ -923,11 +936,11 @@
 	/* files styling and animation - hover or focus*/
 	details.file:nth-of-type(n):is(:hover, :focus) :is(summary, ::details-summary) {
 		--hover-file-top: -2rem;
-		--hover-file-right: 6svw;
+		--hover-file-right: 3svw;
 
 		left: calc(var(--hover-file-right) - (var(--file-index) * 2px));
 		transform: rotate(calc(-2deg + 0.5deg * var(--file-index))) translateY(var(--hover-file-top));
-		/* transform : rotate(calc(-2deg + .5deg * var(--file-index))) translateX(var(--hover-file-right)) translateY(var(--hover-file-top)); */
+		transform : rotate(calc(-2deg + .5deg * var(--file-index))) translateX(var(--hover-file-right)) translateY(var(--hover-file-top));
 		transition-property: top, left, transform, height;
 		transform-origin: top;
 		transition:
@@ -992,9 +1005,7 @@
 
 		.close-file-icon {
 			opacity: 1;
-			color: black;
 			color:color-mix(in oklch, var(--black), var(--file-primary-color) 50%);
-
 			right: 0;
 			padding-bottom: 7%;
 
@@ -1052,32 +1063,25 @@
 			var(--file-primary-color) var(--file-primary-color-amount)
 		);
 		--file-line-color: color-mix(in oklch, var(--file-primary-hue, black), rgb(0, 0, 0) 40%);
-		--file-line-color2: color-mix(
-			in oklch,
-			var(--file-primary-hue, var(--primary-gray-bg)),
-			rgb(206, 44, 44) 15%
-		);
+		--file-line-color2: color-mix(in oklch,var(--file-primary-hue, var(--primary-gray-bg)),rgb(206, 44, 44) 15%);
 
 		--bg-test: color-mix(in oklch, var(--file-primary-hue2) 90%, var(--file-primary-color) 90%);
 		--bg-test: color-mix(in oklch, var(--file-primary-hue2) 90%, var(--file-primary-color) 90%);
 		--file-contrast-color: contrast-color(var(--file-primary-hue));
 
 		position: absolute;
-		bottom: 0;
 		inset-inline: 0;
-		top: 8%;
+		inset-block: 8% 0;
 		display: grid;
 		grid-template-columns: repeat(56, 1fr);
 		grid-template-rows: repeat(38, 1fr);
 		z-index: 10 !important;
 		contain: layout size style;
 		border-radius: var(--wc-radius);
+		overflow: hidden;
 
 		background-color: color-mix(in oklch, var(--file-primary-hue), rgba(255, 255, 255, 0.466) 50%);
-		/* background-color: color-mix(in oklch, var(--file-primary-hue) , white 20% ); */
 		background-color: color-mix(in lab, var(--file-primary-hue), var(--color-bg) 30%);
-		/* background-color: color-mix(in lch, var(--file-primary-hue), var(--color-bg) 30%); */
-		/* background-color: color-mix(in oklch, var(--bg-test) 90% , rgba(255, 255, 255, 0.719) 70% ); */
 	}
 
 	details[open]:has(.experiment)::details-content {
@@ -1100,7 +1104,7 @@
 		border-radius: 5px;
 		overflow-y: auto;
 		overflow-x: hidden;
-		z-index: 4;
+		z-index: 10;
 		resize: both;
 		box-shadow: rgba(68, 63, 43, 0.064) 0px 22px 10px;
 
@@ -1113,18 +1117,6 @@
 		background-blend-mode: overlay;
 		background-position: center;
 		background-repeat: repeat, no-repeat, repeat;
-
-		/* testting */
-		/* background-color: #ffffff; */
-		/* background-size:cover, cover, cover; */
-		/* background-size: 14px 14px , 100% 100%, 14px 14px; */
-		/* background-size: 14px 14px , 100% 100%, contain; */
-		/* background-image:  
-			linear-gradient(var(--file-line-color) 0.7000000000000001px, transparent 0.7000000000000001px), 
-			url('/works-assets/material-assets/Chris website16.avif') ,
-			url('/works-assets/material-assets/Chris website10.avif'),
-			linear-gradient(to right, var(--file-line-color2) 0.7000000000000001px, #e5e5f700 0.7000000000000001px)
-			; */
 
 		@supports (corner-shape: superellipse(0)) {
 			& {
@@ -1151,19 +1143,19 @@
 	.work-description .description-info {
 		flex: 1 1 30%;
 		display: flex;
-		flex-direction: column;
+		flex-flow: column nowrap;
+		justify-content: end;
 		gap: 2%;
 		margin-top: 1rem;
-		justify-content: end;
 	}
 
 	.work-description .description-info ul {
 		display: flex;
-		flex-direction: column;
+		flex-flow: column nowrap;
 		width: 100%;
+		max-width: 400px;
 		border-bottom: 1px solid var(--file-line-color);
 		container-type: inline-size;
-		max-width: 400px;
 	}
 
 	.work-description .description-info ul.collaborators li {
@@ -1253,7 +1245,7 @@
 			var(--file-primary-color) var(--file-primary-color-amount)
 		);
 		--tag-contrast-color: contrast-color(var(--file-primary-hue));
-		flex: 0 1 fit-content;
+		flex: 0 1 auto;
 		height: fit-content;
 		width: fit-content;
 		white-space: nowrap;
@@ -1308,22 +1300,19 @@
 
 	details[open] .work-description.note {
 		--description-bg: #c9c9e3c9;
+
 		grid-column: 5/ 18;
 		grid-row: 5/-5;
 		display: flex;
-		/* width: 100%; */
 		height: 100%;
 		border-radius: 5px;
 		overflow: visible;
 		z-index: 3;
-		transition: translate 200ms
-			linear(0, 0.297 6.8%, 0.515 13.8%, 0.686 22%, 0.812 31.6%, 0.895 42.6%, 0.949 56.4%, 1);
-
+		transition: translate 200ms linear(0, 0.297 6.8%, 0.515 13.8%, 0.686 22%, 0.812 31.6%, 0.895 42.6%, 0.949 56.4%, 1);
 		animation: content-reveal 0.4s var(--transition-timing);
 		container-type: inline-size;
-		/* testting */
 		box-shadow: rgba(68, 63, 43, 0.064) 0px 22px 10px;
-		background-color: #e5e5f71a;
+		background-color: #e5e5f70c;
 		background-image: none;
 
 		@supports (corner-shape: superellipse(0)) {
@@ -1334,42 +1323,44 @@
 	}
 
 	.work-description.note .description-space {
+		display: flex;
+		flex-flow: column nowrap;
+		align-items: end;
+		justify-content: start;
+		gap: 1rem;
 		transition: transform 250ms
 			linear(0, 0.297 6.8%, 0.515 13.8%, 0.686 22%, 0.812 31.6%, 0.895 42.6%, 0.949 56.4%, 1);
 	}
 
 	.work-description.note .description-space button {
-		position: absolute;
-		top: 0;
-		right: 0;
 		display: grid;
 		place-items: center;
-		background-color: color-mix(
-			in oklch,
+		background-color: color-mix(in var(--_ctx, oklch),
 			var(--file-primary-hue, var(--primary-gray-bg)),
 			rgba(255, 255, 255, 0.566) 80%
 		);
 		color: currentColor;
-		width: 2rem;
-		height: 2rem;
+		width: 2.5rem;
+		aspect-ratio: 1;
 		border: none;
 		border-radius: 50%;
 		cursor: pointer;
 		&:hover {
-			background-color: color-mix(
-				in oklch,
+			background-color: color-mix(in var(--_ctx, oklch),
 				var(--file-primary-hue, var(--primary-gray-bg)),
 				rgba(255, 255, 255, 0.693) 80%
 			);
 		}
+
+		:global(.lucide){	width: 1.7rem;	}
 	}
 
 	.work-description:where(.note).stamp {
 		--stamp-radius: 11px;
 		position: relative;
 		height: fit-content;
-		z-index: 3;
 		padding: var(--stamp-radius);
+		z-index: 3;
 		contain: layout;
 
 		&::after {
@@ -1377,10 +1368,10 @@
 			position: absolute;
 			inset: 0;
 			border-radius: inherit;
-			z-index: -1;
 			background-color: var(--description-bg);
-			overflow: visible;
 			padding: 1px;
+			overflow: visible;
+			z-index: -1;
 			mask:
 				radial-gradient(50% 50%, #0000 46%, #000 27%) round var(--stamp-radius)
 					var(--stamp-radius) / calc(2 * var(--stamp-radius)) calc(2 * var(--stamp-radius)),
@@ -1391,8 +1382,7 @@
 
 	.work-description:where(.note):has(.disabled).stamp::after {
 		pointer-events: none;
-		background-color: color-mix(
-			in oklch,
+		background-color: color-mix(in var(--_ctx, oklch),
 			var(--file-primary-hue, black),
 			var(--description-bg) 80%
 		);
@@ -1401,10 +1391,10 @@
 	.work-description.note .qr-container {
 		flex: 0 1 fit-content;
 		display: flex;
+		gap: 1rem;
 		align-items: end;
 		justify-content: end;
 		height: auto;
-		gap: 1rem;
 		min-width: fit-content;
 		padding: 1%;
 		margin-bottom: calc(var(--stamp-radius) / 2);
@@ -1445,7 +1435,6 @@
 		}
 
 		& :nth-child(n) {
-			/* outline:solid red; */
 			display: flex;
 			align-items: center;
 			justify-content: center;
@@ -1454,7 +1443,6 @@
 			text-wrap: nowrap;
 			color: color-mix(in oklch, var(--file-primary-hue) 10%, rgba(33, 15, 15, 0.932) 100%);
 			border: solid 1px rgba(0, 0, 0, 0.179);
-			padding: 0.5rem 1rem;
 		}
 
 		a.link-btn {
@@ -1463,12 +1451,13 @@
 			--_link-contrast-color: contrast-color(var(--_link-color));
 			flex: 1 1 60%;
 			height: 100%;
+			padding: 0.5rem 1rem;
 			border-radius: 10px;
-			font-weight: 500;
-			font-size: 1.25rem;
+			font-weight: 300;
+			font-size: 1.3rem;
 			letter-spacing: .5cqw;			
-			color:color-mix(in srgb , var(--_link-contrast-color) 90% , var(--file-primary-hue) 20%);
-			color:color-mix(in oklch , var(--_link-contrast-color), var(--file-primary-hue) 15%);
+			/* color:color-mix(in srgb , var(--_link-contrast-color) 90% , var(--file-primary-hue) 20%); */
+			/* color:color-mix(in oklch , var(--_link-contrast-color), var(--file-primary-hue) 15%); */
 			background-color:var(--_link-color) ;
 
 			@supports (corner-shape: superellipse(0)) {
@@ -1481,15 +1470,22 @@
 
 		button.qr-btn {
 			flex: 0 1 fit-content;
+			display: grid;
+			place-items: center;
+			height: 111.5%;
+			min-width: 22%;
+			width: 100%;
+			border-top: none;
 			border-radius: 0 0 var(--stamp-radius) var(--stamp-radius);
 			background-color: color-mix(in oklch,var(--file-primary-hue, var(--description-bg)),var(--_white-toggle, white) 60%);
 			background-color: color-mix(in oklch,var(--file-primary-hue, var(--primary-gray-bg)),#ffffff90 60%	);
-			height: 111.5%;
-			min-width: 20%;
-			border-top: none;
 			color: color-mix(in oklch, var(--black), var(--file-primary-color) 50%);
 			cursor: pointer;
 			z-index: 4;
+
+			:global(.lucide) {
+				scale: 1.2;
+			}
 
 			@supports (corner-shape: superellipse(0)) {
 				& {
@@ -1535,7 +1531,7 @@
 		--grid-color:transparent 25%, color-mix(in var(--_ct), var(--grid-line-color) 10%, transparent 70%) 0%;
 		--_ct: oklch;
 
-		grid-column: 1/ -3;
+		grid-column: 1/ -1;
 		grid-row: 1/-1;
 		display: flex;
 		flex-direction: column;
@@ -1563,7 +1559,7 @@
 		scroll-timeline: --work-assets-timeline;
 
 		& > * {
-			padding-left: 43cqw;
+			padding-left: var(--content-assets-left-gap, 10cqw);
 			scrollbar-width: none;
 			animation: content-reveal 0.4s var(--transition-timing);
 		}
@@ -1606,8 +1602,8 @@
 			right: 0;
 			border-radius: 0 var(--wc-radius) var(--wc-radius) 0;
 			border-color: yellow;
-			min-width: 7rem;
-			mask: linear-gradient(to left, var(--file-primary-hue) -2% 70%, transparent 85% 100%);
+			min-width:var(--content-assets-right-gap);
+			mask: linear-gradient(to left, var(--file-primary-hue) -2% 60%, transparent 75% 100%);
 		}
 
 		&.b-bottom {
@@ -1649,13 +1645,13 @@
 		display: flex;
 		flex-direction: column;
 		margin-bottom: 4cqh;
+		overflow: visible;
 
 		contain: layout style paint;
 		container-type: inline-size;
-
 		scroll-snap-align: center;
 		scroll-snap-stop: normal;
-		overflow: visible;
+
 
 		&:nth-of-type(1),
 		&:nth-last-of-type(1) {
@@ -1671,13 +1667,11 @@
 		margin-bottom: 1rem;
 		font-size: clamp(0.9rem, 4vw, 1.3rem);
 		color: var(--color-text);
-		color: var(--file-primary-color);
 		color: color-mix(in var(--_ct),var(--color-text, #ffffffc7),var(--file-primary-color) 50%);
 	}
 
 	.work-assets .content-block :global(p) {
 		line-height: 1.5;
-		font-size: clamp(0.9rem, 4vw, var(--text-size-m));
 		font-size: clamp(0.9rem, 4vw, 1.3rem);
 		color: var(--color-text);
 
@@ -1687,8 +1681,7 @@
 		transition: background-color 200ms ease 2s;
 
 		&:not(a)::selection {
-			color: rgb(0, 0, 0);
-			/* background-color: rgba(255, 255, 255, 0.459); */
+			color: var(--black);
 		}
 	}
 
@@ -1697,18 +1690,18 @@
 	}
 
 	.work-assets :global(.content-block a) {
+		font-size: clamp(0.9rem, 4vw, 1.3rem);
+		font-style: italic;
+		line-height: 1.5;
 		color: color-mix(in var(--_ct), var(--color-text) 80%, var(--workassets-contrast-color, #87b7eb) 10%);
 		text-decoration:underline dotted;
-		font-style: italic;
 		text-underline-offset: 6px;
-		font-size: clamp(0.9rem, 4vw, 1.3rem);
-		cursor: pointer;
 		width: fit-content;
-		line-height: 1.5;
+		cursor: pointer;
 		overflow-y: visible;
 
 		&::selection {
-			color: rgb(0, 0, 0);
+			color: var(--black);
 			background-color: rgba(255, 255, 255, 0.459);
 		}
 
@@ -1720,7 +1713,6 @@
 	}
 
 	.work-assets :global( .content-block > ul) {
-		/* flex: 0 0 26cqb; */
 		display: block flex;
 		flex-flow: column nowrap;
 		width: auto;
@@ -1734,11 +1726,10 @@
 
 	.work-assets :global( .content-block > ul.flat-list) {
 		flex-flow: row wrap;
-		container-type: inline-size;
 		list-style: none;
+		container-type: inline-size;
 	}
 	
-
 	.work-assets :global( .content-block :is(li,.pill)),.content-block :is(li,.pill) {
 		--_pill-hue: var(--file-primary-color);
 		--pill-padding: clamp(7px, 36.5px - 2cqw, 21.5px);
@@ -1758,7 +1749,7 @@
 		border: solid 3px var(--_pill-hue);
 		border-color: color-mix(in var(--_ct),
 			var(--_pill-hue, #ffffffc7) 70%,
-			color-mix(in srgb, var(--color-bg), #ffffff98 50%) 80%
+			 #ffffff98  80%
 		);
 		color: color-mix(
 			in var(--_ct),
@@ -1781,64 +1772,52 @@
 	}
 
 	.work-assets :global( .content-block > ul.flat-list :is(li,.pill)) {
-			--r-flat: 8px; 
-			border-radius:calc(var(--r-flat) * 2.8 + 1px) ;
-			border: none;
-			box-sizing: content-box;
-			padding-block: var(--r-flat);
-			mask: 
-				linear-gradient(#000 0 0) no-repeat
-				50%/calc(100% - 2*var(--r-flat)) calc(100% - 1*var(--r-flat)), 
-				radial-gradient(farthest-side,#000 97%,#0000) 
-				0 0/calc(2*var(--r-flat)) calc(2*var(--r-flat)) round;
-
+		--r-flat: 8px; 
+		border-radius:calc(var(--r-flat) * 2.8 + 1px) ;
+		border: none;
+		box-sizing: content-box;
+		padding-block: var(--r-flat);
+		mask: 
+			linear-gradient(#000 0 0) no-repeat
+			50%/calc(100% - 2*var(--r-flat)) calc(100% - 1*var(--r-flat)), 
+			radial-gradient(farthest-side,#000 97%,#0000) 
+			0 0/calc(2*var(--r-flat)) calc(2*var(--r-flat)) round;
 	}
-
 
 	.work-assets :global(.content-block :is(li,.pill):has(:is(button,a))){
 		--file-pill-color:attr(data-file-pill-color,var(--black));
-		/* border-style: solid none groove; */
-		box-shadow: 
-		black 0 5px 15px -10px;
+		box-shadow: black 0 5px 15px -10px;
 		transition: 150ms ease;
 
 		&:hover {
 			box-shadow: 
 			black 0 5px 11px -10px,
 			inset 0 0 0 1px color-mix(in var(--_ct), var(--file-pill-color,var(--black)) 80%, transparent 20%);
-
 		}
 
 		&:active{
+			transform: scale(1.01, 0.94);
 			box-shadow: 
 			black 0 2px 9px -10px,
 			inset 0 0 0 1px color-mix(in var(--_ct), var(--file-pill-color,var(--black)) 80%, transparent 20%);
-
 		}
 
-		&:nth-last-child(1) {
-			margin-bottom: 2rem;
-		}
-		
+		&:nth-last-child(1) { margin-bottom: 2rem;}
 
-		&::marker {
-			color: var(--file-pill-color);
-		}
+		&::marker {	color: var(--file-pill-color);}
 	}
 
 	.work-assets :global(.content-block :is(li,.pill) :is(button,a)) {
+		font-style: italic;
+		font-size: inherit;
 		color: inherit;
 		border: none;
 		text-decoration: none;
-		font-style: italic;
-		font-size: inherit;
 	}
 
 	.work-assets :global(.content-block :is(li,.pill):has(:is(button,a):hover)) {
-		/* translate: 2px 0; */
 		transition: translate 250ms ease;
-		color:var(--black);
-		color: color-mix(in var(--_ct), var(--file-pill-color) 90%, var(--black) 30%);
+		color: color-mix(in var(--_ct), var(--file-pill-color,var(--black)) 90%, var(--black) 30%);
 		backdrop-filter: blur(4px);
 	}
 
@@ -1867,15 +1846,12 @@
 	}
 
 	/* block has text and image */
-	.work-assets .content-block:has(p ~ .asset-img-ctnr) {
+	:global(.work-assets .content-block:has(p ~ .asset-img-ctnr)) {
 		width: 100%;
 		padding-block: 2%;
 		flex-direction: unset !important;
 		flex-wrap: wrap;
 
-		/* &>*{
-			border: #34df31 solid;
-		} */
 		p {
 			flex: 0 1 fit-content;
 			max-width: 35ch;
@@ -1895,13 +1871,13 @@
 	}
 
 	/* block with image container */
-	.work-assets .content-block .asset-img-ctnr {
+	:global(.work-assets .content-block .asset-img-ctnr) {
 		position: relative;
 		display: flex;
 		place-content: center;
 		justify-content: center;
 		align-items: center;
-		min-width: 60cqw;
+		min-width: 30cqw;
 		min-height: 40cqh;
 		border-radius: 1pc;
 		aspect-ratio: 16/9;
@@ -1914,13 +1890,10 @@
 
 		background-color: var(--file-primary-hue);
 
-		img {
+		:global(img) {
 			object-fit: cover;
 			object-position: 100% 100%;
 			width: 100cqw;
-			/* max-width:fit-content; */
-			/* max-width:700px; */
-
 			height: auto;
 		}
 
@@ -1934,143 +1907,79 @@
 
 	/* block has only one image */
 	.content-block:nth-of-type(n):has(.asset-img-ctnr:first-child:nth-last-of-type(1)) {
-		
-		.asset-img-ctnr {
+		:global(.track-container){	overflow: visible;}
+		:global(.track){	margin-right: 24%;	}
+		:global(.asset-img-ctnr) {
 			max-width: 100%;
 			width: 90cqw;
 			height: auto;
 			outline: #ffffff93 2px solid;
-			/* outline: solid yellow; */
 			outline-offset: -2px;
 			margin-bottom: 3rem;
-			margin-right: 24%;
 		}
 
 		@container (width < 500px) {
 			.asset-img-ctnr{
-				/* border-radius: 3pc; */
-				/* background: linear-gradient( 0deg, var(--file-primary-color) 20%,transparent 40% ); */
 				min-height: fit-content !important;
 			}			
 		}	
 	}
 
 	/* block has multiple images */
-	.content-block:has(.asset-img-ctnr:nth-child(2n)):has(.asset-img-ctnr:nth-last-child(1)) {
+	.content-block:has(.asset-img-ctnr:nth-child(2n)):has(.asset-img-ctnr:nth-last-child(1)) ,
+	.content-block:has(.asset-img-ctnr:nth-child(2n)):has(.asset-img-ctnr:nth-last-child(2)):has(:global(.controls)) {
 		flex: 1 0 auto;
 		position: relative;
-		min-height: fit-content;
-		height: fit-content;
-		flex-flow: row nowrap;
-		gap: 1rem;
-		padding-block: 0;
-		margin-bottom: 4rem;
+		
+		padding-block: 0 calc(var(--carousel-bottom-gap, 0));
+		padding-left: 0;
+		margin-bottom: 3rem;
+		gap: 1rem;		
 
-		overflow-y: hidden;
-		overflow-x: auto;
+		overflow-y: visible;
+		overflow-x: visible;
+		contain: style ;
 		anchor-name: --block;
+		overscroll-behavior-x: contain;
 
-		/* scroll-snap-type: x proximity; */
-		/* overscroll-behavior-x: contain; */
-		/* outline: solid red; */
+		:global(.track) {
+			padding-inline: var(--content-assets-left-gap, 43cqw) var(--content-assets-right-gap, 20%) ; 
+		}
 
-		.asset-img-ctnr {
+		:global(.controls) {
+			animation: assets-scroll-button linear both;
+			animation-timeline: view();
+			animation-range-start: contain;
+			animation-range-end: 75cqh;
+		}
+
+		:global(.asset-img-ctnr) {
 			scroll-snap-stop: always;
 			scroll-snap-align: start;
 			outline: #ffffff93 2px solid;
 			outline-offset: -2px;
-			min-height: 4rem;
+			min-height: 2rem;
 			width: 30cqw;
 			width: 20cqw;
 			cursor: nw-resize;
 			cursor: zoom-in;
 		}
 
-		.asset-img-ctnr:nth-last-of-type(1) {
+		:global(.asset-img-ctnr:nth-last-of-type(1)) {
 			margin-right: 24%;
 		}
 
-		&::scroll-button(*) {
-			display: grid;
-			place-content: center;
-			position: fixed;
-			position-anchor: --block;
-			width: 20px;
-			height: auto;
-			aspect-ratio: 1;
-			bottom: calc(anchor(bottom) - 2cqh);
-			right: calc(anchor(right) + 1cqi);
-			border-radius: 50%;
-			border: 1px;
-			z-index: 2;
-			pointer-events: auto;
-			cursor: pointer;
-			animation: assets-scroll-button linear both;
-			animation-timeline: view();
-			animation-range-start: contain;
-			animation-range-end: 75cqh;
-			background-color: color-mix(
-				in oklch longer hue,
-				var(--file-primary-hue, var(--description-bg)),
-				color-mix(
-						in hsl longer hue,
-						hsl(calc(var(--hue-number) / var(--file-index)), 45%, 88%),
-						var(--file-primary-color) 98%
-					)
-					95%
-			);
-			background-color: rgb(255, 255, 255);
-		}
-		&::scroll-button(*):disabled {
-			z-index: 0;
-			opacity: 0.2 !important;
-			pointer-events: none;
-		}
-		&::scroll-button(left) {
-			content: ''/'Scroll Left';
-			background-image: url('/works-assets/arrow-left.avif');
-			background-image: url('/works-assets/chevrons-left.avif');
-			background-size: cover;
-			background-position: center;
-			cursor: pointer;
-		}
-		&::scroll-button(right) {
-			content: ''/'Scroll Right';
-			background-image: url('/works-assets/arrow-right.avif');
-			background-image: url('/works-assets/chevrons-right.avif');
-			background-size: cover;
-			background-position: center;
-			/* bottom: calc(anchor(bottom) + 5cqh); */
-			cursor: pointer;
-		}
 
 		@supports not selector(::scroll-button(*)) {
 			scroll-snap-type: none;
 			scrollbar-width: thin;
 			padding-bottom: 2rem;
 		}
-	}
-
-	@keyframes assets-scroll-button {
-		from {
-			opacity: 0;
-			transform: translate(0, -50%) scale(0.8);
-		}
-		30%,
-		90% {
-			opacity: 1;
-			transform: translate(0, -50%) scale(1.2);
-		}
-		to {
-			opacity: 0;
-			transform: translate(0, -50%) scale(0.8);
-		}
-	}
+	}	
 
 	.work-assets button.show-info {
 		all: unset;
 		position: fixed;
-		display: grid;
 		display: none;
 		place-content: center;
 		width: 20px ;
@@ -2104,20 +2013,32 @@
 
 		&:nth-child(1) {
 			position: absolute;
-			text-shadow: 3px 2px 3px rgba(255, 255, 255, 0.2);
-			text-shadow: 0px 3px 3px rgba(255, 255, 255, 0.5);
-			color: rgba(0, 0, 0, 0.156);
-			font-size: clamp(4rem, 15vw, 5rem);
 			bottom: 5%;
 			right: 5%;
+			font-size: clamp(4rem, 15vw, 5rem);
+			color: rgba(0, 0, 0, 0.156);
+			/* both good */
+			text-shadow: 3px 2px 3px rgba(255, 255, 255, 0.2);
+			text-shadow: 1px 3px 3px rgba(255, 255, 255, 0.5);
 		}
 
-		&.error{
-			background-color: transparent;
-			inset:0;
-			width: fit-content;
-			height: fit-content;
-			font-size: 3rem;
+		&:nth-child(1).error{
+			position: absolute;
+			top: 0%;
+			/* background-color: transparent; */
+			background-color: red !important;
+			/* inset:0; */
+			/* width: fit-content; */
+			/* height: fit-content; */
+			/* font-size: 3rem; */
+		}
+
+		&.no-files{
+			bottom:auto;
+			left: 0%;
+			color: var(--color-text);
+			z-index: 20;
+		
 		}
 	}
 
@@ -2177,7 +2098,7 @@
 		--_delay: calc(1s / var(--total-work, 1) * (var(--file-index)));
 		z-index: calc(10 - var(--file-index));
 		opacity: 0;
-		/* animation: jump 2s ease var(--_delay) infinite ; */
+		animation: jump 2s ease var(--_delay) infinite ;
 		animation: jump 450ms var(--_delay) forwards steps(3, end);
 		animation-timing-function: linear(
 			0,
@@ -2200,11 +2121,11 @@
 		--_delay: calc(3.5s / var(--total-work, 6) * (var(--file-index)));
 		--file-primary-hue: var(--color-bg);
 		opacity: 0;
-		pointer-events: none;
-		animation: loading 3.2s var(--_delay) infinite steps(4, end);
 		border: solid 1px color-mix(in lab, var(--file-primary-hue), var(--color-text) 30%);
 		color: color-mix(in lab, var(--tritary-color), var(--color-bg) 80%);
 		background-color: color-mix(in oklch, var(--tritary-color) 80% , var(--color-text) 20%);
+		pointer-events: none;
+		animation: loading 3.2s var(--_delay) infinite steps(4, end);
 
 		animation-timing-function: linear(
 			0,
@@ -2221,15 +2142,15 @@
 			0.994 46.3%,
 			1
 		);
-		&*:hover {
+		/* &*:hover {
 			animation-play-state: paused;
 			animation-name: none;
-		}
+		} */
 	}
 
 	.big-asset.big-asset.big-asset.big-asset {
-		min-height: 40cqh;
 		min-width: 100%;
+		min-width: 55cqw;
 		aspect-ratio: 16/9;
 
 		article.asset-img-ctnr {
@@ -2244,7 +2165,6 @@
 
 	.move-description {
 		transform: translate(-25cqw, 0) rotate(-5deg) !important;
-		/* transform: translate(-25cqw, 0) rotate(-5deg) ; */
 	}
 
 	.grid-lines {
@@ -2281,6 +2201,24 @@
 		}
 	}
 
+	@keyframes assets-scroll-button {
+		from {
+			opacity: 0.2;
+			transform: translate(7% ,0 );
+			filter:blur(2px);
+		}
+		15%,
+		95% {
+			opacity: 1;
+			transform: translate(0% ,0 );
+			filter: blur(0);
+		}
+		to {
+			filter:blur(5px);
+			opacity: 0.2;
+		}
+	}
+
 	@keyframes jump {
 		0%,
 		30% {
@@ -2310,6 +2248,11 @@
 	}
 
 	@media screen and (max-width: 950px) {
+		:root{
+			--content-assets-left-gap: 10cqw;
+			--content-assets-right-gap: 35cqw;
+		}
+
 		:global(.mainContain:has(#works details[open])) {
 			padding-inline: 1dvw;
 		}
@@ -2346,8 +2289,6 @@
 				var(--file-primary-hue),
 				rgba(255, 255, 255, 0.466) 40%
 			);
-			/* rotate:calc(-2deg + .1deg * var(--file-index)); */
-			/* transform : rotate(calc(-2deg + .5deg * var(--file-index))) translate(0); */
 			transform: rotate(0deg) translate(0);
 			transition-property: top, left, rotate, height;
 			transition:	300ms var(--transition-timing),box-shadow 0s,filter 0s,transform-origin 0s;cursor: pointer;
@@ -2371,7 +2312,6 @@
 			bottom:-2%;
 			inset-inline: 1.5%;
 			overflow: visible;
-			/* background-color: transparent ; */
 		}
 
 		details[open] > .work-description {
@@ -2407,9 +2347,7 @@
 			--stamp-radius: 15px;
 		}
 
-
 		.work-description.note > :nth-child(n) {
-			/* border: solid yellow; */
 			flex: 1 1 auto;
 			min-height: fit-content;
 			margin: 0;
@@ -2421,7 +2359,6 @@
 			contain: none;
 			translate:0;
 			transition: none ;
-			/* border: solid red	; */
 			.description-space {
 				transform: none ;
 			}
@@ -2432,7 +2369,6 @@
 		}
 
 		.work-description.note.stamp .description-links {
-			/* border: solid blue; */
 			:is(a, button) {
 				flex: 0 1 100%;
 				max-width: 20cqw;
@@ -2447,7 +2383,6 @@
 				max-width: 100%;
 				border-radius: 30px ;
 				max-height: 10cqh;
-	
 			}
 
 			@supports not (corner-shape: superellipse(0)) {
@@ -2457,8 +2392,8 @@
 			}
 		}
 
-
 		.work-description.note .qr-container {
+			display: none;
 			position: relative;
 			max-width:fit-content;
 			align-items: start;
@@ -2467,7 +2402,6 @@
 			border-radius: 10px ;
 			max-height: 2rem;
 
-			/* border: solid red; */
 			img {
 				max-width: 9cqh;
 				opacity: 1;
@@ -2524,11 +2458,12 @@
 			border-radius: var(--wc-radius);
 			border-radius: 13pt;
 			min-height: fit-content ;
+			min-width: 50dvw;
 		}
 
 		.content-block	.asset-img-ctnr > :nth-child(n){
 			height: fit-content;
-			height: 23cqh;
+			/* height: 23cqh; */
 			width: auto;
 		}
 
@@ -2542,13 +2477,21 @@
 			object-fit: contain;
 		}
 
+		.content-block:has(.asset-img-ctnr:nth-child(2n)):has(.asset-img-ctnr:nth-last-child(1)) ,
+		.content-block:has(.asset-img-ctnr:nth-child(2n)):has(.asset-img-ctnr:nth-last-child(2)):has(:global(.controls)) {
+			margin-bottom: 2rem;
+			gap: 20px;
+
+			:global(.track) {
+				padding-inline: var(--content-assets-left-gap, 43cqw) var(--content-assets-right-gap, 20%) ; /* Allow first/last image to be centered */
+			}
+		}
 
 		details[open] .work-assets :is(.b-left.b-left, .b-right.b-right) {
 			display: none;
 		}
 
 		:global(body:has(.menu-container.active)) .work-section details.work-cover :is(summary, ::details-summary){
-			/* --move: calc(50dvh + 1dvw * var(--total-work)); */
 			top:0 !important;
 
 			&:nth-child(n) :global(:nth-child(n):not(.text)) {
@@ -2563,18 +2506,30 @@
 			transform: translate(0 ,0);
 			filter: blur(0px) brightness(0.8);
 			translate: 0% !important;
-
 		}
 
 		.show-qr-qr {
 			transform: translate(0 ,0) ;
 			translate: 0% !important;
-
 		}
 
 		.move-description {
 			transform: translateX(0%) rotate(0) !important;
 			translate: 0% !important;
+		}
+
+		.big-asset.big-asset.big-asset.big-asset {
+			min-width: 89vw;
+			aspect-ratio: 16/9;
+
+			article.asset-img-ctnr {
+				cursor: zoom-out !important;
+			}
+
+			/* :nth-child(1) {
+				opacity:0.5;
+				scale: 2;
+			} */
 		}
 
 	}
