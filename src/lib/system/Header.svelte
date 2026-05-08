@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { menuOpen, contactsOpen, aboutOpen, aboutMoreOpen, modeDark } from '$lib/store';
-	import { onMount, tick } from 'svelte';
 	import * as themeToggleFn from '$lib/atoms/themeToggleFn.svelte';
 	let openMenu = $derived($menuOpen);
 	let openContacts = $derived($contactsOpen);
@@ -74,9 +73,6 @@
 		aboutMoreOpen.set(!$aboutMoreOpen);
 	}
 
-	// onMount(() => {
-	// 	themeToggleFn.setup();
-	// });
 
 
 	$effect(() => {
@@ -95,18 +91,14 @@
 				{#key openMenu}
 					<figure class=" flower">
 						<picture>
+							<source srcset="/portfolio icon/apple-touch-icon.avif" type="image/avif" />
 							<img
 								src="./25acb22a-22a3-41d5-a0eb-c91529c4c6c8 (Custom).webp"
 								alt="icon of me"
-								width="10"
-								height="10"
+								width="40"
+								height="40"
 								loading="lazy"
 							/>
-							<!-- {#if openAbout == true}
-								<img src="./photos/2533cde4-1781-47d6-a605-089cc54dfa8e2.avif" alt="me">
-							{:else}
-								<img class="" src="./25acb22a-22a3-41d5-a0eb-c91529c4c6c8 (Custom).avif" alt="icon of my face me">
-							{/if} -->
 						</picture>
 					</figure>
 				{/key}
@@ -394,22 +386,31 @@
 		display: grid;
 		place-content: center;
 		text-wrap: nowrap;
+		font-size: clamp(var(--text-size-s), 50dvw - 1rem, 1.3rem);
+		line-height: 1rem;
 		padding-inline: 10px;
-		/* border: solid 2px var(--_btn-border-color); */
+		
+		border-color: var(--_btn-border-color);
+		border-width: 3px ;
 		border-style: solid groove groove solid;
-
 		border-radius: 25px;
+		
 		width: auto;
 		min-width: fit-content;
 		height: 3rem;
-		font-size: clamp(var(--text-size-s), 50dvw - 1rem, 1.3rem);
-		line-height: 1rem;
 		background-color: color-mix(in srgb, var(--color-bg, #ffffff), rgba(255, 255, 255, 0.61) 80%);
+		color: inherit;
 		filter: drop-shadow(var(--_btn-shadow-color) 0px 28px 10px);
 		backdrop-filter: blur(8px);
-		color: inherit;
 		cursor: pointer;
 		z-index: 5;
+		transition: 100ms;
+
+		&:active{
+			border-style:  groove solid solid groove ;
+			border-width: 2px;
+			transform: scale(1.09, 0.9);
+		}
 
 		&::after {
 			content: '';
@@ -433,19 +434,6 @@
 		transition: 0.3s ease-out;
 	}
 
-	/* button.menu-btn{
-		width: 6vw;
-		height: 3rem;
-		background-color: white;
-		z-index: 2;
-		padding: 0 !important;
-	} */
-
-	/* button.menu-btn svg{
-		max-width: 80px;
-		height: auto;
-		transition: 2s;
-	} */
 
 	li button:hover {
 		filter: drop-shadow(var(--_btn-shadow-color) 0px 23px 10px);
@@ -453,10 +441,8 @@
 
 	li button:active {
 		filter: drop-shadow(var(--_btn-shadow-color) 0px 15px 10px);
-		scale: 0.97;
-		/* rotate: random(2turn, 10turn, 20deg) !important; */
-		transition: .4s;
-
+		transform: scale(0.98);
+		transition: 100ms;
 	}
 
 	li button.icon-btn {
@@ -505,7 +491,6 @@
 	}
 
 	li.head-extra button {
-		/* transition: .5s ease-out; */
 		transform: translate(0, -5rem);
 		animation: readMoreAnim 0.5s ease-out both;
 		@starting-style {
@@ -550,17 +535,11 @@
 		z-index: 10;
 	}
 
-	/* :global(main:has(button.close-btn:is(:active,:focus-within)) article.active) { */
 	/* :global(main:has(button:is(.close-btn,.about-btn,.contact-btn):is(:active)) article.active) {
-		height: calc(var(--menu-height) + 18px);
+		height: calc(var(--menu-height) + 0px);
 		transition: .4s cubic-bezier(0.375, 0.685, 0.32, 1.275);
-	}
-
-	:global(main:has(button.open-menu-btn:is(:active)) article.close) {
-		translate: 0 -175vh !important;
-		filter: blur(1px);
-		transition: translate .8s 1s !important ;
 	} */
+
 
 	@keyframes sway {
 		50% {

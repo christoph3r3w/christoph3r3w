@@ -1,8 +1,6 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import { menuOpen, contactsOpen, aboutOpen, modeDark } from '$lib/store';
 	import { themeList } from '../atoms/theme-list';
-	// import {page} from '$app/state'
 
 	interface Props {
 		class?: any;
@@ -10,8 +8,6 @@
 	}
 
 	let openMenu = $derived($menuOpen);
-	let openContacts = $derived($contactsOpen);
-	let openAbout = $derived($aboutOpen);
 	let dark = $state(false);
 	let currentThemeIndex = $state(0);
 	let { children, class: CLASS, ...props }: Props = $props();

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Header, Footer, Window, Menu, Menu2, StickerBed, CuttingBoard } from '$lib';
+	import { Header, Window, Menu2, CuttingBoard } from '$lib';
 	import {setup} from '$lib/atoms/themeToggleFn.svelte';
 	import { onMount } from 'svelte';
 
@@ -13,7 +13,7 @@
 </script>
 
 <svelte:head>
-	<link rel="preload" as="image" href="/cuttingmat55-33-2.svg" />
+	<link rel="preload" fetchpriority="high" as="image" href="/cuttingmat55-33-2.svg" />
 </svelte:head>
 
 
@@ -22,19 +22,15 @@
 	<Menu2 />
 	{@render children()}
 </Window>
-<Footer class="ftr" />
 
 <style>
 	:root {
-		/* color-scheme: light dark; */
 		--H-top: 5cqh;
 		--Padding-genral: 2cqh;
-		/* --primary-gray: #d5d5d5e7; */
-		--primary-gray: rgb(235, 233, 219);
+		--primary-gray: #d5d5d5e7;
+		--primary-gray: #ebe9db;
 		--primary-gray: var(--color-bg);
 	}
-
-
 
 	:global(html) {
 		height: 100lvh;
@@ -52,9 +48,9 @@
 		touch-action: none;
 	}
 
-	/* :global(body :nth-child(n):focus-visible){
+	:global(body :nth-child(n):focus-visible){
 		border: solid rgba(255, 140, 0, 0.815);
-	}	 */
+	}	
 
 	:global(header) {
 		padding-inline: var(--Padding-genral);
@@ -62,7 +58,7 @@
 	}
 
 	:global(main) {
-		flex: 1 !important;
+		flex: 1 ;
 		display: flex;
 		flex-direction: column;
 		margin: 0;
@@ -88,27 +84,9 @@
 
 	:global(main.contain) {
 		background-color: var(--primary-gray);
-		/* height: 500vh; */
 	}
 
-	:global(footer) {
-		display: block;
-		flex: 0 1 auto;
-		padding-inline: var(--Padding-genral);
-		display: none;
-	}
 
-	/* .noscript-notice {
-		position: fixed;
-		bottom: 5%;
-		left: 0;
-		right: 0;
-		background: #ffeb3b;
-		color: black;
-		text-align: center;
-		padding: 0.5rem;
-		z-index: 1000;
-	} */
 
 	@media (width < 900px) {
 		:global(html) {

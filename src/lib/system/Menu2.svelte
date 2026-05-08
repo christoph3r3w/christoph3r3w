@@ -1,7 +1,7 @@
 <script lang="ts">
 	// I think the functionality of the menu actually can be a popover. Popovers are a bit more stable now on many browsers. If not, then it can revert to using JavaScript. But I think a popover is a better idea.
 	import { menuOpen, contactsOpen, aboutOpen, aboutMoreOpen } from '$lib/store';
-	import { onMount } from 'svelte';
+	import { onMount,tick } from 'svelte';
 	import { elasticOut } from 'svelte/easing';
 	import { CornerDownRight, ArrowBigDown,Mail } from '@lucide/svelte';
 	
@@ -62,12 +62,14 @@
 
 	onMount(() => {
 		// Listen for the popstate event to handle back/forward navigation
-		menuOpen.set(true);
-		aboutOpen.set(true);
-		window.addEventListener('popstate', () => {
-			contactsOpen.set(false);
-			aboutMoreOpen.set(false);
-		});
+		tick().then(() => {
+			menuOpen.set(true);
+			aboutOpen.set(true);
+			window.addEventListener('popstate', () => {
+				contactsOpen.set(false);
+				aboutMoreOpen.set(false);
+			});
+		})
 	});
 
 	$effect(() => {
@@ -175,7 +177,7 @@
 	<article class="text-bubble">
 		<p>Hello Christopher here</p>
 		{#key openAboutMore}
-			<p in:whoo={{ duration: 200 }}>A web developer in Amsterdam</p>
+			<p in:whoo={{ duration: 200 }}>A web developer in Amsterdam,</p>
 		{/key}
 		{#if openAboutMore == true}
 			<div
@@ -272,11 +274,14 @@
 		<li class="header-logo">
 			<a href="/">
 				<picture class="profile profile-2 flower">
+					<source srcset="/portfolio icon/android-chrome-192x192.webp" type="image/webp" />
 					{#if openAboutMore == true}
 						<img
 							class="face-2"
 							src="./25acb22a-22a3-41d5-a0eb-c91529c4c6c8 (Custom).avif"
 							alt="icon of my face me"
+							width="40"
+							height="40"
 						/>
 						<img src="./photos/2533cde4-1781-47d6-a605-089cc54dfa8e2.avif" alt="me" />
 					{:else}
@@ -284,6 +289,8 @@
 							class=""
 							src="./25acb22a-22a3-41d5-a0eb-c91529c4c6c8 (Custom).webp"
 							alt="icon of my face me"
+							width="40"
+							height="40"
 						/>
 					{/if}
 				</picture>
@@ -291,7 +298,8 @@
 					<picture class="profile profile-2 flower"
 					style="translate:0 -100%; z-index: 0;"
 					 >
-						<img src="./25acb22a-22a3-41d5-a0eb-c91529c4c6c8 (Custom).avif" alt="icon of my face me">
+					 <source srcset="/portfolio icon/apple-touch-icon.webp" type="image/webp" />
+						<img src="./25acb22a-22a3-41d5-a0eb-c91529c4c6c8 (Custom).avif" alt="icon of my face me" width="40" height="40">
 					</picture>				
 				{/if}
 			</a>
@@ -377,14 +385,32 @@
 		--_btn-hue: var(--accent-color);
 		position: relative;
 		flex:1 1 100%;
-		color: var(--color-text);
-		color: var(--_btn-hue);
+		/* color: var(--_btn-hue); */
 		background: transparent;
 		border: none;
 		padding:0;
 		margin: 0;
+		margin-top: 6%;
 		place-content: center;
 		display: none;
+
+		 --r: 25px; /* radius of circles */
+		height: 320px;
+		padding: calc(1.5*var(--r));
+		/* background: #e97f02; */
+		mask: 
+			linear-gradient(#000 0 0) no-repeat
+			50%/calc(100% - 2*var(--r)) calc(100% - 2*var(--r)), 
+			radial-gradient(farthest-side,#000 97%,#0000) 
+			0 0/calc(2*var(--r)) calc(2*var(--r)) round;
+
+		background:
+		url("/stickers/sticker squaer2.webp")  center / 200% no-repeat,
+		color-mix(in srgb, var(--_btn-hue), transparent 20%)
+		;
+		background-blend-mode: overlay;
+	
+		
 	}
 
 	.menu-container .close-menu-btn span{
@@ -396,16 +422,13 @@
 		width: 90cqw;
 
 		border-radius: 10pc;
-		border: 2px solid var(--_btn-hue);
-		
-		font-size: var(--text-size-m);
-		font-weight: 500;
+		/* border: 2px solid var(--_btn-hue); */
+		color: var(--color-text-invert);
+
+		font-size: var(--text-size-l);
+		font-weight: 300;
 		letter-spacing: .7cqw;
-		background:url("/stickers/sticker squaer2.webp");
-		background-position: center;
-		background-blend-mode: overlay;
-		background-size: cover;
-		background-repeat: no-repeat;
+		
 		backdrop-filter: blur(5px);
 	}
 
@@ -466,7 +489,7 @@
 	.headerUl li.header-logo {
 		/* --logo-width:calc-size(fit-content , size + clamp(1rem , 0.05vw + 40cqw ,35cqw)); */
 		/* --logo-width: clamp(20cqw, -.1rem + 87cqw, 39cqw); */
-		flex: 0 1;
+		flex: 0 1 auto;
 		position: relative;
 		display: flex;
 		justify-content: end;
@@ -494,7 +517,6 @@
 	li.header-logo .profile {
 		flex: 0 1 auto;
 		position: relative;
-		/* max-width: clamp(3rem, 93% - 2rem, 100%); */
 		min-width: var(--logo-img-min-size, 0);
 		min-height: var(--logo-img-min-size, 0);
 		view-transition-name: header-figure;
@@ -791,6 +813,11 @@
 			opacity: 0;
 			scale: 0.8;
 		}
+
+		&:active{
+			border-style:  groove solid solid groove ;
+			transform: scale(1.02, 0.95);
+		}
 	}
 
 	/* read more */
@@ -1062,6 +1089,7 @@
 			opacity: 0;
 			scale: 0.8;
 		}
+
 	}
 
 	/* main menu navigation */
@@ -1225,6 +1253,7 @@
 			margin-block: var(--container-block-padding) 0;
 			aspect-ratio: 1;
 			width: clamp(1rem, 0.5vw + 100cqw, 100%);
+			min-width: 100%;
 			height: fit-content;
 			justify-content: center;
 			max-height: 20dvh;
@@ -1340,7 +1369,7 @@
 			}
 		}
 
-		:global(.menu-container:has(.read-more)) {
+		:global(.menu-container:has(.read-more)),.menu-container:has(.read-more) {
 			--menu-height: 100lvh;
 
 			.headerUl {
@@ -1348,8 +1377,23 @@
 				max-height: fit-content;
 			}
 
-			.headerUl .header-logo a .profile {
+			.headerUl .header-logo {
 				width: 100%;
+				aspect-ratio: unset;
+				min-width: 100%;
+
+				a picture.profile.flower {
+					width: 100%;
+					width: 100%;
+					min-height: 100px;
+					max-width: 100%;
+					aspect-ratio: 1;
+
+				}
+			}
+
+			.headerUl .header-logo a  {
+				translate: 0 3cqh ;
 			}
 
 			.read-more {

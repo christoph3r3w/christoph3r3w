@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
-		<title>Ceek</title>
+		<title>CW portfolio</title>
 		<meta name="description" content="christopher's portfolio" />
 		<link rel="icon" href="%sveltekit.assets%/favicon.ico" />
 
@@ -34,38 +34,24 @@
 			sizes="16x16"
 			href="%sveltekit.assets%/portfolio icon/favicon-16x16.avif"
 		/>
-		<!-- <link rel="manifest" href="%sveltekit.assets%/portfolio icon/site.webmanifest"> -->
+		<link rel="manifest" href="%sveltekit.assets%/portfolio icon/site.webmanifest">
 		<link
 			rel="preload"
 			href="%sveltekit.assets%/app.css"
 			as="style"
 			onload="this.rel = 'stylesheet'"
 		/>
-		<link
+		<!-- <link
 			rel="stylesheet"
 			href="%sveltekit.assets%/spalsh.css"
 			as="style"
 			onload="this.rel = 'stylesheet'"
-		/>
+		/> -->
 		<meta name="viewport" content="width=device-width, initial-scale=1 viewport-fit=auto interactive-widget=overlays-content" />
 
 		%sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover">
-		<section id="splash" data-splash-skip="%spalsh-skip%">
-			<figure class="profile profile-2">
-				<picture class="flower">
-					<img
-						src="./25acb22a-22a3-41d5-a0eb-c91529c4c6c8 (Custom).avif"
-						alt="icon of me"
-						width="10"
-						height="10"
-						loading="lazy"
-					/>
-				</picture>
-			</figure>
-			<span id="loading"> loading</span>
-		</section>
 		<div style="display: contents">%sveltekit.body%</div>
 	</body>
 </html>

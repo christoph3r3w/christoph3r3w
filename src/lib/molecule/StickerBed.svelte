@@ -218,7 +218,7 @@
 <svelte:head>
 	{#each visibleStickers as sticker}
 		{#if (sticker.type === 'image' || sticker.type === 'shape') && sticker.visible === true}
-			<link rel="preload" as="image" href={sticker.content} />
+			<link rel="preload" fetchpriority="high" as="image" href={sticker.content} />
 		{/if}
 	{/each}
 </svelte:head>

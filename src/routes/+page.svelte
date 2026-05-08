@@ -2,21 +2,13 @@
 	import { Window, Intro, Intro2, Works } from '$lib';
 	import { onMount, onDestroy } from 'svelte';
 	import { menuOpen } from '$lib/store';
-	import {Temporal, toTemporalInstant} from '@js-temporal/polyfill';
 
 	let { data } = $props();
 	let d = $derived(data);	
 
-	// Reactive variables using $state
 	let container = $state<HTMLElement | undefined>(undefined);
 	let scroller = $state<HTMLElement | undefined>(undefined);
-	let progressCounter = $state<HTMLElement | any>(undefined);
-	let progressBar = $state<HTMLElement | undefined>(undefined);
 	let sections = $state<any[]>([]); // Using any[] as the initial type
-
-	// Add current section tracking
-	let currentSection = $state(0);
-	let totalSections = $state(0);
 
 
 	$effect(() => {
@@ -52,60 +44,58 @@
 		};
 	});
 
-	onMount(() => {
-		function debounce(func: Function, timeout = 300) {
-			let timer: ReturnType<typeof setTimeout>;
-			return (...args: any[]) => {
-				clearTimeout(timer);
-				timer = setTimeout(() => {
-					func(...args);
-				}, timeout);
-			};
-		}
+	// onMount(() => {
+	// 	function debounce(func: Function, timeout = 300) {
+	// 		let timer: ReturnType<typeof setTimeout>;
+	// 		return (...args: any[]) => {
+	// 			clearTimeout(timer);
+	// 			timer = setTimeout(() => {
+	// 				func(...args);
+	// 			}, timeout);
+	// 		};
+	// 	}
 
-		if (!scroller) return;
+	// 	if (!scroller) return;
 
-		function checkScrollButtons(el: HTMLElement) {
-			if (!el || !el.isConnected) return; // Safety check for destroyed elements
-			const atStart = el.scrollLeft === 0;
-			const atEnd = Math.ceil(el.scrollLeft + el.clientWidth) >= el.scrollWidth;
+	// 	function checkScrollButtons(el: HTMLElement) {
+	// 		if (!el || !el.isConnected) return; 
+	// 		const atStart = el.scrollLeft === 0;
+	// 		const atEnd = Math.ceil(el.scrollLeft + el.clientWidth) >= el.scrollWidth;
 
-			// Optional: add classes if needed
-			if (atStart) {
-				el.classList.add('at-start');
-			} else {
-				el.classList.remove('at-start');
-			}
+	// 		// Optional: add classes if needed
+	// 		if (atStart) {
+	// 			el.classList.add('at-start');
+	// 		} else {
+	// 			el.classList.remove('at-start');
+	// 		}
 
-			if (atEnd) {
-				el.classList.add('at-end');
-			} else {
-				el.classList.remove('at-end');
-			}
-		}
+	// 		if (atEnd) {
+	// 			el.classList.add('at-end');
+	// 		} else {
+	// 			el.classList.remove('at-end');
+	// 		}
+	// 	}
 
-		const debouncedScrollCheck = debounce(() => checkScrollButtons(scroller!));
-		const debouncedResizeCheck = debounce(() => checkScrollButtons(scroller!));
+	// 	const debouncedScrollCheck = debounce(() => checkScrollButtons(scroller!));
+	// 	const debouncedResizeCheck = debounce(() => checkScrollButtons(scroller!));
 
-		scroller.addEventListener('scroll', debouncedScrollCheck);
-		window.addEventListener('resize', debouncedResizeCheck);
-		checkScrollButtons(scroller); // Initial check
+	// 	scroller.addEventListener('scroll', debouncedScrollCheck);
+	// 	window.addEventListener('resize', debouncedResizeCheck);
+	// 	checkScrollButtons(scroller); // Initial check
 
-		// Return cleanup function properly
-		return () => {
-			if (scroller) {
-				scroller.removeEventListener('scroll', debouncedScrollCheck);
-				window.removeEventListener('resize', debouncedResizeCheck);
-			}
-		};
-	});
+	// 	// Return cleanup function properly
+	// 	return () => {
+	// 		if (scroller) {
+	// 			scroller.removeEventListener('scroll', debouncedScrollCheck);
+	// 			window.removeEventListener('resize', debouncedResizeCheck);
+	// 		}
+	// 	};
+	// });
 
 	onDestroy(() => {
 		// Clear DOM references to prevent memory leaks
 		container = undefined;
 		scroller = undefined;
-		progressCounter = undefined;
-		progressBar = undefined;
 		sections = [];
 	});
 
@@ -131,11 +121,7 @@
 		}
 	}
 
-	function menuClose() {
-		startViewTransition(function () {
-			menuOpen.set(false);
-		});
-	}
+
 </script>
 
 <div class="container" bind:this={container}>
@@ -151,35 +137,16 @@
 			<Intro2 data={d || {}} />
 		</Window>
 
-		<!-- <Window role="child" class="contentContain" color="#e7c75e" styleOn="--hoverC:white" bind:this={sections[0]}>
-			<Intro2 data={d}/>
+
+		<!-- <Window role="child" class="contentContain" color="transparent" styleOn="--hoverC:#DCA256" bind:this={sections[1]}>
+			<Works data={d || {}} />
 		</Window> -->
 
-		<!-- <Window role="child" class="contentContain" color="white" styleOn="--hoverC:white" bind:this={sections[0]}>
-			<Intro2 {data}/>
-		</Window> -->
-
-		<!-- <Window role="child" class="contentContain" color="white" styleOn="--hoverC:white" bind:this={sections[0]}>
-			<Intro/>
-		</Window> -->
-
-		<!-- <Window role="child" class="contentContain" color="transparent" bind:this={sections[1]}>
-			<p>no yoo</p>
-		</Window> -->
-
-		<!-- <Window role="child" class="contentContain" color="transparent" styleOn="--hoverC:#DCA256" bind:this={sections[2]}>
-			<Works {data}/>
-		</Window> -->
-
-		<!-- <Window role="child" class="contentContain" color="transparent" styleOn="--hoverC:#3B6E25" bind:this={sections[3]}>
-			<p>no y443</p>
-		</Window> -->
 	</section>
 </div>
 
 <style>
-	:root,
-	* {
+	:root {
 		--scale: 0;
 
 		@property --padding-genral {
@@ -283,20 +250,19 @@
 		}
 	}
 
-	/* :global(body:has(.at-end)) {
+	:global(body:has(.at-end)) {
     .scroller::scroll-button(left){
       width: 6rem;
     }
-  } */
+  }
 
-	:global(.contentContain) {
-		margin-top: 1px !important;
+	:global(.child-container.contentContain) {
+		margin-top: 1px ;
 		position: relative;
 		top: 10px;
 		flex: 0 0 89vw;
 		flex-basis: clamp(60vw, 100%, 90vw);
 		height: 97.5%;
-		/* translate:clamp(-2% ,-2vw, -8%) 0; */
 		background-color: color-mix(
 			in srgb,
 			var(--hoverC, var(--white)),
