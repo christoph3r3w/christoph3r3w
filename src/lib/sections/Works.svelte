@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount,tick } from 'svelte';
-	import { OrderedList, ContactForm, StickerBed,Buttons } from '$lib';
+	import { OrderedList, ContactForm, StickerBed,Carousel } from '$lib';
 	import {firstLoad} from '$lib/store';
 	import { fade, fly } from 'svelte/transition';
 	import QRCode from 'qrcode';
@@ -263,27 +263,22 @@
 						<p>{@html block.text}</p>
 					{/if}
 					{#if block.images || block.video }
+					{#if contentLoad[index]}
+						{#await projects then dataWorks} 
+						<Carousel imageBlock={block.images} blockIndex={i} controls={['base']} >
 						{#each block.images as img}
-							<button
-								class="asset-img-ctnr"
-								onclick={(e) => {
-									const parentBlock = e.currentTarget.closest(`.block-${i}`);
-									parentBlock?.querySelectorAll('.asset-img-ctnr').forEach((btn) => {
-										btn.classList.toggle('big-asset');
-									});
-								}}
-							>
-								<picture>	
-									<img src={img} alt="" />
+							<span	class="asset-img-ctnr">
+								<picture >	
+									<img src={img} alt={'Image'} loading="lazy"/>
 								</picture>
-							</button>
-						{/each}
-					<!-- {#if block.video}
-						<video class="asset-video" autoplay muted loop x-webkit-airplay="deny" loading="lazy" poster="/stickers/in progresss-texture-clear.avif">
-							<source src={block.video} type="video/mp4" />
-							Your browser does not support the video tag.
-						</video>
-					{/if} -->
+							</span>
+							{/each}
+						</Carousel>
+						{:catch error}
+							<p>Error loading images: {error.message}</p>
+						{/await}
+					
+						{/if}
 					{/if}
 					{#if block.html}
 						{@html block.html}
