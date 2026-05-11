@@ -56,8 +56,8 @@
 		},
 		{
 			id: 'pixel-c',
-			visible: false,
-			content: '/stickers/pixel-c-star.avif',
+			visible: true,
+			content: 'https://res.cloudinary.com/dkemfwmvh/image/upload/f_auto,q_auto/c-icon-pixeled_pedsph?_a=BAMAPqhK0',
 			type: 'image',
 			alt: 'pixel sticker',
 			canMove: true
@@ -65,7 +65,7 @@
 		{
 			id: 'flag',
 			visible: false,
-			content: '/stickers/korsou sticker.avif',
+			content: 'https://res.cloudinary.com/dkemfwmvh/image/upload/f_auto,q_auto/korsou_sticker_couv62?_a=BAMAPqhK0',
 			type: 'image',
 			alt: 'tutorial sticker',
 			canMove: true
@@ -73,7 +73,7 @@
 		{
 			id: 'vue',
 			visible: true,
-			content: '/stickers/vue.avif',
+			content: 'https://res.cloudinary.com/dkemfwmvh/image/upload/f_auto,q_auto/vue_jbfvmb?_a=BAMAPqhK0',
 			type: 'image',
 			alt: 'tutorial sticker',
 			canMove: true
@@ -81,7 +81,7 @@
 		{
 			id: 'JS',
 			visible: true,
-			content: '/stickers/js sticker (2).avif',
+			content: 'https://res.cloudinary.com/dkemfwmvh/image/upload/js_sticker_2_egl5je?_a=BAMAPqhK0',
 			type: 'image',
 			alt: 'tutorial sticker',
 			canMove: true
@@ -89,7 +89,7 @@
 		{
 			id: 'figma',
 			visible: true,
-			content: '/stickers/figma sticker.avif',
+			content: 'https://res.cloudinary.com/dkemfwmvh/image/upload/f_auto,q_auto/figma_sticker_jkhxt7?_a=BAMAPqhK0',
 			type: 'image',
 			alt: 'tutorial sticker',
 			canMove: true
@@ -97,7 +97,7 @@
 		{
 			id: 'svelte',
 			visible: true,
-			content: '/stickers/svelte.avif',
+			content: 'https://res.cloudinary.com/dkemfwmvh/image/upload/f_auto,q_auto/svelte_kzwxx3?_a=BAMAPqhK0',
 			type: 'image',
 			alt: 'tutorial sticker',
 			canMove: true
@@ -105,7 +105,7 @@
 		{
 			id: 'c-name',
 			visible: true,
-			content: '/stickers/c-name free.avif',
+			content: 'https://res.cloudinary.com/dkemfwmvh/image/upload/f_auto,q_auto/c-name_free_oknivz?_a=BAMAPqhK0',
 			type: 'image',
 			alt: 'tutorial sticker',
 			canMove: false
@@ -113,7 +113,7 @@
 		{
 			id: 'c-pixel-icon',
 			visible: true,
-			content: '/stickers/c-icon-pixeled.avif',
+			content: 'https://res.cloudinary.com/dkemfwmvh/image/upload/f_auto,q_auto/c-icon-pixeled_pedsph?_a=BAMAPqhK0',
 			type: 'image',
 			alt: 'c-pixel-icon',
 			canMove: false
@@ -121,7 +121,7 @@
 		{
 			id: 'in-progress clear',
 			visible: true,
-			content: '/stickers/in progresss-texture-clear.avif',
+			content: 'https://res.cloudinary.com/dkemfwmvh/image/upload/f_auto,q_auto/in_progresss-texture-clear_croc0l?_a=BAMAPqhK0',
 			type: 'image',
 			alt: 'in progress',
 			canMove: true
@@ -129,7 +129,7 @@
 		{
 			id: 'in-progress',
 			visible: true,
-			content: '/stickers/in progress-texture.avif',
+			content: 'https://res.cloudinary.com/dkemfwmvh/image/upload/f_auto,q_auto/in_progress-texture_ahgqwn?_a=BAMAPqhK0',
 			type: 'image',
 			alt: 'tutorial sticker',
 			canMove: true
@@ -189,6 +189,7 @@
 	}
 
 	onMount(() => {
+		tick()
 		// const handleMouseMove = (event: MouseEvent) => {
 		// 	moveX = event.clientX;
 		// 	moveY = event.clientY;
@@ -350,12 +351,13 @@
 			--sticker-color: hsla(0, 75%, 50%, 0);
 			--sticker-width: auto;
 			--sticker-height: 12rem;
-			--sticker-rotation: 107deg !important;
+			--sticker-rotation: 307deg !important;
 			--sticker-top: auto;
+			rotate: 119deg !important;
 			left: auto;
 			right: 28%;
-			bottom: -11%;
-			/* filter: drop-shadow(.5px .5px 1px black); */
+			bottom: -35%;
+			filter: sepia(.2);
 			z-index: 0;
 		}
 		&.flag {
@@ -417,12 +419,12 @@
 		&.pixel-c {
 			--sticker-color: hsla(0, 75%, 50%, 0);
 			--sticker-width: auto;
-			--sticker-height: 12rem;
-			--sticker-rotation: -0deg;
+			--sticker-height: 2rem;
+			--sticker-rotation: 50deg;
 			--sticker-top: auto;
-			bottom: 0;
-			left: 0%;
-			/* opacity: 0; */
+			rotate: 50deg;
+			bottom: 40%;
+			left: 90%;
 		}
 		&.c-pixel-icon {
 			--sticker-color: hsla(0, 75%, 50%, 0);
@@ -430,9 +432,8 @@
 			--sticker-height: 2rem;
 			--sticker-rotation: -0deg;
 			--sticker-top: auto;
-			bottom: 0;
+			bottom: 0%;
 			left: 0%;
-			/* opacity: 0; */
 		}
 	}
 

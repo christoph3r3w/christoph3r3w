@@ -312,7 +312,9 @@
 						{#each block.images as img}
 							<span	class="asset-img-ctnr">
 								<picture >	
-									<img src={img} alt={'Image'} loading="lazy"/>
+									<enhanced:img src={img} alt={'Image'} loading="lazy"
+									 sizes="(min-width:1920px) 1280px, (min-width:1080px) 640px, (min-width:768px) 400px"
+									/>
 								</picture>
 							</span>
 							{/each}

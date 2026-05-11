@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { menuOpen, contactsOpen, aboutOpen, aboutMoreOpen, modeDark } from '$lib/store';
 	import * as themeToggleFn from '$lib/atoms/themeToggleFn.svelte';
+	import { CldImage } from 'svelte-cloudinary';
 	let openMenu = $derived($menuOpen);
 	let openContacts = $derived($contactsOpen);
 	let openAbout = $derived($aboutOpen);
@@ -88,20 +89,27 @@
 	<li class="header-logo">
 		<a href="/" data-sveltekit-reload>
 			{#if openMenu === false}
-				{#key openMenu}
-					<figure class=" flower">
+				<!-- {#key openMenu} -->
+					<div class="logo-container flower">
 						<picture>
 							<source srcset="/portfolio icon/apple-touch-icon.avif" type="image/avif" />
 							<img
+							class="face-2"
+							src="https://res.cloudinary.com/dkemfwmvh/image/upload/f_auto,q_auto/25acb22a-22a3-41d5-a0eb-c91529c4c6c8_Custom_rnbhzd?_a=BAMAPqhK0"
+							alt="icon of my face me"
+							width="60"
+							height="60"
+						/>
+							<!-- <img
 								src="./25acb22a-22a3-41d5-a0eb-c91529c4c6c8 (Custom).webp"
 								alt="icon of me"
 								width="40"
 								height="40"
 								loading="lazy"
-							/>
+							/> -->
 						</picture>
-					</figure>
-				{/key}
+					</div>
+				<!-- {/key} -->
 			{/if}
 		</a>
 	</li>

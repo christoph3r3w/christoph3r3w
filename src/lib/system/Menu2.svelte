@@ -4,6 +4,7 @@
 	import { onMount,tick } from 'svelte';
 	import { elasticOut } from 'svelte/easing';
 	import { CornerDownRight, ArrowBigDown,Mail } from '@lucide/svelte';
+	import { CldImage } from 'svelte-cloudinary';
 	
 	let openMenu = $derived($menuOpen);
 	let openContacts = $derived($contactsOpen);
@@ -276,18 +277,29 @@
 				<picture class="profile profile-2 flower">
 					<source srcset="/portfolio icon/android-chrome-192x192.webp" type="image/webp" />
 					{#if openAboutMore == true}
-						<img
+						<!-- <CldImage
+							class="face-2"
+							src="android-chrome-192x192_cix3es"
+							alt="icon of my face me"
+							width="40"
+							height="40"
+						/> -->
+						<!-- <img
 							class="face-2"
 							src="./25acb22a-22a3-41d5-a0eb-c91529c4c6c8 (Custom).avif"
 							alt="icon of my face me"
 							width="40"
 							height="40"
-						/>
-						<img src="./photos/2533cde4-1781-47d6-a605-089cc54dfa8e2.avif" alt="me" />
+						/> -->
+						<img
+							src="https://res.cloudinary.com/dkemfwmvh/image/upload/f_auto,q_auto/2533cde4-1781-47d6-a605-089cc54dfa8e2_ecpjff?_a=BAMAPqhK0" 
+							alt="me" 
+							width="700"
+							height="700"/>
 					{:else}
 						<img
-							class=""
-							src="./25acb22a-22a3-41d5-a0eb-c91529c4c6c8 (Custom).webp"
+							class="face-2"
+							src="https://res.cloudinary.com/dkemfwmvh/image/upload/f_auto,q_auto/25acb22a-22a3-41d5-a0eb-c91529c4c6c8_Custom_rnbhzd?_a=BAMAPqhK0"
 							alt="icon of my face me"
 							width="40"
 							height="40"
