@@ -75,7 +75,6 @@
 	}
 
 
-
 	$effect(() => {
 		if (openMenu == false) {
 			contactsOpen.set(false);
@@ -87,7 +86,7 @@
 
 {#snippet headerLogo()}
 	<li class="header-logo">
-		<a href="/" data-sveltekit-reload>
+		<a href="/" data-sveltekit-reload data-sveltekit-preload-code class="logo-link" aria-label="home">
 			{#if openMenu === false}
 				<!-- {#key openMenu} -->
 					<div class="logo-container flower">
@@ -301,7 +300,7 @@
 		}
 	}
 
-	.header-logo figure {
+	.header-logo .logo-container {
 		flex: 0 1 auto;
 		position: relative;
 		aspect-ratio: 1;
@@ -412,7 +411,9 @@
 		backdrop-filter: blur(8px);
 		cursor: pointer;
 		z-index: 5;
-		transition: 100ms;
+		transition: 100ms, 
+		color 0s, 
+		transform 200ms linear(0, 0.008 0.8%, 0.032 1.6%, 0.129 3.4%, 0.692 10.3%, 0.903 13.5%, 1.04 16.7%, 1.084 18.4%, 1.111 20.2%, 1.122 22.3%, 1.117 24.6%, 1.016 35.6%, 0.996 39%, 0.987 42.6%, 1.001 64.5%, 1);
 
 		&:active{
 			border-style:  groove solid solid groove ;

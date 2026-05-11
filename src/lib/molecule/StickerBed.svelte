@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { onMount, tick } from 'svelte'
-	import { fade, fly } from 'svelte/transition';
 	import { firstLoad } from '$lib/store';
 	import { elasticOut } from 'svelte/easing';
 

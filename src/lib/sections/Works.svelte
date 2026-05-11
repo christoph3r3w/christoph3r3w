@@ -34,7 +34,7 @@
 
 	let { data } : Props = $props();
 	let { projects, delay = 0 } = $derived(data);
-	let dataWorks2 = $state<any[]>([]);
+	let dataWorks2 = $state<unknown[]>([]);
 
 	// Promise Handling Session 
 	$effect(() => {
@@ -63,7 +63,7 @@
 	let openDetailsIndex = $state<number | null>(null);
 	let m4 = $derived(openDetailsIndex);
 
-	let works = $derived(dataWorks2[1]?.works.filter((w: any) => w?.published.is === true).slice(0, 6) || []);
+	let works = $derived(dataWorks2[1]?.works.filter((w: unknown) => w?.published.is === true).slice(0, 6) || []);
 	let fileLinks = $derived(works[m4 ?? 0]?.link.src || '');
 	let qrTimeout: ReturnType<typeof setTimeout> | null = $state(null);
 	let qrURL = $state('');
@@ -149,14 +149,6 @@
 		el.style.setProperty('z-index', '90');
 	}
 
-	function bigPicture(e: MouseEvent,i: number) {
-		const imgBtn = e.currentTarget as HTMLElement;
-		const parentBlock = imgBtn.closest(`.block-${i}`);
-		parentBlock?.querySelectorAll('.asset-img-ctnr').forEach((btn) => {
-			btn.classList.toggle('big-asset');
-		});
-	}
-
 	onMount(() => {
 		tick(); 
 		projects.then(() => {
@@ -174,8 +166,8 @@
 	$effect(() => {
 		projects.then(() => {
 			clearLoadAnimation();
-			// let m3 = document.querySelector('.file-5')?.setAttribute('open','');
-			let m6 =  document.querySelectorAll<HTMLElement>('.file:not([open])').forEach(file => {
+			// let m3 = document.querySelector('.file-4')?.setAttribute('open','');
+			document.querySelectorAll<HTMLElement>('.file:not([open])').forEach(file => {
 				file.style.removeProperty('z-index');
 			});
 
@@ -217,6 +209,7 @@
 
 <svelte:head>
 	<link rel="preload" fetchpriority="auto" as="image" href="/works-assets/material-assets/paper 1 black&white transparent cropped (Custom).avif" />
+	<link rel="preload" fetchpriority="auto" as="image" href="/works-assets/material-assets/paper 1 black&white transparent cropped (Custom flipped).avif" />
 	<link rel="preload" fetchpriority="low" as="image" href="/works-assets/material-assets/Chris website14.avif" />
 </svelte:head>
 
@@ -322,7 +315,6 @@
 						{:catch error}
 							<p>Error loading images: {error.message}</p>
 						{/await}
-					
 						{/if}
 					{/if}
 					{#if block.html}
@@ -454,9 +446,6 @@
 	>
 		<summary tabindex="-1" class="experiment">
 			<span class="file-title"> your project here ??? </span>
-			<span class="cover-content sticker-label"
-				><img src="/chris icon lowlowres.avif" alt="chris icon" /></span
-			>
 			<div class="close-file-icon">
 				<svg
 					width="24"
@@ -518,7 +507,6 @@
 		{@render loadingFiles()}
 	{:then dataWorks}
 		<!-- {@render loadingFiles()} -->
-		<!-- {@render contactForm()} -->
 		{#each works as work, i}
 			{@render files(work, i)}
 		{:else}
@@ -680,6 +668,23 @@
 		&[open] {display: none;	}
 	}
 
+		details {
+
+		&:nth-of-type(1n) summary {
+			background-image: url('/works-assets/material-assets/paper 1 black&white transparent cropped (Custom flipped).avif');
+		}
+
+		&:nth-of-type(3n) summary {
+			background-image: url('/works-assets/material-assets/paper 1 black&white transparent cropped (Custom).avif');
+		}
+
+		&:nth-of-type(n) summary.experiment {
+			background-image: url('/works-assets/material-assets/Chris website14.avif');
+			background-blend-mode: soft-light;
+		}		
+	}
+
+
 	/* file and folder styling */
 	details:nth-of-type(n) > summary {
 		position: absolute;
@@ -722,15 +727,6 @@
 		&::marker {
 			content: '';
 			display: none;
-		}
-
-		&:nth-of-type(1n) {
-			background-image: url('/works-assets/material-assets/paper 1 black&white transparent cropped (Custom).avif');
-		}
-
-		&:nth-of-type(n).experiment {
-			background-image: url('/works-assets/material-assets/Chris website14.avif');
-			background-blend-mode: soft-light;
 		}
 
 		/* every section in the summary close state */
@@ -1080,7 +1076,6 @@
 		z-index: 10 !important;
 		contain: layout size style;
 		border-radius: var(--wc-radius);
-		overflow: hidden;
 
 		background-color: color-mix(in oklch, var(--file-primary-hue), rgba(255, 255, 255, 0.466) 50%);
 		background-color: color-mix(in lab, var(--file-primary-hue), var(--color-bg) 30%);
@@ -1486,7 +1481,7 @@
 			z-index: 4;
 
 			:global(.lucide) {
-				scale: 1.2;
+				scale: 1.1;
 			}
 
 			@supports (corner-shape: superellipse(0)) {
@@ -1605,7 +1600,7 @@
 			border-radius: 0 var(--wc-radius) var(--wc-radius) 0;
 			border-color: yellow;
 			min-width:var(--content-assets-right-gap);
-			mask: linear-gradient(to left, var(--file-primary-hue) -2% 60%, transparent 75% 100%);
+			mask: linear-gradient(to left, var(--file-primary-hue) -2% 35%, transparent 65% 100%);
 		}
 
 		&.b-bottom {
@@ -1677,7 +1672,7 @@
 		font-size: clamp(0.9rem, 4vw, 1.3rem);
 		color: var(--color-text);
 
-		max-width: 80cqw;
+		max-width: 75cqw;
 		width: 80ch;
 		margin-bottom: 1rem;
 		transition: background-color 200ms ease 2s;
@@ -1728,6 +1723,7 @@
 
 	.work-assets :global( .content-block > ul.flat-list) {
 		flex-flow: row wrap;
+		max-width: 77cqw;
 		list-style: none;
 		container-type: inline-size;
 	}
@@ -1741,8 +1737,9 @@
 		);
 
 		font-size: clamp(0.9rem, 4vw, 1.3rem);
-		text-align: center;
+		text-align: start;
 		place-content: center;
+		min-width: fit-content;
 		max-width: fit-content;
 		min-height: 3rem;
 		padding-inline: var(--pill-padding);
@@ -1767,7 +1764,6 @@
 			color-mix(in var(--_ct),var(--file-primary-hue), #ffffff98 30%) 90%
 		);
 
-		
 		&::first-letter {
 			text-transform: uppercase;
 		}
@@ -1995,6 +1991,11 @@
 		background-color: color-mix(in oklch, var(--black), var(--file-primary-color) 50%);
 		color: var(--file-primary-color);
 		z-index: 10;
+
+		&:active{
+			border-width: 2px;
+			transform: scale(1.09, 0.9);
+		}
 	}
 
 	/* //////////////// */
@@ -2203,21 +2204,25 @@
 		}
 	}
 
-	@keyframes assets-scroll-button {
-		from {
-			opacity: 0.2;
-			transform: translate(7% ,0 );
-			filter:blur(2px);
-		}
-		15%,
-		95% {
-			opacity: 1;
-			transform: translate(0% ,0 );
-			filter: blur(0);
-		}
-		to {
-			filter:blur(5px);
-			opacity: 0.2;
+	@supports (animation-timeline: view()) {
+
+		@keyframes assets-scroll-button {
+			from {
+				opacity: 0.2;
+				transform: translate(0, 7px);
+				filter:blur(2px);
+			}
+			15%,
+			95% {
+				opacity: 1;
+				transform: translate(0% ,0 );
+				filter: blur(0);
+			}
+			to {
+				filter:blur(5px);
+				/* transform: translate(10%, 47% ); */
+				opacity: 0.2;
+			}
 		}
 	}
 

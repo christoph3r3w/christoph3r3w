@@ -66,7 +66,7 @@ $effect(() => {
   observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        const slides = Array.from(track.children);
+        const slides = Array.from(track?.children);
         currentIndex = slides.indexOf(entry.target as HTMLElement);
       }
     });
@@ -369,11 +369,10 @@ onMount(() => {
 			cursor: pointer;
 
 			&:has(input:checked) {
-				background-color: var(--carousel-pill-btn-color);
 				background-color: var(--color-text);
-
 				border-radius: 50%;
 				box-shadow: rgba(0, 0, 0, 0.541) 0 5px 5px -3px;
+				scale: 1;
 			}
 
 			&:not(:has(input:checked)) {

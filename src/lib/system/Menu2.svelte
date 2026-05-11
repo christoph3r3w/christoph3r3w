@@ -3,7 +3,7 @@
 	import { menuOpen, contactsOpen, aboutOpen, aboutMoreOpen } from '$lib/store';
 	import { onMount,tick } from 'svelte';
 	import { elasticOut } from 'svelte/easing';
-	import { CornerDownRight, ArrowBigDown,Mail } from '@lucide/svelte';
+	import {ArrowBigDown,Mail } from '@lucide/svelte';
 	import { CldImage } from 'svelte-cloudinary';
 	
 	let openMenu = $derived($menuOpen);
@@ -53,7 +53,7 @@
 			delay: params.delay || 0,
 			duration: params.duration || 400,
 			easing: params.easing || elasticOut,
-			css: (t: any, u: any) =>
+			css: (t: number, u: number) =>
 				`
 				opacity: ${t * 0.6};
 				blur: ${u * 10}px;	
@@ -207,30 +207,20 @@
 				collaborators, or users themselves. These conversations shape how I approach the work:
 			</p>
 			<ul class="approaches" in:whoo={{ duration: 300, delay: 400 }} out:whoo={{ duration: 400 }}>
-				<!-- <li>Considering the needs of the stakeholders</li> -->
-				<!-- <li>Researching (new) tools and techniques that uniquely address user needs</li> -->
-				<!-- <li>Designing how the content and data that flows through the system</li> -->
-				<!-- <li>Designing the data flows </li> -->
-				<!-- <li>Laying out the content system</li> -->
-				<!-- <li>building systems flexible to adapt to both visual needs and the data that flows through them.</li> -->
-				<!-- <li>building flexible systems that adapts to both visual needs and the data flows .</li> -->
 				<li>
 					<p class="apr-pill">Considering stakeholder needs</p>
 					<p class="apr-pill">Researching tools and techniques that address user needs</p>
 				</li>
-				<!-- <CornerDownRight /> -->
 				<ArrowBigDown />
 				<li>
 					<p class="apr-pill">Designing the data flows</p>
 					<p class="apr-pill">Laying out the content system</p>
 				</li>
-				<!-- <CornerDownRight /> -->
 				<ArrowBigDown />
 				<li class="apr-pill">
 					Building flexible systems that adapt to visual needs and data flows
 				</li>
 				<li class="apr-pill">Automated and user testing</li>
-				<!-- <CornerDownRight/ /> -->
 				<ArrowBigDown />
 				<li class="apr-pill">Iterating until the project meets the criteria to go live</li>
 			</ul>
@@ -301,19 +291,20 @@
 							class="face-2"
 							src="https://res.cloudinary.com/dkemfwmvh/image/upload/f_auto,q_auto/25acb22a-22a3-41d5-a0eb-c91529c4c6c8_Custom_rnbhzd?_a=BAMAPqhK0"
 							alt="icon of my face me"
-							width="40"
-							height="40"
-						/>
+							width="150"
+							height="150"
+						
+						/> 
 					{/if}
 				</picture>
-				{#if $aboutMoreOpen == true}
+				<!-- {#if $aboutMoreOpen == true}
 					<picture class="profile profile-2 flower"
 					style="translate:0 -100%; z-index: 0;"
 					 >
 					 <source srcset="/portfolio icon/apple-touch-icon.webp" type="image/webp" />
 						<img src="./25acb22a-22a3-41d5-a0eb-c91529c4c6c8 (Custom).avif" alt="icon of my face me" width="40" height="40">
 					</picture>				
-				{/if}
+				{/if} -->
 			</a>
 		</li>
 		<li
@@ -378,6 +369,7 @@
 		justify-content: center;
 		min-height: var(--menu-height);
 		height: fit-content;
+		max-height: calc(var(--menu-height) + 24dvh);
 		padding-inline: var(--Padding-genral);
 		background-color: transparent;
 
@@ -386,7 +378,6 @@
 
 		container-type: inline-size;
 		container-name: menu;
-
 
 		@starting-style {
 			translate: 0 -10%;
@@ -628,7 +619,6 @@
 		padding: clamp(1rem, 1.5cqw, 2rem) clamp(1.5rem, 3cqw, 4rem);
 		border-radius: 10px 23.7px 23.7px 23.7px;
 		border: solid 1.9px var(--color-bg-muted);
-		/* border: solid 1px var(--_btn-border-color); */
 		border-style: solid groove groove solid;
 		width: fit-content;
 		min-height: 3rem;
@@ -727,7 +717,7 @@
 	/* about menu */
 	/* ////////// */
 	:global(.menu-container:has(.head-about)) {
-		/* --menu-height: 20cqh ; */
+		--menu-height: 60cqh ;
 		background-color: transparent;
 		box-shadow: none;
 		transition: 0.5s cubic-bezier(0.575, 0.005, 0.32, 1.175) 100ms;

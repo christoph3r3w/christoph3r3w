@@ -365,7 +365,7 @@ export async function load() {
 				// REDPERS
 				{
 					title: 'Redpers',
-					slug: 'UI overhaul',
+					slug: 'UI Revamp',
 					published: { is: true, date: '' },
 					description: '',
 					assets: {
@@ -393,7 +393,7 @@ export async function load() {
 								`
 								<h2>My propositions were :</h2>
 								<ul>
-									<li>A progress bar</li>
+									<li>A progress indicator</li>
 									<li>The ability to like or copy an article</li>
 									<li>Alternative hero sections</li>
 									<li>User preference theme state</li>
@@ -419,7 +419,7 @@ export async function load() {
 								'/works-assets/redpers/Arc_FwdWXvIFuE.gif',
 								'/works-assets/redpers/Figma_7ZeokABRGy22.avif',
 								'/works-assets/redpers/chrome_qBWt4euOe0.avif',
-								'/works-assets/redpers/chrome_Ji1CNss5Yj.png',						
+								'/works-assets/redpers/chrome_Ji1CNss5Yj.avif',						
 							]
 						},
 						{
