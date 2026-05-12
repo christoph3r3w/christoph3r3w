@@ -530,7 +530,7 @@ export async function load() {
 	works = workStatus(works);
 	let delaySimulation = 9000;
 	delaySimulation = 0;
-	delaySimulation = 5000
+	delaySimulation = 3000
 
 	// Timeout and Retry System
 	const TIMEOUT_MS = 10000; // 10 seconds
@@ -571,18 +571,23 @@ export async function load() {
 		throw lastError;
 	};
 
-	const projects = new Promise((resolve, reject) => {
-		setTimeout(() => {
-			resolve(dataWorks);
-			reject();
-		}, delaySimulation);
-		fetchWithRetry();
+	// const projects = new Promise((resolve, reject) => {
+	// 	setTimeout(() => {
+	// 		resolve(dataWorks);
+	// 		reject();
+	// 	}, delaySimulation);
+	// 	fetchWithRetry();
 
-	}); 
+	// }); 
+
+	const projects = (async () => {
+		await new Promise(r => setTimeout(r, delaySimulation));
+
+		return await fetchWithRetry();
+	})();
 
 
 	return {
-		// dataWorks,
 		projects,
 		delay: delaySimulation == 0 ? RETRY_DELAY_MS : delaySimulation
 	};
