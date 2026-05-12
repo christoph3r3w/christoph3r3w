@@ -555,7 +555,7 @@
 		@property --file-primary-hue {
 			syntax: '<color>';
 			inherits: false;
-			initial-value: transparent;
+			initial-value: 0;
 		}
 
 		@property --file-index {
@@ -1331,7 +1331,7 @@
 	.work-description.note .description-space button {
 		display: grid;
 		place-items: center;
-		background-color: color-mix(in var(--_ctx, oklch),
+		background-color: color-mix(in var(--color-spacex, oklch),
 			var(--file-primary-hue, var(--primary-gray-bg)),
 			rgba(255, 255, 255, 0.566) 80%
 		);
@@ -1342,7 +1342,7 @@
 		border-radius: 50%;
 		cursor: pointer;
 		&:hover {
-			background-color: color-mix(in var(--_ctx, oklch),
+			background-color: color-mix(in var(--color-spacex, oklch),
 				var(--file-primary-hue, var(--primary-gray-bg)),
 				rgba(255, 255, 255, 0.693) 80%
 			);
@@ -1378,7 +1378,7 @@
 
 	.work-description:where(.note):has(.disabled).stamp::after {
 		pointer-events: none;
-		background-color: color-mix(in var(--_ctx, oklch),
+		background-color: color-mix(in var(--color-spacex, oklch),
 			var(--file-primary-hue, black),
 			var(--description-bg) 80%
 		);
@@ -1505,27 +1505,27 @@
 
 	details[open] .work-assets {
 		--file-primary-hue: color-mix(
-			in var(--_ct),
+			in var(--color-space),
 			hsl(calc(213 * 680 / var(--file-index)), 0%, 80%),
 			var(--file-primary-color) 20%
 		);
 		--file-primary-hue2: color-mix(
-			in var(--_ct),
+			in var(--color-space),
 			hsl(calc(213 * 701 / var(--file-index)), 55%, 98%),
 			var(--file-primary-color) 75%
 		);
 		--file-assets-background: color-mix(
-			in var(--_ct),
+			in var(--color-space),
 			var(--file-primary-hue),
 			rgba(255, 255, 255, 0.073) 85%
 		);
-		--workassets-contrast-color: color-mix(in var(--_ct), var(--file-contrast-color),var(--file-primary-hue) 30%);
+		--workassets-contrast-color: color-mix(in var(--color-space), var(--file-contrast-color),var(--file-primary-hue) 30%);
 
 		--s: 60px; /* control the size of the grid */
 		--t: 2px; /* the thickness */
-		--grid-line-color: color-mix(in var(--_ct), var(--file-line-color2), var(--color-text) 20%);
-		--grid-color:transparent 25%, color-mix(in var(--_ct), var(--grid-line-color) 10%, transparent 70%) 0%;
-		--_ct: oklch;
+		--grid-line-color: color-mix(in var(--color-space), var(--file-line-color2), var(--color-text) 20%);
+		--grid-color:transparent 25%, color-mix(in var(--color-space), var(--grid-line-color) 10%, transparent 70%) 0%;
+		--color-space: oklch;
 
 		grid-column: 1/ -1;
 		grid-row: 1/-1;
@@ -1544,14 +1544,14 @@
 			linear-gradient(
 				90deg,
 				transparent 25%,
-				color-mix(in var(--_ct) longer hue, var(--file-primary-hue), rgba(255, 255, 255, 0.126) 88%) 53%,
-				color-mix(in var(--_ct) longer hue, var(--file-primary-hue), rgba(255, 255, 255, 0.092) 77%),
-				color-mix(in var(--_ct) longer hue, var(--file-primary-hue), rgba(255, 255, 255, 0.074) 88%) 73%,
+				color-mix(in var(--color-space) longer hue, var(--file-primary-hue), rgba(255, 255, 255, 0.126) 88%) 53%,
+				color-mix(in var(--color-space) longer hue, var(--file-primary-hue), rgba(255, 255, 255, 0.092) 77%),
+				color-mix(in var(--color-space) longer hue, var(--file-primary-hue), rgba(255, 255, 255, 0.074) 88%) 73%,
 				transparent 85%
 			);
 
-		scrollbar-color: color-mix(in var(--_ct), var(--file-primary-color), transparent 55%) transparent;
-		scrollbar-color: color-mix(in var(--_ct), var(--file-assets-background), white 15%) transparent;
+		scrollbar-color: color-mix(in var(--color-space), var(--file-primary-color), transparent 55%) transparent;
+		scrollbar-color: color-mix(in var(--color-space), var(--file-assets-background), white 15%) transparent;
 		scroll-timeline: --work-assets-timeline;
 
 		& > * {
@@ -1663,7 +1663,7 @@
 		margin-bottom: 1rem;
 		font-size: clamp(0.9rem, 4vw, 1.3rem);
 		color: var(--color-text);
-		color: color-mix(in var(--_ct),var(--color-text, #ffffffc7),var(--file-primary-color) 50%);
+		color: color-mix(in var(--color-space),var(--color-text, #ffffffc7),var(--file-primary-color) 50%);
 	}
 
 	.work-assets .content-block :global(p) {
@@ -1689,7 +1689,7 @@
 		font-size: clamp(0.9rem, 4vw, 1.3rem);
 		font-style: italic;
 		line-height: 1.5;
-		color: color-mix(in var(--_ct), var(--color-text) 80%, var(--workassets-contrast-color, #87b7eb) 10%);
+		color: color-mix(in var(--color-space), var(--color-text) 80%, var(--workassets-contrast-color, #87b7eb) 10%);
 		text-decoration:underline dotted;
 		text-underline-offset: 6px;
 		width: fit-content;
@@ -1702,7 +1702,7 @@
 		}
 
 		&:hover {
-			color: color-mix(in var(--_ct), var(--file-primary-color) 50%, var(--workassets-contrast-color, #87b7eb) 90%);
+			color: color-mix(in var(--color-space), var(--file-primary-color) 50%, var(--workassets-contrast-color, #87b7eb) 90%);
 			text-decoration-thickness: 3px ;
 			transition: 180ms ease;
 		}
@@ -1730,7 +1730,7 @@
 	.work-assets :global( .content-block :is(li,.pill)),.content-block :is(li,.pill) {
 		--_pill-hue: var(--file-primary-color);
 		--pill-padding: clamp(7px, 36.5px - 2cqw, 21.5px);
-		--_pill-color2: color-mix(in var(--_ct),
+		--_pill-color2: color-mix(in var(--color-space),
 			var(--_pill-hue, #ffffffc7),
 			color-mix(in lab, var(--color-bg), #ffffff98 50%) 70%
 		);
@@ -1745,22 +1745,22 @@
 		border-radius: var(--pill-radius);
 		
 		border: solid 3px var(--_pill-hue);
-		border-color: color-mix(in var(--_ct),
+		border-color: color-mix(in var(--color-space),
 			var(--_pill-hue, #ffffffc7) 70%,
 			 #ffffff98  80%
 		);
 		color: color-mix(
-			in var(--_ct),
+			in var(--color-space),
 			black 60%,
 			var(--_pill-hue, var(--black)) 80%
 		);
-		background-color: color-mix(in var(--_ct),
-			var(--_pill-hue, #ffffffc7),color-mix(in var(--_ct), 
+		background-color: color-mix(in var(--color-space),
+			var(--_pill-hue, #ffffffc7),color-mix(in var(--color-space), 
 			var(--file-primary-hue), #ffffff98 30%) 80%
 		);
-		background-color: color-mix(in var(--_ct),
+		background-color: color-mix(in var(--color-space),
 			var(--_pill-hue, #ffffffc7),
-			color-mix(in var(--_ct),var(--file-primary-hue), #ffffff98 30%) 90%
+			color-mix(in var(--color-space),var(--file-primary-hue), #ffffff98 30%) 90%
 		);
 
 		&::first-letter {
@@ -1789,14 +1789,14 @@
 		&:hover {
 			box-shadow: 
 			black 0 5px 11px -10px,
-			inset 0 0 0 1px color-mix(in var(--_ct), var(--file-pill-color,var(--black)) 80%, transparent 20%);
+			inset 0 0 0 1px color-mix(in var(--color-space), var(--file-pill-color,var(--black)) 80%, transparent 20%);
 		}
 
 		&:active{
 			transform: scale(1.01, 0.94);
 			box-shadow: 
 			black 0 2px 9px -10px,
-			inset 0 0 0 1px color-mix(in var(--_ct), var(--file-pill-color,var(--black)) 80%, transparent 20%);
+			inset 0 0 0 1px color-mix(in var(--color-space), var(--file-pill-color,var(--black)) 80%, transparent 20%);
 		}
 
 		&:nth-last-child(1) { margin-bottom: 2rem;}
@@ -1814,7 +1814,7 @@
 
 	.work-assets :global(.content-block :is(li,.pill):has(:is(button,a):hover)) {
 		transition: translate 250ms ease;
-		color: color-mix(in var(--_ct), var(--file-pill-color,var(--black)) 90%, var(--black) 30%);
+		color: color-mix(in var(--color-space), var(--file-pill-color,var(--black)) 90%, var(--black) 30%);
 		backdrop-filter: blur(4px);
 	}
 

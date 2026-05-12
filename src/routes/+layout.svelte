@@ -27,9 +27,10 @@
 	:root {
 		--H-top: 5cqh;
 		--Padding-genral: 2cqh;
-		--primary-gray: #d5d5d5e7;
-		--primary-gray: #ebe9db;
-		--primary-gray: var(--color-bg);
+		/* --primary-gray: #d5d5d5e7; */
+		/* --primary-gray: #ebe9db; */
+		--primary-gray: var(--color-bg,  #ebe9db);
+		--color-space: oklch
 	}
 
 	:global(html) {

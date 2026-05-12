@@ -345,7 +345,7 @@
 <style>
 	:root {
 		--menu-height: 40cqh;
-		--icon-shadow-color: color-mix(in srgb, var(--color-bg, #ffffff), rgba(105, 98, 63, 0.181) 50%);
+		--icon-shadow-color: color-mix(in var(--color-space), var(--color-bg, #ffffff), rgba(105, 98, 63, 0.181) 50%);
 		--logo-img-min-size: 4.5rem;
 		--logo-width: clamp(4cqw, -0.1rem + 67cqw, 5cqw);
 		--intro-element-displacement: calc(var(--H-top) + 11cqb);
@@ -913,14 +913,14 @@
 	}
 
 	.read-more .text-bubble {
-		--_ct: oklch;
+		--color-space: oklch;
 	}
 
 	.read-more .text-bubble > p {
 		max-width: 45ch;
 		height: fit-content;
-		color: color-mix(in var(--_ct), var(--color-text), var(--color-bg) 30%);
-		color: color-mix(in var(--_ct), var(--color-text) 100%, var(--accent-color) 10%);
+		color: color-mix(in var(--color-space), var(--color-text), var(--color-bg) 30%);
+		color: color-mix(in var(--color-space), var(--color-text) 100%, var(--accent-color) 10%);
 
 		&:nth-of-type(n + 3) {
 			line-height: 1.3;
@@ -954,7 +954,7 @@
 		li {
 			--_pill-hue: var(--accent-color);
 			--_pill-color2: color-mix(
-				in var(--_ct),
+				in var(--color-space),
 				var(--_pill-hue, #ffffffc7),
 				color-mix(in lab, var(--color-bg), #ffffff98 50%) 90%
 			);
@@ -971,7 +971,7 @@
 
 			background-color: var(--_pill-color2);
 			color: color-mix(
-				in var(--_ct),
+				in var(--color-space),
 				var(--color-text, #ffffff) 70%,
 				var(--_pill-hue, var(--black)) 90%
 			);
@@ -996,10 +996,10 @@
 		}
 
 		.apr-pill.apr-pill {
-			--_ct: oklch;
+			--color-space: oklch;
 			--_pill-hue: var(--accent-color);
 			--_pill-color2: color-mix(
-				in var(--_ct),
+				in var(--color-space),
 				var(--_pill-hue, #ffffffc7),
 				color-mix(in lab, var(--color-bg), #ffffff98 50%) 90%
 			);
@@ -1016,18 +1016,18 @@
 			border-radius: var(--pill-radius);
 
 			color: color-mix(
-				in var(--_ct),
+				in var(--color-space),
 				var(--color-text, #ffffff) 70%,
 				var(--_pill-hue, var(--black)) 90%
 			);
 			border: solid 3px var(--_pill-hue);
 			border-color: color-mix(
-				in var(--_ct),
+				in var(--color-space),
 				var(--_pill-hue, #ffffffc7) 70%,
 				color-mix(in srgb, var(--color-bg), #ffffff98 50%) 50%
 			);
 			background-color: color-mix(
-				in var(--_ct),
+				in var(--color-space),
 				var(--_pill-hue, #ffffffc7),
 				color-mix(in srgb, var(--color-bg), #ffffff98 50%) 90%
 			);
@@ -1061,9 +1061,9 @@
 	}
 
 	.read-more :global(.lucide:nth-of-type(n)) {
-		--_lucide-c: color-mix(in var(--_ct), var(--color-text) 80%, var(--color-bg) 60%);
+		--_lucide-c: color-mix(in var(--color-space), var(--color-text) 80%, var(--color-bg) 60%);
 		color: color-mix(
-			in var(--_ct),
+			in var(--color-space),
 			var(--_lucide-c, #2c5d98),
 			var(--primary-color, var(--color-heading)) 36%
 		);

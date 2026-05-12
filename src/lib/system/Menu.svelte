@@ -313,7 +313,7 @@
 <style>
 	:root {
 		--menu-height: 50cqh;
-		--icon-shadow-color: color-mix(in srgb, var(--color-bg, #ffffff), rgba(105, 98, 63, 0.181) 50%);
+		--icon-shadow-color: color-mix(in oklch, var(--color-bg, #ffffff), #69623f2e 50%);
 	}
 
 	@property --menu-height {

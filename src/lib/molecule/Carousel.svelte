@@ -239,8 +239,8 @@ onMount(() => {
 		}
 
 		:global(.controls) {
-			--controls-bg: color-mix(in var(--_ct), var(--_pill-hue, #ffffffc7), color-mix(in var(--_ct), var(--file-primary-hue), #ffffff67 90%) 90%);
-			--controls-bg: color-mix(in var(--_ct), var(--_pill-hue, #ffffffc7),  #ffffff0e 90%);
+			--controls-bg: color-mix(in var(--color-space), var(--_pill-hue, #ffffffc7), color-mix(in var(--color-space), var(--file-primary-hue), #ffffff67 90%) 90%);
+			--controls-bg: color-mix(in var(--color-space), var(--_pill-hue, #ffffffc7),  #ffffff0e 90%);
 
 			isolation: isolate;
 			display: flex ;
@@ -305,7 +305,7 @@ onMount(() => {
 
 			&:hover{
 				box-shadow: black 0 5px 11px -10px, inset 0 0 9px -5px 
-				color-mix(in var(--_ct), var(--file-pill-color, var(--black)) 30%, transparent 40%);
+				color-mix(in var(--color-space), var(--file-pill-color, var(--black)) 30%, transparent 40%);
 			}
 
 			button{
@@ -350,7 +350,7 @@ onMount(() => {
 			border-radius: var(--pill-radius);
 			border: solid 3px var(--_pill-hue);
 			border-color: 
-				color-mix(in var(--_ct), var(--_pill-hue, #ffffffc7) 70%, 
+				color-mix(in var(--color-space), var(--_pill-hue, #ffffffc7) 70%, 
 				color-mix(in srgb, var(--color-bg), #ffffff98 50%) 80%);
 			background-color: var(--controls-bg) !important;
 			aspect-ratio: 1;
