@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { menuOpen, contactsOpen, aboutOpen, aboutMoreOpen, modeDark } from '$lib/store';
 	import * as themeToggleFn from '$lib/atoms/themeToggleFn.svelte';
-	import { CldImage } from 'svelte-cloudinary';
 	let openMenu = $derived($menuOpen);
 	let openContacts = $derived($contactsOpen);
 	let openAbout = $derived($aboutOpen);
@@ -73,7 +72,6 @@
 	function handleAboutMore() {
 		aboutMoreOpen.set(!$aboutMoreOpen);
 	}
-
 
 	$effect(() => {
 		if (openMenu == false) {

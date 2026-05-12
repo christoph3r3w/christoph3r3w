@@ -4,7 +4,6 @@
 	import { onMount,tick } from 'svelte';
 	import { elasticOut } from 'svelte/easing';
 	import {ArrowBigDown,Mail } from '@lucide/svelte';
-	import { CldImage } from 'svelte-cloudinary';
 	
 	let openMenu = $derived($menuOpen);
 	let openContacts = $derived($contactsOpen);

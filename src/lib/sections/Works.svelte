@@ -172,7 +172,7 @@
 		projects.then(() => {
 			clearLoadAnimation();
 			// let m3 = document.querySelector('.file-4')?.setAttribute('open','');
-			document.querySelectorAll<HTMLElement>('.file:not([open])').forEach(file => {
+			let m6 = document.querySelectorAll<HTMLElement>('.file:not([open])').forEach(file => {
 				file.style.removeProperty('z-index');
 			});
 
@@ -556,7 +556,6 @@
 		--carousel-bottom-gap:0rem;
 
 		font-family: 'Geist Sans', sans-serif;
-
 		
 
 		@property --file-index {
