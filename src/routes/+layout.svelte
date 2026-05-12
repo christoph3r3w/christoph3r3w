@@ -1,9 +1,7 @@
 <script lang="ts">
-	import { Header, Window, Menu2, CuttingBoard } from '$lib';
+	import { Header, Window, Menu2} from '$lib';
 	import {setup} from '$lib/atoms/themeToggleFn.svelte';
 	import { onMount } from 'svelte';
-
-	let svg = CuttingBoard;
 
 	let { children } = $props();
 

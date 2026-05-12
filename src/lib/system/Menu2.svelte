@@ -253,7 +253,6 @@
 	</article>
 	{#if openAboutMore !== true}
 		<article class="text-bubble" in:whoo={{ duration: 200 }}>
-			<!-- Interact with folder below to see projects. -->
 			Have a look at some projects in the folder below.
 		</article>
 	{/if}
@@ -266,20 +265,7 @@
 				<picture class="profile profile-2 flower">
 					<source srcset="/portfolio icon/android-chrome-192x192.webp" type="image/webp" />
 					{#if openAboutMore == true}
-						<!-- <CldImage
-							class="face-2"
-							src="android-chrome-192x192_cix3es"
-							alt="icon of my face me"
-							width="40"
-							height="40"
-						/> -->
-						<!-- <img
-							class="face-2"
-							src="./25acb22a-22a3-41d5-a0eb-c91529c4c6c8 (Custom).avif"
-							alt="icon of my face me"
-							width="40"
-							height="40"
-						/> -->
+						
 						<img
 							src="https://res.cloudinary.com/dkemfwmvh/image/upload/f_auto,q_auto/2533cde4-1781-47d6-a605-089cc54dfa8e2_ecpjff?_a=BAMAPqhK0" 
 							alt="me" 
@@ -291,9 +277,7 @@
 							src="https://res.cloudinary.com/dkemfwmvh/image/upload/f_auto,q_auto/25acb22a-22a3-41d5-a0eb-c91529c4c6c8_Custom_rnbhzd?_a=BAMAPqhK0"
 							alt="icon of my face me"
 							width="150"
-							height="150"
-						
-						/> 
+							height="150"/> 
 					{/if}
 				</picture>
 				<!-- {#if $aboutMoreOpen == true}
@@ -342,7 +326,8 @@
 </article>
 
 <style>
-	:root {
+
+	:root{
 		--menu-height: 40cqh;
 		--icon-shadow-color: color-mix(in var(--color-space), var(--color-bg, #ffffff), rgba(105, 98, 63, 0.181) 50%);
 		--logo-img-min-size: 4.5rem;
@@ -352,12 +337,12 @@
 		--pill-radius: 107.59px;
 		/* --pill-padding: 21.5px; */
 		--pill-padding: clamp(7px, 46.5px - 2cqw, 21.5px);
+	}
 
-		@property --menu-height {
-			syntax: '<length>';
-			initial-value: 46cqh;
-			inherits: true;
-		}
+	@property --menu-height {
+		syntax: '<length>';
+		initial-value: 46cqh;
+		inherits: true;
 	}
 
 	/* menu contaiter styling and logic */

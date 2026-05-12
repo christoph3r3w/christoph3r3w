@@ -147,13 +147,12 @@
 <style>
 	:root {
 		--scale: 0;
+	}
 	
-		@property --padding-genral {
-			syntax: '<length>';
-			initial-value: 1rem;
-			inherits: true;
-		}
-
+	@property --padding-genral {
+		syntax: '<length>';
+		initial-value: 1rem;
+		inherits: true;
 	}
 
 	:global(body:has(noscript .mainContain)) {
