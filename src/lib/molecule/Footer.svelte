@@ -129,7 +129,7 @@
 	<li class="D-menu">
 		<button onmouseup={toggleContacts} class="contact-btn">Contact</button>
 		<button onmouseup={toggleMenu} class="menu-btn" aria-label="menu button">
-			<svg width="" height="" viewBox="0 0 77 62" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<svg width="50" height="50" viewBox="0 0 77 62" fill="none" xmlns="http://www.w3.org/2000/svg">
 				<path d="M25 31.25L25 30.75" stroke="black" stroke-width="5" stroke-linecap="round" />
 				<path d="M39 31.25L39 30.75" stroke="black" stroke-width="5" stroke-linecap="round" />
 				<path d="M52 31.25L52 30.75" stroke="#555555" stroke-width="5" stroke-linecap="round" />
@@ -294,7 +294,7 @@
 	/* //////////////////////// */
 	/* logo - face icon section */
 	/* //////////////////////// */
-	li.footer-logo {
+	/* li.footer-logo {
 		transition: 0.5s ease-out;
 		justify-content: end;
 		filter: drop-shadow(var(--icon-shadow-color) 0px 28px 10px);
@@ -368,7 +368,7 @@
 				transition: 12s;
 			}
 		}
-	}
+	} */
 
 	/* //////////////////////////////////// */
 	/* button menu section - middle section */

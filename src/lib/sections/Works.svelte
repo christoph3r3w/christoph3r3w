@@ -236,7 +236,7 @@
 		<div class="close-file-icon">
 			<svg
 				width="24"
-				height="25"
+				height="24"
 				viewBox="0 0 24 25"
 				fill="none"
 				xmlns="http://www.w3.org/2000/svg"
@@ -449,7 +449,7 @@
 			<div class="close-file-icon">
 				<svg
 					width="24"
-					height="25"
+					height="24"
 					viewBox="0 0 24 25"
 					fill="none"
 					xmlns="http://www.w3.org/2000/svg"
@@ -534,11 +534,8 @@
 			var(--file-primary-color) 90%
 		);
 		--file-primary-hue: var(---primary-color);
-		--file-cover-color: color-mix(in oklch, #f5e5b9, rgba(255, 255, 255, 0.466) 30%);
-		--file-cover-color: rgba(255, 255, 255, 0.834);
 		--file-cover-color: var(--tritary-color);
 
-		--transition-timing: cubic-bezier(0.62, -0.1, 0.36, 1);
 		--transition-timing: cubic-bezier(0.294, -0.291, 0.247, 1.056);
 		--transition-duration: 0.7s;
 		--delay-factor: 0.1s;
@@ -554,19 +551,21 @@
 		--carousel-bottom-gap:0rem;
 
 		font-family: 'Geist Sans', sans-serif;
+
+		@property --file-primary-hue {
+			syntax: '<color>';
+			inherits: false;
+			initial-value: transparent;
+		}
+
+		@property --file-index {
+			syntax: '<integer>';
+			inherits: false;
+			initial-value: 0;
+		}
+
 	}
 
-	@property --file-primary-hue {
-		syntax: '<color>';
-		inherits: false;
-		initial-value: transparent;
-	}
-
-	@property --file-index {
-		syntax: '<integer>';
-		inherits: false;
-		initial-value: 0;
-	}
 
 	.work-section:has(details[open]) .Orderedlist-container {
 		filter: opacity(0.3) blur(1px);

@@ -125,7 +125,6 @@
 </script>
 
 <div class="container" bind:this={container}>
-	<!-- the section -->
 	<section class="mainContain scroller" bind:this={scroller}>
 		<Window
 			role="child"
@@ -148,17 +147,18 @@
 <style>
 	:root {
 		--scale: 0;
-	}
+	
+		@property --padding-genral {
+			syntax: '<length>';
+			initial-value: 1rem;
+			inherits: true;
+		}
 
-	@property --padding-genral {
-		syntax: '<length>';
-		initial-value: 1rem;
-		inherits: true;
 	}
 
 	:global(body:has(noscript .mainContain)) {
 		.container:has(.scroller) {
-			background-color: aqua !important;
+			background-color: rgb(0, 0, 0);
 			display: none;
 		}
 	}
@@ -274,10 +274,6 @@
 		grid-template-columns: repeat(60, 1fr);
 		grid-template-rows: repeat(40, 1fr);
 		scroll-snap-align: center;
-
-		/* box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset; */
-		/* box-shadow: rgba(224, 224, 238, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.177) 0px -2px 6px 0px inset,rgba(212, 211, 203, 0.505) 0px 30px 60px -12px inset, rgba(211, 188, 131, 0.3) 0px 18px 36px -18px inset; */
-		/* box-shadow: rgba(224, 224, 238, 0.25) 0px 50px 100px -20px, rgba(33, 33, 33, 0.23) 0px 30px 60px -30px, rgba(10, 37, 64, 0.121) 0px -2px 6px 0px inset,rgba(212, 211, 203, 0.505) 0px 30px 60px -28px inset, rgba(211, 188, 131, 0.3) 0px 18px 36px -30px inset; */
 		box-shadow: rgba(0, 0, 0, 0.1) -4px 9px 25px -6px;
 	}
 

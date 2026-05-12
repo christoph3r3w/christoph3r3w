@@ -66,7 +66,7 @@
 		overflow: hidden;
 		background-attachment: fixed, fixed;
 		background:
-			url('cuttingmat55-33-2.svg'),
+			url('/cuttingmat55-33-2.svg'),
 			radial-gradient(circle, rgba(42, 123, 155, 0) 69%, var(--color-bg) 100%);
 		background-size: cover, cover;
 		background-repeat: no-repeat;

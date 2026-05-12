@@ -143,7 +143,7 @@
 <div class="intro-section pad" bind:this={introSection}>
 	<!-- <p class="text" bind:this={textElement}	>Christopher Willems</p> -->
 	<div class="text" bind:this={textElement}>
-		<p>Chri</p>
+		<p>Chris</p>
 		<!-- <figure class='bar' bind:this={bar}>
 			<img src="25acb22a-22a3-41d5-a0eb-c91529c4c6c8.avif" alt="">
 			<section class="barControls">
