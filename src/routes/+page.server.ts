@@ -277,7 +277,6 @@ export async function load() {
 						icon: '/pwa-64x64.avif',
 						// color: 'hsl(130, 25%, 38%)'
 						color: 'hsl(130, 18%, 49%)'
-						// color:'#b2b857',
 					},
 					contentBlock: [
 						{
@@ -317,10 +316,6 @@ export async function load() {
 								'/works-assets/monytri/Figma_qpFdozyYcm.avif',
 								'/works-assets/monytri/Figma_SYUhIpEj2X.avif',
 								'/works-assets/monytri/Screenshot 2026-03-09 2349322.avif',
-								'/works-assets/monytri/Arc_jwNAJXUzVf.gif',
-								'/works-assets/monytri/monytri 2233 2026-01-18 025839 (Custom).avif',
-								'/works-assets/monytri/Vector 6.avif',
-								'/works-assets/monytri/Screenshot 2026-01-23 224045.avif'
 							]
 						},
 						{
@@ -535,7 +530,7 @@ export async function load() {
 	works = workStatus(works);
 	let delaySimulation = 9000;
 	delaySimulation = 0;
-	// delaySimulation = 5000
+	delaySimulation = 5000
 
 	// Timeout and Retry System
 	const TIMEOUT_MS = 10000; // 10 seconds
