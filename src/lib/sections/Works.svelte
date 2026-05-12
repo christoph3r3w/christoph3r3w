@@ -32,6 +32,11 @@
 		m5?:(filenumber : number) => void;
 	}
 
+	interface Pagination {
+		currentPage: number;
+		totalPages: number;
+	}
+
 	let { data } : Props = $props();
 	let { projects, delay = 0 } = $derived(data);
 	let dataWorks2 = $state<unknown[]>([]);
@@ -63,7 +68,7 @@
 	let openDetailsIndex = $state<number | null>(null);
 	let m4 = $derived(openDetailsIndex);
 
-	let works = $derived(dataWorks2[1]?.works.filter((w: unknown) => w?.published.is === true).slice(0, 6) || []);
+	let works = $derived(dataWorks2[1]?.works?.filter((w: any) => w?.published?.is === true).slice(0, 6) || []);
 	let fileLinks = $derived(works[m4 ?? 0]?.link.src || '');
 	let qrTimeout: ReturnType<typeof setTimeout> | null = $state(null);
 	let qrURL = $state('');
@@ -565,7 +570,6 @@
 		}
 
 	}
-
 
 	.work-section:has(details[open]) .Orderedlist-container {
 		filter: opacity(0.3) blur(1px);
@@ -1943,12 +1947,12 @@
 			padding-inline: var(--content-assets-left-gap, 43cqw) var(--content-assets-right-gap, 20%) ; 
 		}
 
-		:global(.controls) {
+		/* :global(.controls) {
 			animation: assets-scroll-button linear both;
 			animation-timeline: view();
 			animation-range-start: contain;
 			animation-range-end: 75cqh;
-		}
+		} */
 
 		:global(.asset-img-ctnr) {
 			scroll-snap-stop: always;
