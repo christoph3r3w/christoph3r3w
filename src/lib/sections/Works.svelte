@@ -554,18 +554,18 @@
 		--carousel-bottom-gap:0rem;
 
 		font-family: 'Geist Sans', sans-serif;
+	}
 
-		@property --file-primary-hue {
-			syntax: '<color>';
-			inherits: false;
-			initial-value: 0;
-		}
+	@property --file-primary-hue {
+		syntax: '<color>';
+		inherits: false;
+		initial-value: transparent;
+	}
 
-		@property --file-index {
-			syntax: '<integer>';
-			inherits: false;
-			initial-value: 0;
-		}
+	@property --file-index {
+		syntax: '<integer>';
+		inherits: false;
+		initial-value: 0;
 	}
 
 	.work-section:has(details[open]) .Orderedlist-container {

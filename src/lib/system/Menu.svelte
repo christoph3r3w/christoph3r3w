@@ -314,12 +314,12 @@
 	:root {
 		--menu-height: 50cqh;
 		--icon-shadow-color: color-mix(in srgb, var(--color-bg, #ffffff), rgba(105, 98, 63, 0.181) 50%);
+	}
 
-		@property --menu-height {
-			syntax: '<length>';
-			initial-value: 46cqh;
-			inherits: true;
-		}
+	@property --menu-height {
+		syntax: '<length>';
+		initial-value: 46cqh;
+		inherits: true;
 	}
 
 	/* menu contaiter styling and logic */

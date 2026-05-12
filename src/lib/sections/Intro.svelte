@@ -166,36 +166,34 @@
 </div>
 
 <style>
-	:root {
-		@property --letter-index {
-			syntax: '<number>';
-			initial-value: 0;
-			inherits: true;
-		}
+	@property --letter-index {
+		syntax: '<number>';
+		initial-value: 0;
+		inherits: true;
+	}
 
-		@property --letter-total {
-			syntax: '<number>';
-			initial-value: 11;
-			inherits: true;
-		}
+	@property --letter-total {
+		syntax: '<number>';
+		initial-value: 11;
+		inherits: true;
+	}
 
-		@property --random-col {
-			syntax: '<number>';
-			initial-value: 1;
-			inherits: true;
-		}
+	@property --random-col {
+		syntax: '<number>';
+		initial-value: 1;
+		inherits: true;
+	}
 
-		@property --random-row {
-			syntax: '<number>';
-			initial-value: 1;
-			inherits: true;
-		}
+	@property --random-row {
+		syntax: '<number>';
+		initial-value: 1;
+		inherits: true;
+	}
 
-		@property --h {
-			syntax: '<number> | <percentage>';
-			initial-value: -0%;
-			inherits: true;
-		}
+	@property --h {
+		syntax: '<number> | <percentage>';
+		initial-value: -0%;
+		inherits: true;
 	}
 
 	:global(.char) {
@@ -210,7 +208,6 @@
 		position: relative;
 		will-change: transform;
 		width: clamp(10rem, 100%, 20rem);
-		/* outline: solid rgba(0, 128, 0, 0.174) 1px; */
 	}
 
 	.intro-section {
@@ -230,169 +227,4 @@
 		container-type: inline-size;
 	}
 
-	/* .text{
-		width: 60vw;
-		height: 15cqh;
-		position: relative;
-		display: inline flex;
-		align-items: center;
-		justify-content: center;
-		outline: solid red;
-	} */
-
-	/* .text p{
-		display: flex;
-		align-items: center;
-	} */
-
-	/* .bar {
-		--press:0;
-		--h:1;
-		--d:0;
-
-		flex: 1 0 50%;
-		position: fixed; 
-		inset-inline: 10%;
-		inset-block: 40%;
-		display: flex;
-		border-radius: 10rem 10rem;
-		background-color: goldenrod;
-		overflow: clip;
-		opacity: 0;
-		z-index: 3;
-		transition: .2s;
-		box-shadow: rgba(0, 0, 0, 0.09) var(--press) calc(2px * var(--h)) 1px var(--d), rgba(0, 0, 0, 0.09) var(--press) calc(4px * var(--h)) 2px var(--d), rgba(0, 0, 0, 0.09) var(--press) calc(8px * var(--h)) 4px var(--d), rgba(0, 0, 0, 0.09) var(--press) 16px 8px var(--d), rgba(0, 0, 0, 0.09) 0px 32px 16px var(--d);
-	} */
-
-	/* :global(body):has(.bar:hover) .barConShadow {
-		--press: 0;
-		box-shadow: rgba(0, 0, 0, 0.09) var(--press) 2px 1px, rgba(0, 0, 0, 0.09) var(--press) 4px 2px, rgba(0, 0, 0, 0.09) var(--press) 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
-		transition: .2s;
-		transform: translateY(10%) !important;
-	} */
-	/* span and button left */
-	/* :global(body) .bar:hover:has(span:nth-of-type(1):hover){
-		--press: 10px ;
-		--h:-1.2;
-		--d:-5px;
-		transform: rotateY(-5deg) skewY(1deg) !important;
-	} */
-
-	/* :global(body) .bar:hover:has(span:nth-of-type(1) button:active){
-		--press: 10px ;
-		--h:-1.2;
-		--d:-5px;
-		transform: rotateY(-10deg) skewY(2deg) !important;
-	} */
-
-	/* span and button right */
-	/* :global(body) .bar:hover:has(span:nth-of-type(3):hover){
-		--press: -10px;
-		--h:-1.2;
-		--d:-5px;
-		transform: rotateY(5deg) skewY(-1deg) !important;
-	}
-
-	:global(body) .bar:hover:has(span:nth-of-type(3) button:active){
-		--press: -10px;
-		--h:-1.2;
-		--d:-5px;
-		transform: rotateY(10deg) skewY(-2deg) !important;
-	}
-
-	.bar img {
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-		object-position: 75% 35%;
-		border-radius: inherit;
-		mix-blend-mode:overlay;
-	}
-
-	.barControls {
-		position: absolute;
-		inset-inline: 0;
-		inset-block: 0;
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		border-radius: 10rem 10rem;
-		z-index: 2;
-
-	}
-
-	.barControls span:is(:nth-of-type(1), :nth-of-type(3)) {
-		display: none
-	}
-
-	.barControls span:nth-of-type(2) {
-		display: flex;
-		flex: 1 1 40%;
-		justify-content: center;
-		align-items: center;
-		outline: solid rgba(119, 128, 0, 0.678);
-		height: 100%;
-	}
-
-	@supports not selector(::scroll-button(*)){
-	
-		.barControls span {
-			position: relative;
-			outline: solid rgba(119, 128, 0, 0.678);
-			height: 100%;
-			flex: 1 1 30%;
-			display: flex;
-			align-items: center;
-
-			&:nth-of-type(1) {
-				display: flex;
-				border-radius: 5rem 0 0 5rem;
-				padding-left: 3%;
-			}
-
-			&:is(:nth-of-type(2)){
-				justify-content: center;
-			}
-
-			&:nth-of-type(3){
-				display: flex;
-				border-radius: 0 5rem 5rem 0;
-				justify-content: end;
-				padding-right: 3%;
-			}
-		}
-	}
-
-	.barControls span:nth-child(n) button {
-		position: relative;
-		aspect-ratio: 1;
-		border-radius: 50%;
-		height: 80%;
-		border: none;
-		anchor-name: "button";
-		
-		&:active {
-			outline: solid rgba(0, 128, 0, 0.174) 1px;
-			background-color: rgb(0, 128, 0);
-		}
-	}
-
-	.barControls span:nth-child(1) button {
-		anchor-name: --button-left;
-	}
-	.barControls span:nth-child(3) button {
-		anchor-name: --button-right;
-	}
-
-	.barConShadow {
-		position: absolute;
-		inset-inline: 10%;
-		inset-block: 40%;
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		border-radius: 10rem 10rem;
-		z-index: 1;
-		background-color: rgba(94, 94, 94, 0.568);
-	} */
 </style>

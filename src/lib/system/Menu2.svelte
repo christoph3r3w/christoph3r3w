@@ -353,12 +353,12 @@
 		--pill-radius: 107.59px;
 		/* --pill-padding: 21.5px; */
 		--pill-padding: clamp(7px, 46.5px - 2cqw, 21.5px);
+	}
 
-		@property --menu-height {
-			syntax: '<length>';
-			initial-value: 46cqh;
-			inherits: true;
-		}
+	@property --menu-height {
+		syntax: '<length>';
+		initial-value: 46cqh;
+		inherits: true;
 	}
 
 	/* menu contaiter styling and logic */
