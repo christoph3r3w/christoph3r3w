@@ -187,7 +187,7 @@
 	}
 
 	/* carousel control logic and animation */
-	.scroller {
+	/* .scroller {
 		&::scroll-button(*) {
 			--_btn-shadow-color: color-mix(
 				in srgb,
@@ -201,10 +201,10 @@
 			);
 
 			position: fixed;
-			/* top: anchor(top);
+			top: anchor(top);
       	left: anchor(left);
       	right: anchor(right);
-      	bottom: anchor(bottom); */
+      	bottom: anchor(bottom);
 			bottom: 4%;
 			margin-inline: 6%;
 			background: rgba(197, 197, 197, 0.762);
@@ -243,7 +243,7 @@
 		}
 	}
 
-	/* button grow animation */
+	button grow animation
 	:global(body:has(.at-start, .at-end)) {
 		.scroller::scroll-button(*):not(:disabled) {
 			width: 5rem;
@@ -254,7 +254,7 @@
     .scroller::scroll-button(left){
       width: 6rem;
     }
-  }
+  } */
 
 	:global(.child-container.contentContain) {
 		margin-top: 1px ;

@@ -289,17 +289,6 @@
 				{@render Contacts()}
 			{:else if openAbout == true}
 				{@render About()}
-			{:else}
-				<!-- <span> <button onclick={() => showAbout()}>About</button></span>
-				<span> <button onclick={() => showContacts()}>Contact</button></span>
-				<span> <a class="noLink" href="/">Masmesa studio</a></span>
-				<span> <a class="noLink" href="/">Workshops,events</a></span> -->
-				<!-- <li class="menu-routes">
-				<span> <button onclick={() => showAbout()}>About</button></span>
-				<span> <button onclick={() => showContacts()}>Contact</button></span>
-				<span> <a class="noLink" href="/">Masmesa studio</a></span>
-				<span> <a class="noLink" href="/">Workshops,events</a></span>
-			</li> -->
 			{/if}
 		</li>
 	</ul>
@@ -339,10 +328,6 @@
 		position: relative;
 		height: var(--menu-height);
 		padding-inline: var(--Padding-genral);
-		/* background-color: rgba(255, 255, 255, 0.342);
-		background-color: color-mix(in srgb, var(--color-bg, rgba(255, 255, 255, 0.781)), rgba(255, 255, 255, 0.342) 80%);
-		background-color: color-mix(in srgb, var(--tritary-color, rgba(255, 255, 255, 0.781)), rgba(255, 255, 255, 0.342) 20%);
-		background-color: color-mix(in srgb, var(--tritary-color, rgba(255, 255, 255, 0.781)),color-mix(in srgb, var(--color-bg), rgba(255, 255, 255, 0.595) 50% ) 90%); */
 		background-color: inherit;
 
 		backdrop-filter: blur(5px);
@@ -350,7 +335,6 @@
 
 		container-type: inline-size;
 		container-name: menu;
-		/* view-transition-name: menu; */
 
 		@starting-style {
 			translate: 0 -100%;
@@ -369,16 +353,9 @@
 		display: block;
 		inset: 0;
 		top: calc(0 - 10%);
-		/* background-color: rgba(255, 255, 255, 0.801);
-		background-color: color-mix(in hsl, var(--color-bg)60%, transparent );
-		background-color: color-mix(in srgb, var(--color-bg, rgba(255, 255, 255, 0.511)) 60%, rgba(255, 255, 255, 0.199) 80%);
-		background-color: color-mix(in srgb, var(--tritary-color, rgba(255, 255, 255, 0.781)), rgba(255, 255, 255, 0.595) 60%); */
-		/* background-color: color-mix(in srgb, var(--tritary-color, rgba(255, 255, 255, 0.781)),color-mix(in srgb, var(--color-bg), rgba(255, 255, 255, 0.595) 50% ) 90%); */
-		/* box-shadow: rgba(27, 21, 14, 0.041) 0px 50px 50px -20px, rgba(0, 0, 0, 0.15) 0px 10px 60px -30px, rgba(10, 37, 64, 0.35) 0px -1.7px 3px 0px inset; */
 
 		z-index: 1;
 		animation: block 0.65s linear 100ms alternate both;
-		/* view-transition-name: menu; */
 	}
 
 	.close {
@@ -407,7 +384,6 @@
 		bottom: 0;
 		padding-inline: 6rem;
 		container-type: inline-size;
-		/* outline: solid red; */
 	}
 
 	.headerUl > li {
@@ -424,7 +400,6 @@
 		height: 60cqh;
 		max-height: 100%;
 		z-index: 30;
-		/* outline: solid red; */
 	}
 
 	li.header-logo a {
@@ -449,7 +424,7 @@
 		min-width: 5rem;
 		height: 100%;
 		min-height: 5rem;
-		/* view-transition-name: header-figure; */
+		view-transition-name: header-figure;
 		isolation: isolate;
 
 		& img {
@@ -509,12 +484,10 @@
 		--g: /27.486% 27.486% radial-gradient(#000 calc(71% - 1px), #0000 71%) no-repeat;
 		transition: transform 1s 0.1s;
 		transform: rotateY(0.5turn);
-		/* animation:flip 1s alternate forwards .1s   ; */
 	}
 
 	.headerUl:has(li:nth-of-type(1) a:not(:hover)) .flower {
 		transition: 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275) 1s;
-		/* animation: sway 10s backwards infinite .1s; */
 	}
 
 	li:not(.header-logo) {
@@ -523,7 +496,6 @@
 		padding-inline: var(--Padding-genral);
 		flex: 1 1 auto;
 		gap: 4%;
-		/* outline: solid red; */
 	}
 
 	/* contacts menu */
