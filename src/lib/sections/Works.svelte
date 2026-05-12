@@ -557,17 +557,20 @@
 
 		font-family: 'Geist Sans', sans-serif;
 
-		@property --file-primary-hue {
-			syntax: '<color>';
-			inherits: false;
-			initial-value: 0;
-		}
+		
 
 		@property --file-index {
 			syntax: '<integer>';
-			inherits: false;
+			inherits: true;
 			initial-value: 0;
 		}
+
+		@property --file-primary-hue {
+			syntax: '<color>';
+			inherits: true;
+			initial-value: 0;
+		}
+
 
 	}
 
