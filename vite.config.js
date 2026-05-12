@@ -11,5 +11,8 @@ export default defineConfig({
 		hmr: {
 			overlay: false
 		}
+	},
+	build: {
+		cssMinify: 'esbuild'
 	}
 });
