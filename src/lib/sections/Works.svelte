@@ -670,7 +670,7 @@
 		&[open] {display: none;	}
 	}
 
-		details {
+	details {
 
 		&:nth-of-type(1n) summary {
 			background-image: url('/works-assets/material-assets/paper 1 black&white transparent cropped (Custom flipped).avif');
@@ -738,8 +738,8 @@
 			height: fit-content;
 			margin-right: 1%;
 			overflow: hidden;
-			color: color-mix(in oklch, var(--file-primary-hue), rgb(14, 14, 14) 45%);
-			color: color-mix(in oklch,	var(--file-primary-hue), var(--color-text-mute, var(--color-text)) 45%);
+			/* color: color-mix(in oklch, var(--file-primary-hue), rgb(14, 14, 14) 45%); */
+			/* color: color-mix(in oklch,	var(--file-primary-hue), var(--color-text-mute, var(--color-text)) 45%); */
 			color: color-mix(in oklch, var(--file-primary-hue), rgb(14, 14, 14) 55%);
 
 			font-size: 2rem;
@@ -1612,7 +1612,7 @@
 			width: 100%;
 			border-radius: 0 0 var(--wc-radius) var(--wc-radius);
 			border-color: blue;
-			mask: linear-gradient(to top, var(--file-primary-hue) -2% 10%, transparent 50% 100%);
+			mask: linear-gradient(to top, var(--file-primary-hue) -4% 10%, transparent 50% 100%);
 		}
 	}
 

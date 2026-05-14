@@ -1183,7 +1183,7 @@
 		}
 	}
 
-	@media (width < 850px) {
+	@media (width < 950px) {
 		.menu-container.active ul.headerUl {
 			padding: 0;
 			margin-left: 0 ;
