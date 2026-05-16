@@ -234,8 +234,8 @@
 
 <style>
 	:root {
-		--btn-shadow-color: color-mix(in oklch, var(--color-bg, #ffffff), rgba(105, 98, 63, 0.181) 50%);
-		--icon-shadow-color: color-mix(in oklch, var(--color-bg, #ffffff), rgba(105, 98, 63, 0.181) 50%);
+		--btn-shadow-color: color-mix(in var(--color-space), var(--color-bg, #ffffff), rgba(105, 98, 63, 0.181) 50%);
+		--icon-shadow-color: color-mix(in var(--color-space), var(--color-bg, #ffffff), rgba(105, 98, 63, 0.181) 50%);
 		--header-element-shadow: 0 10px 20px -10px rgba(12, 15, 23, 0.378);
 	}
 

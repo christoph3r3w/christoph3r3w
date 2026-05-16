@@ -151,7 +151,7 @@
 		if (!el) return;
 
 		el.setAttribute('open', '');
-		el.style.setProperty('z-index', '90');
+		el.style.setProperty('z-index', '9');
 	}
 
 	onMount(() => {
@@ -239,7 +239,7 @@
 			<span class="status">{work?.status?.sticker || `an ${work?.status?.is}`}</span>
 		</div>
 		<div class="close-file-icon">
-			<svg
+			<!-- <svg
 				width="24"
 				height="24"
 				viewBox="0 0 24 25"
@@ -249,7 +249,9 @@
 				<path
 					d="M23.2396 21.8955C23.7523 22.4204 23.7523 23.2715 23.2396 23.7965C22.9841 24.0581 22.6481 24.1906 22.3121 24.1906C21.9761 24.1906 21.6401 24.0599 21.3846 23.7965L11.8121 13.996L2.23956 23.7965C1.98406 24.0581 1.64806 24.1906 1.31206 24.1906C0.97606 24.1906 0.640063 24.0599 0.384563 23.7965C-0.128187 23.2715 -0.128187 22.4204 0.384563 21.8955L9.95706 12.0951L0.384563 2.29474C-0.128187 1.76978 -0.128187 0.918677 0.384563 0.393719C0.897313 -0.13124 1.72857 -0.13124 2.24132 0.393719L11.8138 10.1942L21.3863 0.393719C21.899 -0.13124 22.7303 -0.13124 23.2431 0.393719C23.7558 0.918677 23.7558 1.76978 23.2431 2.29474L13.6706 12.0951L23.2396 21.8955Z"
 				/>
-			</svg>
+			</svg> -->
+			<XIcon />
+
 		</div>
 	</summary>
 {/snippet}
@@ -534,7 +536,7 @@
 		--hue-number: 913;
 
 		--file-primary-hue: color-mix(
-			in oklch longer hue,
+			in var(--color-space) longer hue,
 			hsl(calc(213 * 700 / var(--file-index)), 55%, 38%),
 			var(--file-primary-color) 90%
 		);
@@ -542,8 +544,8 @@
 		--file-cover-color: var(--tritary-color);
 
 		--transition-timing: cubic-bezier(0.294, -0.291, 0.247, 1.056);
-		--transition-duration: 0.7s;
-		--delay-factor: 0.1s;
+		--transition-duration: 600ms;
+		--delay-factor: 50ms;
 
 		--sticker-color: hsla(21, 79%, 51%, 0.974);
 		--sticker-width: 0;
@@ -601,7 +603,7 @@
 		/* folder cover animation */
 		details.work-cover :is(summary, ::details-summary),
 		details.work-cover summary {
-			--transition-duration: 700ms;
+			--transition-duration: 600ms;
 			--move: calc(40dvh + 1dvw * var(--total-work));
 
 			top: var(--move);
@@ -630,7 +632,7 @@
 		details.file:is(:focus-within) summary {
 			--move: calc(46vh + (-43vh * (var(--file-index) / var(--total-work, 1))));
 			--shadow-1-radius: calc(-4px + 0.5px * (var(--file-index)));
-			--shadow-1-color: color-mix(in oklch, var(--file-primary-hue), rgba(0, 0, 0, 0.259) 30%);
+			--shadow-1-color: color-mix(in var(--color-space), var(--file-primary-hue), rgba(0, 0, 0, 0.259) 30%);
 			top: calc(var(--move));
 			left: calc(0.1dvw * var(--total-work) + 10px * tan(var(--file-index)) + var(--move-all));
 
@@ -738,9 +740,7 @@
 			height: fit-content;
 			margin-right: 1%;
 			overflow: hidden;
-			/* color: color-mix(in oklch, var(--file-primary-hue), rgb(14, 14, 14) 45%); */
-			/* color: color-mix(in oklch,	var(--file-primary-hue), var(--color-text-mute, var(--color-text)) 45%); */
-			color: color-mix(in oklch, var(--file-primary-hue), rgb(14, 14, 14) 55%);
+			color: color-mix(in var(--color-space), var(--file-primary-hue), rgb(14, 14, 14) 55%);
 
 			font-size: 2rem;
 			font-weight: 700;
@@ -765,6 +765,7 @@
 			white-space: nowrap;
 			font-size: 1rem;
 			height: 2rem;
+			margin-right: 2%;
 			display: flex;
 			align-items: center;
 			justify-content: center;
@@ -818,9 +819,9 @@
 		display: block !important;
 		font-size: clamp(2rem, 20vw, 10rem);
 		color: var(--color-text);
-		background-color: var(--file-cover-color, color-mix(in oklch longer hue, var(--hoverC,var(--primary-color,hsl(calc(213 - 90 / var(--file-index)), 55%, 38%))) , rgba(255, 255, 255, 0.338) 70% ));
+		background-color: var(--file-cover-color, color-mix(in var(--color-space), var(--hoverC,var(--primary-color,hsl(calc(213 - 90 / var(--file-index)), 55%, 38%))) , rgba(255, 255, 255, 0.338) 70% ));
 		background-color: color-mix(
-			in oklch,
+			in var(--color-space),
 			var(--hoverC, var(--primary-color, hsl(calc(213 - 90 / var(--file-index)), 55%, 38%))) 60%,
 			rgba(255, 255, 255, 0.466) 33%
 		);
@@ -849,7 +850,7 @@
 			opacity: 1;
 			pointer-events:none;
 			cursor: pointer;
-			color: var(--file-cover-color, color-mix(in oklch longer hue, var(--hoverC,var(--primary-color,hsl(calc(213 - 90 / var(--file-index)), 55%, 38%))) , rgba(255, 255, 255, 0.338) 70% ));
+			color: var(--file-cover-color, color-mix(in var(--color-space), var(--hoverC,var(--primary-color,hsl(calc(213 - 90 / var(--file-index)), 55%, 38%))) , rgba(255, 255, 255, 0.338) 70% ));
 			z-index: -1;
 		} */
 
@@ -865,18 +866,16 @@
 	/* ///////////////////// */
 	/* files covers */
 	details.file summary {
-		--file-primary-hue: color-mix(
-			in oklch,
+		--file-primary-hue: color-mix(in var(--color-space, oklch),
 			hsl(calc(var(--hue-number, 213) / var(--file-index)), 55%, 38%),
 			var(--file-primary-color) var(--file-primary-color-amount)
 		);
 		--move: calc(50vh + (-6.9svh * var(--file-index)));
 		top: var(--move);
 		right: 0;
+		
 		color: var(--black);
-
-		background-color: color-mix(in oklch, var(--file-primary-hue), rgba(255, 255, 255, 0.466) 10%);
-		background-color: color-mix(in lab, var(--file-primary-hue), var(--color-bg) 20%);
+		background-color: color-mix(in var(--color-space), var(--file-primary-hue), var(--color-bg) 10%);
 		border-radius: var(--wc-radius) var(--wc-radius) var(--wc-radius) 5px;
 		backdrop-filter: blur(50px);
 
@@ -890,8 +889,6 @@
 	/* files background overlay */
 	details.file summary:nth-of-type(n)::before {
 		content: '';
-		/* background-color: color-mix(in oklch, var(--file-primary-hue), hsla(204, 93%, 33%, 0.566) 60%); */
-		/* background-color: color-mix(in oklch, var(--file-primary-hue), rgba(238, 130, 238, 0.462) 60%); */
 		background-color: color-mix(in lab, var(--file-primary-hue), rgba(173, 130, 238, 0.462) 55%);
 
 		position: absolute;
@@ -899,7 +896,7 @@
 		top: 4rem;
 		left: 3rem;
 		border-radius: inherit;
-		z-index: 100;
+		z-index: 10;
 		contain: paint content;
 	}
 
@@ -925,12 +922,14 @@
 	}
 
 	/* when hover or focus stops */
-	details.work-cover:not(:hover, :focus, :active) :is(summary, ::details-summary) {
+	details.work-cover:not(:hover, :focus, :active) :is(summary, ::details-summary),
+	details.work-cover :is(summary, ::details-summary):not(:hover, :focus, :active) {
 		transition: 600ms var(--transition-timing);
 	}
 
-	details.file:not(:hover, :focus, :active) :is(summary, ::details-summary) {
-		transition: 200ms var(--transition-timing);
+	details.file:not(:hover, :focus, :active)  :is(summary, ::details-summary),
+	details.file :is(summary, ::details-summary):not(:hover, :focus, :active) {
+		transition: 250ms var(--transition-timing);
 	}
 
 	/* files styling and animation - hover or focus*/
@@ -950,7 +949,7 @@
 			background-color 200ms 100ms,
 			transform-origin 0s;
 		cursor: pointer;
-		background-color: color-mix(in oklch, var(--file-primary-hue), rgba(255, 255, 255, 0.466) 20%);
+		background-color: color-mix(in var(--color-space), var(--file-primary-hue), rgba(255, 255, 255, 0.466) 20%);
 
 		@container (width < 900px) {
 			--move: calc(46vh + (-43vh * (var(--file-index) / var(--total-work, 1))));
@@ -977,13 +976,15 @@
 	}
 
 	.work-section:has(details:nth-of-type(n)[open]) details.file > summary {
+		--_fold-radius: 55px;
+		--_contrast-color: contrast-color(var(--file-primary-hue));
 		top: -2%;
 		left: 5%;
 		transform: rotate(0deg);
-		color: var(--file-primary-hue, black);
+		color: var(--file-primary-hue, var(--black));
 		background-color: var(--file-primary-hue);
 		background-color: color-mix(in lab, var(--file-primary-hue), var(--color-bg) 10%);
-		border-radius: var(--wc-radius) 30px var(--wc-radius) 0;
+		border-radius: var(--wc-radius) var(--_fold-radius) var(--wc-radius) 0;
 		transition:
 			0.3s var(--transition-timing),
 			border-radius 100ms,
@@ -1005,22 +1006,21 @@
 
 		.close-file-icon {
 			opacity: 1;
-			color:color-mix(in oklch, var(--black), var(--file-primary-color) 50%);
 			right: 0;
-			padding-bottom: 7%;
-
-			svg {
-				position: absolute;
-				width: 10px;
+			display: flex;
+			align-items: center;
+			/* border:solid red; */
+			padding-left: 10px;
+			
+			:global(.lucide),svg {
+				width: 20px;
 				height: auto;
 				aspect-ratio: 1;
-				top: 1.3rem;
-				right: 1.2rem;
+				stroke-width: 3.2px;
+				color:var(--_contrast-color,black);
+				color: color-mix(in var(--color-space), var(--file-primary-hue), var(--_contrast-color,black) 80%);
 			}
 
-			svg path {
-				stroke: color-mix(in oklch, var(--file-primary-hue), rgba(0, 0, 0, 0.848) 80%);
-			}
 		}
 
 		.close-file-icon::after {
@@ -1028,11 +1028,11 @@
 			position: absolute;
 			top: 0;
 			right: 0;
-			width: 2.5rem;
-			height: 2.7rem;
-			border-radius: 10px 40px 10px var(--wc-radius);
-			background-color: color-mix(in oklch, var(--file-primary-hue), rgba(25, 25, 31, 0.503) 10%);
-			filter: drop-shadow(rgba(50, 47, 30, 0.921) 0px 2px 1px);
+			width: 3.2rem;
+			height: 3.7rem;
+			border-radius: 10px var(--_fold-radius) 10px var(--wc-radius);
+			background-color: color-mix(in var(--color-space), var(--file-primary-hue), rgba(25, 25, 31, 0.503) 10%);
+			filter: drop-shadow(#322f1e90 0px 1px .5px);
 			z-index: -1;
 
 			@supports (corner-shape: superellipse(0)) {
@@ -1052,21 +1052,19 @@
 	/* The content of each project is */
 	/* ////////////////////////////// */
 	details[open]::details-content {
-		--file-primary-hue: color-mix(
-			in oklch,
+		--file-primary-hue: color-mix(in var(--color-space, oklch),
 			var(--file-primary-hue2) 90%,
 			var(--file-primary-color) 90%
 		);
-		--file-primary-hue2: color-mix(
-			in oklch,
+		--file-primary-hue2: color-mix(in var(--color-space, oklch),
 			hsl(calc(var(--hue-number, 213) / var(--file-index)), 25%, 68%),
 			var(--file-primary-color) var(--file-primary-color-amount)
 		);
-		--file-line-color: color-mix(in oklch, var(--file-primary-hue, black), rgb(0, 0, 0) 40%);
-		--file-line-color2: color-mix(in oklch,var(--file-primary-hue, var(--primary-gray-bg)),rgb(206, 44, 44) 15%);
+		--file-line-color: color-mix(in var(--color-space, oklch), var(--file-primary-hue, black), rgb(0, 0, 0) 40%);
+		--file-line-color2: color-mix(in var(--color-space, oklch),var(--file-primary-hue, var(--primary-gray-bg)),rgb(206, 44, 44) 15%);
 
-		--bg-test: color-mix(in oklch, var(--file-primary-hue2) 90%, var(--file-primary-color) 90%);
-		--bg-test: color-mix(in oklch, var(--file-primary-hue2) 90%, var(--file-primary-color) 90%);
+		--bg-test2: color-mix(in var(--color-space, oklch), var(--file-primary-hue2) 90%, var(--file-primary-color) 90%);
+		--bg-test: color-mix(in var(--color-space, oklch), var(--file-primary-hue2) 90%, var(--file-primary-color) 90%);
 		--file-contrast-color: contrast-color(var(--file-primary-hue));
 
 		position: absolute;
@@ -1079,7 +1077,7 @@
 		contain: layout size style;
 		border-radius: var(--wc-radius);
 
-		background-color: color-mix(in oklch, var(--file-primary-hue), rgba(255, 255, 255, 0.466) 50%);
+		/* background-color: color-mix(in var(--color-space, oklch), var(--file-primary-hue), rgba(255, 255, 255, 0.466) 50%); */
 		background-color: color-mix(in lab, var(--file-primary-hue), var(--color-bg) 30%);
 	}
 
@@ -1212,7 +1210,7 @@
 		flex-flow: row wrap;
 		margin-top: 1%;
 		background-color: color-mix(
-			in oklch,
+			in var(--color-space),
 			var(--file-primary-hue, var(--primary-gray-bg)),
 			rgba(80, 80, 80, 0.167) 20%
 		);
@@ -1239,7 +1237,7 @@
 	.work-description .description-info ul.tools .tags {
 		--hue-number: calc(213 * 900 * var(--tag-id, 13));
 		--file-primary-hue: color-mix(
-			in oklch,
+			in var(--color-space),
 			hsl(calc(var(--hue-number, 213) / var(--file-index)), calc(25% + 1% * var(--tag-id, 1)), 48%),
 			var(--file-primary-color) var(--file-primary-color-amount)
 		);
@@ -1250,30 +1248,30 @@
 		white-space: nowrap;
 		font-size: 0.88rem;
 		font-weight: 500;
-		color: color-mix(in oklch, var(--file-line-color) 60%, black 45%);
+		color: color-mix(in var(--color-space), var(--file-line-color) 60%, black 45%);
 		border-radius: 50px;
-		background-color: color-mix(in oklch, var(--file-primary-hue), rgba(255, 255, 255, 0.566) 60%);
+		background-color: color-mix(in var(--color-space), var(--file-primary-hue), rgba(255, 255, 255, 0.566) 60%);
 		padding: 0.3rem 0.8rem;
 		margin-inline: 1%;
 		margin-bottom: 2%;
 
 		&:nth-child(-n + 3) {
-			--_3tag-color:color-mix(in oklch, var(--black), var(--file-primary-color) 20%);
+			--_3tag-color:color-mix(in var(--color-space), var(--black), var(--file-primary-color) 20%);
 			--tag-contrast-color: contrast-color(var(--_3tag-color));
 			mix-blend-mode: multiply;
 			mix-blend-mode: overlay;
 			background-color: color-mix(
-				in oklch longer hue,
+				in var(--color-space) longer hue,
 				var(--file-primary-hue),
-				color-mix(in oklch longer hue,
+				color-mix(in var(--color-space) longer hue,
 						hsl(calc(var(--hue-number) / var(--file-index)), 45%, 28%),
 						var(--file-primary-color) 98%
 					)
 					96%
 			);
-			background-color: color-mix(in oklch, var(--black), var(--file-primary-color) 50%);
-			color: color-mix(in oklch, var(--file-primary-hue), var(--tag-contrast-color) 80%);
-			border: solid 2px color-mix(in oklch, var(--file-primary-hue), rgba(255, 255, 255, 0.566) 60%);
+			background-color: color-mix(in var(--color-space), var(--black), var(--file-primary-color) 50%);
+			color: color-mix(in var(--color-space), var(--file-primary-hue), var(--tag-contrast-color) 80%);
+			border: solid 2px color-mix(in var(--color-space), var(--file-primary-hue), rgba(255, 255, 255, 0.566) 60%);
 		}
 	}
 
@@ -1327,6 +1325,7 @@
 		align-items: end;
 		justify-content: start;
 		gap: 1rem;
+		transform: translateX(2rem);
 		transition: transform 250ms
 			linear(0, 0.297 6.8%, 0.515 13.8%, 0.686 22%, 0.812 31.6%, 0.895 42.6%, 0.949 56.4%, 1);
 	}
@@ -1334,7 +1333,7 @@
 	.work-description.note .description-space button {
 		display: grid;
 		place-items: center;
-		background-color: color-mix(in var(--color-spacex, oklch),
+		background-color: color-mix(in var(--color-space, oklch),
 			var(--file-primary-hue, var(--primary-gray-bg)),
 			rgba(255, 255, 255, 0.566) 80%
 		);
@@ -1345,11 +1344,13 @@
 		border-radius: 50%;
 		cursor: pointer;
 		&:hover {
-			background-color: color-mix(in var(--color-spacex, oklch),
+			background-color: color-mix(in var(--color-space, oklch),
 				var(--file-primary-hue, var(--primary-gray-bg)),
 				rgba(255, 255, 255, 0.693) 80%
 			);
 		}
+
+		&:nth-of-type(1) { margin-top: 10cqh; }
 
 		:global(.lucide){	width: 1.7rem;	}
 	}
@@ -1381,7 +1382,7 @@
 
 	.work-description:where(.note):has(.disabled).stamp::after {
 		pointer-events: none;
-		background-color: color-mix(in var(--color-spacex, oklch),
+		background-color: color-mix(in var(--color-space, oklch),
 			var(--file-primary-hue, black),
 			var(--description-bg) 80%
 		);
@@ -1422,7 +1423,7 @@
 	}
 
 	.work-description:where(.note) .description-links {
-		--_white-toggle: color-mix(in oklch, white 100%, var(--file-primary-hue, white) 100%);
+		--_link-contrast-color: contrast-color(var(--_link-color), var(--file-primary-hue));
 		flex: 0 1 10%;
 		display: flex;
 		gap: 1rem;
@@ -1440,13 +1441,12 @@
 			font-size: 1.125rem;
 			font-weight: 500;
 			text-wrap: nowrap;
-			color: color-mix(in oklch, var(--file-primary-hue) 10%, rgba(33, 15, 15, 0.932) 100%);
+			color: color-mix(in var(--color-space), var(--file-primary-hue) 10%, rgba(33, 15, 15, 0.932) 100%);
 			border: solid 1px rgba(0, 0, 0, 0.179);
 		}
 
 		a.link-btn {
-			--_link-color: color-mix(in oklch longer hue,var(--file-primary-hue, var(--description-bg)),color-mix(in hsl longer hue,hsl(calc(var(--hue-number) / var(--file-index)), 45%, 68%),var(--file-primary-color) 98%)63%);
-			--_link-color: color-mix(in oklch longer hue,var(--file-primary-hue, var(--description-bg)),color-mix(in hsl shorter hue,hsl(calc(var(--hue-number) / var(--file-index)), 85%, 88%),var(--file-primary-color) 98%)64%);
+			--_link-color: color-mix(in var(--color-space) longer hue,var(--file-primary-hue, var(--description-bg)),color-mix(in hsl shorter hue,hsl(calc(var(--hue-number) / var(--file-index)), 85%, 88%),var(--file-primary-color) 98%)64%);
 			--_link-contrast-color: contrast-color(var(--_link-color));
 			flex: 1 1 60%;
 			height: 100%;
@@ -1455,8 +1455,7 @@
 			font-weight: 300;
 			font-size: 1.3rem;
 			letter-spacing: .5cqw;			
-			/* color:color-mix(in srgb , var(--_link-contrast-color) 90% , var(--file-primary-hue) 20%); */
-			/* color:color-mix(in oklch , var(--_link-contrast-color), var(--file-primary-hue) 15%); */
+			color:color-mix(in var(--color-space) , var(--_link-contrast-color), var(--file-primary-hue) 10%);
 			background-color:var(--_link-color) ;
 
 			@supports (corner-shape: superellipse(0)) {
@@ -1476,13 +1475,12 @@
 			width: 100%;
 			border-top: none;
 			border-radius: 0 0 var(--stamp-radius) var(--stamp-radius);
-			background-color: color-mix(in oklch,var(--file-primary-hue, var(--description-bg)),var(--_white-toggle, white) 60%);
-			background-color: color-mix(in oklch,var(--file-primary-hue, var(--primary-gray-bg)),#ffffff90 60%	);
-			color: color-mix(in oklch, var(--black), var(--file-primary-color) 50%);
+			background-color: color-mix(in var(--color-space),var(--file-primary-hue, var(--primary-gray-bg)),#ffffff90 60%	);
 			cursor: pointer;
 			z-index: 4;
 
 			:global(.lucide) {
+				color: color-mix(in var(--color-space), var(--_link-contrast-color,var(--black)), var(--file-primary-color) 50%);
 				scale: 1.1;
 			}
 
@@ -1627,7 +1625,7 @@
 		--t: 1.6px; /* the thickness */
 		--g: 20px;
 		--grid-color:
-			color-mix(in oklch, var(--grid-line-color) 20%, transparent 70%) 25%, transparent 25%;
+			color-mix(in var(--color-space), var(--grid-line-color) 20%, transparent 70%) 25%, transparent 25%;
 
 		background:
 			conic-gradient(at var(--g) var(--t), var(--grid-color))
@@ -1990,7 +1988,7 @@
 		right: .5rem;
 		border: solid 2px;
 		padding: 10px;
-		background-color: color-mix(in oklch, var(--black), var(--file-primary-color) 50%);
+		background-color: color-mix(in var(--color-space), var(--black), var(--file-primary-color) 50%);
 		color: var(--file-primary-color);
 		z-index: 10;
 
@@ -2066,7 +2064,7 @@
 		position: absolute;
 		font-size: 1rem;
 		font-weight: lighter;
-		color: color-mix(in oklch, rgb(0, 0, 0), var(--sticker-color, transparent) 10%);
+		color: color-mix(in var(--color-space), rgb(0, 0, 0), var(--sticker-color, transparent) 10%);
 		background-color: var(--sticker-color);
 		border-radius: 15px;
 		padding: 3ex 2ex;
@@ -2128,7 +2126,7 @@
 		opacity: 0;
 		border: solid 1px color-mix(in lab, var(--file-primary-hue), var(--color-text) 30%);
 		color: color-mix(in lab, var(--tritary-color), var(--color-bg) 80%);
-		background-color: color-mix(in oklch, var(--tritary-color) 80% , var(--color-text) 20%);
+		background-color: color-mix(in var(--color-space), var(--tritary-color) 80% , var(--color-text) 20%);
 		pointer-events: none;
 		animation: loading 3.2s var(--_delay) infinite steps(4, end);
 
@@ -2294,7 +2292,7 @@
 		details.file:nth-of-type(n):is(:active, :focus) :is(summary, ::details-summary) {
 			--hover-file-top: 0px;
 			background-color: color-mix(
-				in oklch,
+				in var(--color-space),
 				var(--file-primary-hue),
 				rgba(255, 255, 255, 0.466) 40%
 			);

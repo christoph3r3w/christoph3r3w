@@ -180,8 +180,8 @@
 
 <style>
 	:root {
-		--list-color: color-mix(in oklch, var(--hoverC, var(--tritary-color)) 65%, var(--dark-subtle));
-		--line-color: color-mix(in oklch, var(--list-color), rgba(200, 196, 123, 0.21));
+		--list-color: color-mix(in var(--color-space), var(--hoverC, var(--tritary-color)) 65%, var(--dark-subtle));
+		--line-color: color-mix(in var(--color-space), var(--list-color), rgba(200, 196, 123, 0.21));
 		--line-gap: 1svh;
 	}
 
@@ -283,7 +283,7 @@
 	}
 
 	#ol :is(button, a, svg):nth-last-of-type(n):hover {
-		--list-color: color-mix(in oklch, var(--hoverC, rgba(255, 255, 255, 0.677)), black 80%);
+		--list-color: color-mix(in var(--color-space), var(--hoverC, rgba(255, 255, 255, 0.677)), black 80%);
 		text-decoration: underline wavy;
 	}
 

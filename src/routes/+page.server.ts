@@ -218,7 +218,7 @@ export async function load() {
 						},
 						{
 							text:["The result of this project within that sprint was a simple but intentional web-based game with three levels. Each level has you collecting ingredients to brew a specific potion, with only one attempt per level to get it right and move on to the next.",
-									"It was a good opportunity to combine interesting frontend concepts with a lightweight backend, and showcase to merlin my creative coding angle."
+									"It was a good opportunity to combine novel frontend concepts with a lightweight backend, and showcase to merlin my creative coding angle."
 							],
 						},
 						{

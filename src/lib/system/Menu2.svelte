@@ -776,7 +776,7 @@
 
 	.head-about button.read-more-btn {
 		--_btn-hue: var(--accent-color);
-		--_btn-color2: color-mix(in oklch,var(--_btn-hue, #ffffffc7) 15%,color-mix(in lab, var(--color-bg), #ffffffe1 60%) 90%	);
+		--_btn-color2: color-mix(in var(--color-space),var(--_btn-hue, #ffffffc7) 15%,color-mix(in var(--color-space), var(--color-bg), #ffffffe1 60%) 90%	);
 		place-content: center;
 		padding-inline: var(--pill-padding);
 
@@ -1208,8 +1208,8 @@
 
 		.active {
 			flex: 0 1 auto;
-			background-color: color-mix(in oklch, var(--color-bg, #ffffff82) 60%, #ffffff33 80%);
-			border-bottom: solid 5px color-mix(in oklch, var(--color-bg, #ffffff82) 50%, #ffffff33 80%);
+			background-color: color-mix(in var(--color-space), var(--color-bg, #ffffff82) 60%, #ffffff33 80%);
+			border-bottom: solid 5px color-mix(in var(--color-space), var(--color-bg, #ffffff82) 50%, #ffffff33 80%);
 		}
 
 		.menu-container.active ul.headerUl {

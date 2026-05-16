@@ -7,10 +7,11 @@
 		total?: number;
 		patern?: 'random' | 'grid';
 	}
+
 	interface StickerListItem {
 		id: string;
 		content: string;
-		type: 'image' | 'text' | 'shape';
+		type: 'image' | 'text' | 'shape' | 'svg';
 		alt?: string;
 		visible: boolean;
 		canMove: boolean;
@@ -132,6 +133,22 @@
 			type: 'image',
 			alt: 'tutorial sticker',
 			canMove: true
+		},
+		{
+			id: 'A11y',
+			visible: true,
+			content: '/stickers/idCZJhQ0tS_1778840910867.svg',
+			type: 'svg',
+			alt: 'A11y-sticker',
+			canMove: true
+		},
+		{
+			id: 'Cc',
+			visible: true,
+			content:'/stickers/closed-caption.svg',
+			type: 'svg',
+			alt: 'A11y-sticker',
+			canMove: true
 		}
 	];
 
@@ -160,9 +177,9 @@
 		params: { delay?: number; duration?: number; easing?: (t: number) => number; sticker?: any }
 		) {
 
-		// if ($firstLoad == true) {
-		// 	return { delay: 0, duration: 0, css: () => 'display: none; opacity: 0;' };
-		// }
+		if ($firstLoad == true) {
+			return { delay: 0, duration: 0, css: () => 'display: none; opacity: 0;' };
+		}
 
 		const existingTransform = getComputedStyle(node).transform.replace('none', '');
 		const sticker = (params as any)?.sticker;
@@ -244,6 +261,22 @@
 			>
 				<img src={sticker.content} alt={sticker.alt} loading="eager" />
 			</span>
+			{:else if sticker.type === 'svg'}
+				<div	class="cover-content sticker-label {sticker.id}"
+					in:stick={{ duration: 800}}
+					style="transform: translate({sticker.offsetX || 0}px, {sticker.offsetY ||
+						0}px) rotate({sticker.rotation || 0}deg);"
+				>
+					<svg 
+					width="90" 
+					height="90"
+					style="transform: translate({sticker.offsetX || 0}px, {sticker.offsetY ||
+						0}px) rotate({sticker.rotation || 0}deg);">   
+					    
+						<image xlink:href={sticker.content} />    
+					</svg>
+				</div>
+				
 		{:else}
 			<img
 				src={sticker.content}
@@ -434,6 +467,24 @@
 			bottom: 0%;
 			left: 0%;
 		}
+		&.A11y {
+			--sticker-color: hsla(0, 75%, 50%, 0);
+			--sticker-width: auto;
+			--sticker-height: 2rem;
+			--sticker-rotation: -0deg;
+			--sticker-top: auto;
+			top: 19%;
+			right: 8%;
+		}
+		&.Cc {
+			--sticker-color: hsla(0, 75%, 50%, 0);
+			--sticker-width: auto;
+			--sticker-height: 3rem;
+			--sticker-rotation: -0deg;
+			--sticker-top: auto;
+			top: 25%;
+			right: 8%;
+		}
 	}
 
 	/* //////////////// */
@@ -455,7 +506,7 @@
 		position: absolute;
 		font-size: 1rem;
 		font-weight: lighter;
-		color: color-mix(in oklch, rgb(0, 0, 0), var(--sticker-color, transparent) 10%);
+		color: color-mix(in var(--color-space), rgb(0, 0, 0), var(--sticker-color, transparent) 10%);
 		background-color: var(--sticker-color);
 		border-radius: 15px;
 		padding: 3ex 2ex;

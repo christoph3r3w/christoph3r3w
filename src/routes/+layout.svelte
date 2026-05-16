@@ -48,7 +48,9 @@
 	}
 
 	:global(body :nth-child(n):focus-visible){
-		border: solid rgba(255, 140, 0, 0.815);
+		border-color: #ffe91e;
+		outline-color: #ffe91e;
+		background-color: #ffe91e;
 	}	
 
 	:global(header) {

@@ -270,9 +270,9 @@
 
 	@media (height < 700px) and (width >= 950px) {
 
-	:global(.mainContain:has(.contentContain:first-child:nth-last-of-type(1))) {
+	/* :global(.mainContain:has(.contentContain:first-child:nth-last-of-type(1))) {
 		justify-content: end;
-	}
+	} */
 		:global(.contentContain:has(:is(#works, #workList))) {
 			--file-section-height: 80lvh;
 			max-width: 700px;
