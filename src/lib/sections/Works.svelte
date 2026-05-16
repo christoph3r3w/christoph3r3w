@@ -964,7 +964,7 @@
 	}
 
 	.work-section:has(details:nth-of-type(n)[open]) details.file > summary {
-		--_fold-radius: 55px;
+		--_fold: 52px;
 		--_contrast-color: contrast-color(var(--file-primary-hue));
 		top: -2%;
 		left: 5%;
@@ -972,7 +972,7 @@
 		color: var(--file-primary-hue, var(--black));
 		background-color: var(--file-primary-hue);
 		background-color: color-mix(in lab, var(--file-primary-hue), var(--color-bg) 10%);
-		border-radius: var(--wc-radius) var(--_fold-radius) var(--wc-radius) 0;
+		border-radius: var(--wc-radius) var(--_fold) var(--wc-radius) 0;
 		transition:
 			0.3s var(--transition-timing),
 			border-radius 100ms,
@@ -1016,10 +1016,13 @@
 			top: 0;
 			right: 0;
 			width: 3.5rem;
+			width: calc(var(--_fold) * 1.15);
 			height: 3.7rem;
-			border-radius: 10px var(--_fold-radius) 10px var(--wc-radius);
+			height: calc(var(--_fold) * 1.15);
+			border-radius: 10px var(--_fold) 10px var(--wc-radius);
 			background-color: color-mix(in var(--color-space), var(--file-primary-hue), rgba(25, 25, 31, 0.503) 10%);
 			filter: drop-shadow(#322f1e90 0px 1px .5px);
+			clip-path: polygon(calc(var(--_fold) * 0.39) 0, 100% calc(var(--_fold) * 0.77), 100% 100%, 0 100%, 0 0);
 			z-index: -1;
 
 			@supports (corner-shape: superellipse(0)) {
