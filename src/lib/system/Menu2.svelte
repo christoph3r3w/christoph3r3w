@@ -61,21 +61,21 @@
 	}
 
 	const skills = $state([
-		{ name: 'HTML/CSS', level: 'Advanced' },
-		{ name: 'JavaScript', level: 'Advanced' },
-		{ name: 'TypeScript', level: 'Intermediate' },
-		{ name: 'React', level: 'Intermediate' },
-		{ name: 'Svelte', level: 'Expert' },
-		{ name: 'Node.js', level: 'Intermediate' },
-		{ name: 'Vue', level: 'Intermediate' },
-		{ name: 'Ionic - capacitor', level: 'Intermediate' },
-		{ name: 'p5.js', level: 'Beginner' },
-		{ name: 'three.js', level: 'Beginner' },
-		{ name: 'Figma', level: 'Advanced' },
-		{ name: 'WCGA auditing', level: 'Advanced' },
-		{ name: 'Accessibility consulting', level: 'Advanced' },
-		{ name: 'UI/UX design', level: 'Intermediate' },
-		{ name: 'Project management', level: 'Intermediate' }
+		{ name: 'HTML/CSS', level: '5' },
+		{ name: 'JavaScript', level: '5' },
+		{ name: 'TypeScript', level: '4' },
+		{ name: 'React', level: '3' },
+		{ name: 'Svelte', level: '5' },
+		{ name: 'Node.js', level: '4' },
+		{ name: 'Vue', level: '4' },
+		{ name: 'Ionic - capacitor', level: '4' },
+		{ name: 'p5.js', level: '3' },
+		{ name: 'three.js', level: '2' },
+		{ name: 'Figma', level: '5' },
+		{ name: 'WCGA auditing', level: '5' },
+		{ name: 'Accessibility consulting', level: '5' },
+		{ name: 'UI/UX design', level: '4' },
+		{ name: 'Project management', level: '4' }
 	]);
 
 	onMount(() => {
@@ -397,6 +397,11 @@
 
 		@starting-style {
 			translate: 0 -10%;
+		}
+
+		&::selection {
+			color: var(--black);
+			background-color: yellow;
 		}
 	}
 
