@@ -40,6 +40,7 @@
 	let { data } : Props = $props();
 	let { projects, delay = 0 } = $derived(data);
 	let dataWorks2 = $state<unknown[]>([]);
+	let m8 = $derived(projects.then((res) => res));
 
 	// Promise Handling Session 
 	$effect(() => {
@@ -487,7 +488,7 @@
 
 <div class="work-section pad" id="works" style="--file-index:0; --total-work:{works.length};">
 	<section class="Orderedlist-container">
-		<OrderedList {pagination} {works} />
+		<OrderedList {pagination} {works} {m8} />
 	</section>
 	
 	<!-- onclick it will close all details -->

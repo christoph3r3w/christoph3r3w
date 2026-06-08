@@ -1,6 +1,7 @@
 <script lang="ts">
 	// import  {next} from '../../routes/work.remote'
 	// import {y} from '../molecule/pagination.svelte'
+	import { Minus, LineDotRightHorizontal} from '@lucide/svelte';
 
 	interface Props {
 		pagination?: number | 'none';
@@ -13,13 +14,14 @@
 			year?: string;
 			description?: string;
 		}>;
+		m8: Promise<unknown[]>;
 	}
 	
-	let { pagination, works } : Props = $props();
+	let { pagination, works, m8 } : Props = $props();
 
 	let tFolders = $derived(
 		works.map(({ title, published, dateStart, dateEnd }) => ({
-			year: dateStart.split('-')[0] || dateEnd.split('-')[0] || 'on going',
+			year: dateEnd.split('-')[0] || dateStart.split('-')[0] ||  'on going',
 			title,
 			published: published
 		}))
@@ -72,10 +74,12 @@
 	const maxYear = $derived(mfolders.length ? mfolders.reduce((max, item) =>
 		item.year > max.year && item.year !== '' ? item : max
 	) : { year: '' });
+
 	let maxPagination = $state(() => {
 		let max = 7;
 		return typeof pagination === 'number' && pagination > max ? pagination : max;
 	});
+
 	const paginationToggle = $derived(() => {
 		if (tFolders.length <= maxPagination()) return '';
 		if (pagination != 'none')	return '';
@@ -111,7 +115,7 @@
 				</a>
 			</li>
 			<ol>
-				{#each folder.files as file}
+				{#each folder.files as _}
 					<li>
 						<svg
 							width="5"
@@ -140,10 +144,10 @@
 	<!-- <p>{maxYear.year}</p> -->
 	<ol class="main-list">
 		<!-- <li>
-				<p>{maxYear.year}</p>
-			</li> -->
+			<p>{maxYear.year}</p>
+		</li> -->
 		{#each mfolders as folder}
-			{#each folder.files as file}
+			{#each folder.files as _}
 				<li>
 					<svg
 						width="5"
@@ -154,12 +158,10 @@
 					>
 						<path d="M0.5 0.5L4.5 0.5" stroke="var(--list-color)" stroke-linecap="round" />
 					</svg>
+					<Minus />
 					<p>{folder.year}</p>
 				</li>
-				<!-- <hr> -->
-				<!-- <br> -->
 			{/each}
-			<!-- <br> -->
 		{/each}
 		<br />
 		<li>
@@ -168,7 +170,31 @@
 	</ol>
 {/snippet}
 
+{#snippet loadingList()}			
+	<p>List Size</p>
+	<ol class="main-list">
+	{#each Array(3) as _}
+		<li>
+			<svg
+				width="5"
+				height="1"
+				viewBox="0 0 5 1"
+				fill="none"
+				xmlns="http://www.w3.org/2000/svg"
+			>
+				<path d="M0.5 0.5L4.5 0.5" stroke="var(--line-color)" stroke-linecap="round" />
+			</svg>
+			<Minus />
+		</li>
+
+	{/each}
+	</ol>
+{/snippet}
+
 <div id="ol" class={paginationToggle()}>
+{#await m8 }
+	{@render loadingList()}
+{:then res } 
 	{#if mfolders.length}
 		{#if tFolders.length > maxPagination()}
 			{@render mList()}
@@ -176,6 +202,8 @@
 			{@render sList()}
 		{/if}
 	{/if}
+	
+{/await}
 </div>
 
 <style>
@@ -252,11 +280,13 @@
 		display: flex;
 		gap: var(--line-gap);
 		align-items: center;
-		/* outline: solid red; */
 		a {
 			color: var(--list-color);
 		}
 		svg ~ p {
+			display: none;
+		}
+		:global(.lucide ~ p) {
 			display: none;
 		}
 		/* &:hover {
@@ -278,11 +308,13 @@
 		}
 	}
 
-	.main-list ol li svg path {
+	.main-list ol li svg path,
+	.main-list ol li :global(.lucide) {
 		stroke: var(--line-color);
+		color: var(--line-color);
 	}
 
-	#ol :is(button, a, svg):nth-last-of-type(n):hover {
+	#ol :is(button, a, svg, :global(.lucide)):nth-last-of-type(n):hover {
 		--list-color: color-mix(in var(--color-space), var(--hoverC, rgba(255, 255, 255, 0.677)), black 80%);
 		text-decoration: underline wavy;
 	}
