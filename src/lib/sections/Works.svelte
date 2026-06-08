@@ -2321,6 +2321,7 @@
 		}
 
 		.work-section:has(details:nth-of-type(n)[open]) details.file > summary {
+			--_fold: 32px;
 			top: -4%;
 			left: 0%;
 			right: 0;
