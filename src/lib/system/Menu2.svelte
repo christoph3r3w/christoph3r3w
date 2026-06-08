@@ -60,6 +60,24 @@
 		};
 	}
 
+	const skills = $state([
+		{ name: 'HTML/CSS', level: 'Advanced' },
+		{ name: 'JavaScript', level: 'Advanced' },
+		{ name: 'TypeScript', level: 'Intermediate' },
+		{ name: 'React', level: 'Intermediate' },
+		{ name: 'Svelte', level: 'Expert' },
+		{ name: 'Node.js', level: 'Intermediate' },
+		{ name: 'Vue', level: 'Intermediate' },
+		{ name: 'Ionic - capacitor', level: 'Intermediate' },
+		{ name: 'p5.js', level: 'Beginner' },
+		{ name: 'three.js', level: 'Beginner' },
+		{ name: 'Figma', level: 'Advanced' },
+		{ name: 'WCGA auditing', level: 'Advanced' },
+		{ name: 'Accessibility consulting', level: 'Advanced' },
+		{ name: 'UI/UX design', level: 'Intermediate' },
+		{ name: 'Project management', level: 'Intermediate' }
+	]);
+
 	onMount(() => {
 		// Listen for the popstate event to handle back/forward navigation
 		tick().then(() => {
@@ -179,58 +197,7 @@
 			<p in:whoo={{ duration: 200 }}>A web developer in Amsterdam,</p>
 		{/key}
 		{#if openAboutMore == true}
-			<div
-				class="previous-roles"
-				in:whoo={{ duration: 200, delay: 400 }}
-				out:whoo={{ duration: 200 }}
-			>
-				<h2 in:whoo={{ duration: 200, delay: 400 }} out:whoo={{ duration: 200 }}>
-					Previous roles:
-				</h2>
-				<ul>
-					<li>Frontend Developer</li>
-					<li>Frontend Engineer</li>
-					<li>UI Designer</li>
-					<li>UI Consultant</li>
-				</ul>
-			</div>
-			<p in:whoo={{ duration: 300, delay: 400 }} out:whoo={{ duration: 400 }}>
-				Curiosity and experimentation drive my practice. Through studies and client work, I
-				developed a structural approach to applying these principles across different user needs and
-				content.
-			</p>
-			<h2 in:whoo={{ duration: 300, delay: 400 }} out:whoo={{ duration: 400 }}>Approach</h2>
-			<p in:whoo={{ duration: 300, delay: 400 }} out:whoo={{ duration: 400 }}>
-				The projects I've enjoyed most began as thoughtful conversations, with clients,
-				collaborators, or users themselves. These conversations shape how I approach the work:
-			</p>
-			<ul class="approaches" in:whoo={{ duration: 300, delay: 400 }} out:whoo={{ duration: 400 }}>
-				<li>
-					<p class="apr-pill">Considering stakeholder needs</p>
-					<p class="apr-pill">Researching tools and techniques that address user needs</p>
-				</li>
-				<ArrowBigDown />
-				<li>
-					<p class="apr-pill">Designing the data flows</p>
-					<p class="apr-pill">Laying out the content system</p>
-				</li>
-				<ArrowBigDown />
-				<li class="apr-pill">
-					Building flexible systems that adapt to visual needs and data flows
-				</li>
-				<li class="apr-pill">Automated and user testing</li>
-				<ArrowBigDown />
-				<li class="apr-pill">Iterating until the project meets the criteria to go live</li>
-			</ul>
-			<p in:whoo={{ duration: 300, delay: 400 }} out:whoo={{ duration: 400 }}>
-				I draw on web fundamentals as a creative material, experimenting with what's possible,
-				staying curious about emerging features, while always thinking about the person using the
-				product.
-			</p>
-			<p in:whoo={{ duration: 300, delay: 400 }} out:whoo={{ duration: 400 }}>
-				Whether it's a custom solution for a specific stakeholder or a system built to scale, the
-				goal remains the same: work that's thoughtful, accessible, and genuinely fun.
-			</p>
+			{@render aboutMore()}
 		{:else}
 			<p
 				style="margin-top: 1rem;"
@@ -255,6 +222,72 @@
 			Have a look at some projects in the folder below.
 		</article>
 	{/if}
+{/snippet}
+
+{#snippet aboutMore()}
+	<div
+		class="previous-roles"
+		in:whoo={{ duration: 200, delay: 400 }}
+		out:whoo={{ duration: 200 }}
+	>
+		<h2 in:whoo={{ duration: 200, delay: 400 }} out:whoo={{ duration: 200 }}>
+			Previous roles:
+		</h2>
+		<ul>
+			<li>Frontend Developer</li>
+			<li>Frontend Engineer</li>
+			<li>UI Designer</li>
+			<li>UI Consultant</li>
+		</ul>
+	</div>
+	<p in:whoo={{ duration: 300, delay: 400 }} out:whoo={{ duration: 400 }}>
+		Curiosity and experimentation drive my practice. Through studies and client work, I
+		developed a structural approach to applying these principles across different user needs and
+		content.
+	</p>
+	<h2 in:whoo={{ duration: 300, delay: 400 }} out:whoo={{ duration: 400 }}>Approach</h2>
+	<p in:whoo={{ duration: 300, delay: 400 }} out:whoo={{ duration: 400 }}>
+		The projects I've enjoyed most began as thoughtful conversations, with clients,
+		collaborators, or users themselves. These conversations shape how I approach the work:
+	</p>
+	<ul class="approaches" in:whoo={{ duration: 300, delay: 400 }} out:whoo={{ duration: 400 }}>
+		<li>
+			<p class="apr-pill">Considering stakeholder needs</p>
+			<p class="apr-pill">Researching tools and techniques that address user needs</p>
+		</li>
+		<ArrowBigDown />
+		<li>
+			<p class="apr-pill">Designing the data flows</p>
+			<p class="apr-pill">Laying out the content system</p>
+		</li>
+		<ArrowBigDown />
+		<li class="apr-pill">
+			Building flexible systems that adapt to visual needs and data flows
+		</li>
+		<li class="apr-pill">Automated and user testing</li>
+		<ArrowBigDown />
+		<li class="apr-pill">Iterating until the project meets the criteria to go live</li>
+	</ul>
+	<p in:whoo={{ duration: 300, delay: 400 }} out:whoo={{ duration: 400 }}>
+		I draw on web fundamentals as a creative material, experimenting with what's possible,
+		staying curious about emerging features, while always thinking about the person using the
+		product.
+	</p>
+	<p in:whoo={{ duration: 300, delay: 400 }} out:whoo={{ duration: 400 }}>
+		Whether it's a custom solution for a specific stakeholder or a system built to scale, the
+		goal remains the same: work that's thoughtful, accessible, and genuinely fun.
+	</p>	
+
+	<h2 in:whoo={{ duration: 300, delay: 400 }} out:whoo={{ duration: 400 }}>Skills</h2>
+
+	<ul class="skill-list" in:whoo={{ duration: 300, delay: 400 }} out:whoo={{ duration: 400 }}>
+		{#each skills as skill}
+			<li>
+				<p class="skill-name " data-attr={skill.level}>{skill.name}</p>
+			</li>
+		{/each}
+	</ul>
+
 {/snippet}
 
 {#snippet headerC()}
@@ -335,7 +368,7 @@
 		--intro-element-transition: 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275) 100ms;
 		--pill-radius: 107.59px;
 		/* --pill-padding: 21.5px; */
-		--pill-padding: clamp(7px, 46.5px - 2cqw, 21.5px);
+		--pill-padding: clamp(7px, 46.5px - 1.5cqw, 21.5px);
 	}
 
 	@property --menu-height {
@@ -751,7 +784,6 @@
 		position: relative;
 		display: flex;
 		font-size: clamp(1.2rem, -0.9606rem + 2.8522cqw, var(--text-size-l));
-		scrollbar-color: color-mix(in srgb, #2c5d98, var(--primary-color, var(--black)) 40%) transparent;
 		scrollbar-color: color-mix(
 				in srgb,
 				var(--color-bg, #2c5d98),
@@ -776,13 +808,19 @@
 
 	.head-about button.read-more-btn {
 		--_btn-hue: var(--accent-color);
+		--_btn-hue2:  color-mix(
+				in srgb,
+				var(--color-bg, #2c5d98),
+				var(--primary-color, var(--black)) 16%
+			);
 		--_btn-color2: color-mix(in var(--color-space),var(--_btn-hue, #ffffffc7) 15%,color-mix(in var(--color-space), var(--color-bg), #ffffffe1 60%) 90%	);
+		
 		place-content: center;
 		padding-inline: var(--pill-padding);
 
-		background-color: var(--_btn-color2);
+		background-color: var(--_btn-hue2, var(--_btn-color2));
 		backdrop-filter: blur(5px);
-		color: color-mix(in srgb, var(--color-text, #ffffff) 50%, var(--_btn-hue, var(--black)) 90%);
+		color: color-mix(in var(--color-space), var(--color-text, #ffffff) 30%, var(--_btn-hue, var(--black)) 100%);
 		border: solid 1px;
 		border-color: var(--_btn-hue);
 		border-radius: var(--pill-radius);
@@ -791,6 +829,7 @@
 		min-height: 3rem;
 		text-wrap: nowrap;
 		font-size: var(--text-size-s);
+		font-weight: 600;
 		cursor: pointer;
 		transition: 500ms ease;
 
@@ -995,6 +1034,7 @@
 
 			place-content: center;
 			padding-inline: var(--pill-padding);
+			padding-block: clamp(5px, 4vw, .5rem);
 			margin-bottom: 1rem;
 			border-radius: var(--pill-radius);
 
@@ -1003,7 +1043,7 @@
 				var(--color-text, #ffffff) 70%,
 				var(--_pill-hue, var(--black)) 90%
 			);
-			border: solid 3px var(--_pill-hue);
+			border: solid 2px var(--_pill-hue);
 			border-color: color-mix(
 				in var(--color-space),
 				var(--_pill-hue, #ffffffc7) 70%,
@@ -1056,6 +1096,42 @@
 			fill 300ms ease;
 		fill: currentColor;
 	}
+
+		.skill-list {
+		display: flex;
+		flex-flow: row wrap;
+		gap: 0.8rem;
+		justify-content:space-evenly;
+	}
+
+	.skill-list li {
+		--_pill-hue: var(--accent-color);
+		--_pill-color2: color-mix(
+			in var(--color-space),
+			var(--_pill-hue, #ffffffc7),
+			color-mix(in lab, var(--color-bg), #ffffff98 50%) 90%
+		);
+		place-content: center;
+		padding-inline: var(--pill-padding);
+		padding-block:clamp(7px, 4vh,15px) ;
+		margin-bottom: 1rem;
+		border-radius: var(--pill-radius);
+
+		background-color: var(--_pill-color2);
+		color: color-mix(
+			in var(--color-space),
+			var(--color-text, #ffffff) 70%,
+			var(--_pill-hue, var(--black)) 90%
+		);
+		border: solid 2px;
+		border-color: var(--_pill-color2);
+		filter: drop-shadow(var(--_btn-shadow-color) 0px 10px 15px);
+
+		max-width: fit-content;
+		min-height: 3rem;
+		text-wrap: nowrap;
+	}
+
 
 	.read-more .rm-btn-container {
 		display: flex;

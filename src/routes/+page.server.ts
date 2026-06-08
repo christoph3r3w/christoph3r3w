@@ -71,8 +71,8 @@ export async function load() {
 					tags: ['Experiment', 'Grid Motion', 'responsive design'],
 
 					link: { src: 'https://codepen.io/Christopher-the-animator/pen/NWoeXRo', showType: 'none' },
-					dateStart: '2023',
-					dateEnd: '2023',
+					dateStart: '2024',
+					dateEnd: '2024',
 					status: { is: 'experiment', sticker: '' }
 				},
 				// WINDOWS
@@ -151,7 +151,7 @@ export async function load() {
 					},
 					tags: ['Svelte', 'NodeJS', 'Responsive ui', 'UI/UX', 'popover'],
 					link: { src: 'https://brilletjes-squad-page.vercel.app/', showType: 'desktop' },
-					dateStart: '2023',
+					dateStart: '2024',
 					dateEnd: '',
 					status: { is: 'experiment', sticker: '' }
 				},

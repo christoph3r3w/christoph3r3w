@@ -114,6 +114,7 @@
 
 {#snippet buttonNav()}
 	<li class="D-menu">
+		<!-- main menu btn -->
 		<button onmouseup={toggleMenu} onkeydown={toggleMenu} class="menu-btn" aria-label="menu button">
 			<svg width="" height="" viewBox="0 0 77 62" fill="none" xmlns="http://www.w3.org/2000/svg">
 				<path d="M25 31.25L25 30.75" stroke="black" stroke-width="5" stroke-linecap="round" />
@@ -121,15 +122,40 @@
 				<path d="M52 31.25L52 30.75" stroke="#555555" stroke-width="5" stroke-linecap="round" />
 			</svg>
 		</button>
+		<!-- contact btn -->
 		<button onmouseup={toggleContacts} onkeydown={toggleContacts} class="contact-btn">Contact</button>
+		<!-- about btn -->
 		<button onmouseup={toggleAbout} onkeydown={toggleAbout} class="about-btn">About</button>
+		
+		<!-- dark mode btn -->
+		<button
+			class="dark-mode icon-btn"
+			title="theme toggle"
+			aria-label="theme toggle"
+			onclick={() => themeToggleFn.handleDarkMode()}
+		>
+			<svg
+				width="24"
+				height="24"
+				viewBox="0 0 24 24"
+				fill="none"
+				xmlns="http://www.w3.org/2000/svg"
+			>
+				<path
+					style="fill:var(--primary-color);"
+					d="M12.133 3C12.136 3 12.14 3 12.143 3C12.462 3 12.6 3.39301 12.36 3.60001C10.679 5.04701 9.755 7.32199 10.226 9.77399C10.749 12.495 12.988 14.566 15.773 14.938C17.532 15.173 19.161 14.728 20.456 13.839C20.719 13.658 21.068 13.897 20.989 14.203C19.885 18.519 15.626 21.595 10.767 20.902C6.73098 20.326 3.54399 17.087 3.06599 13.095C2.81599 11.013 3.28897 9.05101 4.26997 7.42001C5.85997 4.77401 8.78598 3 12.133 3Z"
+					fill="#121212"
+				/>
+			</svg>
+		</button>
+
 		{#if openMenu == true}
+			<!-- theme toggle btn -->
 			<button
 				class="themes icon-btn"
 				title="theme toggle"
 				aria-label="theme toggle"
-				onclick={themeToggleFn.handleThemeToggle}
-			>
+				onclick={themeToggleFn.handleThemeToggle}>
 				<svg
 					width="25"
 					height="32"
@@ -167,26 +193,6 @@
 				</svg>
 			</button>
 		{/if}
-		<button
-			class="dark-mode icon-btn"
-			title="theme toggle"
-			aria-label="theme toggle"
-			onclick={() => themeToggleFn.handleDarkMode()}
-		>
-			<svg
-				width="24"
-				height="24"
-				viewBox="0 0 24 24"
-				fill="none"
-				xmlns="http://www.w3.org/2000/svg"
-			>
-				<path
-					style="fill:var(--primary-color);"
-					d="M12.133 3C12.136 3 12.14 3 12.143 3C12.462 3 12.6 3.39301 12.36 3.60001C10.679 5.04701 9.755 7.32199 10.226 9.77399C10.749 12.495 12.988 14.566 15.773 14.938C17.532 15.173 19.161 14.728 20.456 13.839C20.719 13.658 21.068 13.897 20.989 14.203C19.885 18.519 15.626 21.595 10.767 20.902C6.73098 20.326 3.54399 17.087 3.06599 13.095C2.81599 11.013 3.28897 9.05101 4.26997 7.42001C5.85997 4.77401 8.78598 3 12.133 3Z"
-					fill="#121212"
-				/>
-			</svg>
-		</button>
 	</li>
 {/snippet}
 

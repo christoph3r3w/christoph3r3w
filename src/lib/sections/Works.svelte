@@ -357,7 +357,7 @@
 	<!-- the section behind the description -->
 	<article class="work-description note stamp {showQr ? 'show-qr-qr' : ''}">
 		<div class="description-space">
-			<button onclick={moveDescription}>
+			<button class="wavyBox" onclick={moveDescription}>
 				{#if showDescription}
 					<ListCollapse size="20" />
 				{:else}
@@ -1322,7 +1322,7 @@
 
 	.work-description.note .description-space button {
 		display: grid;
-		place-items: center;
+		place-items: center end;
 		background-color: color-mix(in var(--color-space, oklch),
 			var(--file-primary-hue, var(--primary-gray-bg)),
 			rgba(255, 255, 255, 0.566) 80%
@@ -1331,7 +1331,6 @@
 		width: 2.5rem;
 		aspect-ratio: 1;
 		border: none;
-		border-radius: 50%;
 		cursor: pointer;
 		&:hover {
 			background-color: color-mix(in var(--color-space, oklch),
@@ -1340,10 +1339,35 @@
 			);
 		}
 
-		&:nth-of-type(1) { margin-top: 10cqh; }
+		&:nth-of-type(1) { margin-top: 20cqh; }
 
-		:global(.lucide){	width: 1.7rem;	}
+		:global(.lucide){	width: 3rem; scale:1.05;}
 	}
+	.work-description.note .description-space button.wavyBox {
+		--s: 5px;  
+		--w: 90px; 
+		--file-primary-hue: color-mix(
+			in var(--color-space),
+			hsl(calc(var(--hue-number, 213) / var(--file-index)), calc(25% + 1% * var(--tag-id, 1)), 48%),
+			var(--file-primary-color) var(--file-primary-color-amount)
+		);
+
+		
+		width: round(var(--w),4*var(--s)); 
+		aspect-ratio: 1;
+		padding: var(--s);
+		border: var(--s) solid #0000;
+		box-sizing: border-box;
+		/* background-color: color-mix(in var(--color-space), var(--file-primary-hue), rgba(255, 255, 255, 0.566) 60%); */
+		/* background-color: var(--_description-bg); */
+		border-radius: calc(2.2*var(--s)); /* for the image */
+		mask: 
+			radial-gradient(calc(sqrt(2)*var(--s)),#000 calc(100% - 1px),#0000),
+			conic-gradient(#000 0 0) content-box,
+			radial-gradient(calc(sqrt(2)*var(--s)),#0000 100%,#000 calc(100% + 1px)) 
+			var(--s) var(--s) padding-box;
+		mask-size: calc(var(--s)*4) calc(var(--s)*4);
+}
 
 	.work-description:where(.note).stamp {
 		--stamp-radius: 11px;
