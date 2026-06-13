@@ -60,7 +60,6 @@ export async function load() {
 									<ul>
 										<li><button data-open-file="3">...</button></li>
 										<li><button data-open-file="2">...</button></li>
-										<li><a target="_blank" href="https://your-tribe-for-life-profile-card-livid.vercel.app/#cover-3">layout test</a></li>
 									</ul>																		
 								`],
 							},

@@ -409,7 +409,6 @@
 		--_btn-hue: var(--accent-color);
 		position: relative;
 		flex:1 1 100%;
-		/* color: var(--_btn-hue); */
 		background: transparent;
 		border: none;
 		padding:0;
@@ -421,7 +420,6 @@
 		 --r: 25px; /* radius of circles */
 		height: 320px;
 		padding: calc(1.5*var(--r));
-		/* background: #e97f02; */
 		mask: 
 			linear-gradient(#000 0 0) no-repeat
 			50%/calc(100% - 2*var(--r)) calc(100% - 2*var(--r)), 
@@ -446,7 +444,6 @@
 		width: 90cqw;
 
 		border-radius: 10pc;
-		/* border: 2px solid var(--_btn-hue); */
 		color: var(--color-text-invert);
 
 		font-size: var(--text-size-l);
@@ -623,9 +620,6 @@
 	}
 
 	.text-bubble {
-		/* --_btn-shadow-color: color-mix(in srgb, var(--color-bg,#ffffff), rgba(65, 60, 39, 0.181) 70%); */
-		/* --_btn-shadow-color: color-mix(in srgb, var(--accent-color,#ffffff), rgba(90, 86, 70, 0.181) 95%); */
-		/* --_btn-border-color: color-mix(in srgb, var(--accent-color,#ffffff), rgba(90, 86, 70, 0.181) 65%); */
 		--_btn-shadow-color: color-mix(
 			in srgb,
 			var(--color-bg-muted, #ffffff),
