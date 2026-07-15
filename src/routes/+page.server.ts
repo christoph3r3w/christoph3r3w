@@ -12,7 +12,7 @@ export async function load() {
 		link: { src: string; showType: '' | 'mobile' | 'desktop' | 'none' };
 		dateStart: string;
 		dateEnd: string;
-		status: { is: string; sticker: string };
+		status: { is: 'completed' | 'experiment' | 'in progress' | 'planned'| 'small'; sticker: string };
 		contentBlock?: Array<{ text?: string[]; images?: string[]; h2?: string }>;
 		collaborators?: Record<string, string>;
 		tags?: string[];
@@ -73,6 +73,45 @@ export async function load() {
 					dateStart: '2024',
 					dateEnd: '2024',
 					status: { is: 'experiment', sticker: '' }
+				},
+				//Small catalougue 
+				{
+					title: "Daph's catalougue",
+					slug: 'catalougue',
+					published: { is: true, date: '' },
+					description:
+						'A simple site cataloging the artwork of Daphne Bleeker',
+					assets: { 
+						image: [''], 
+						icon: '/works-assets/Daph cata/D-logo.png', 
+						// color: 'hsl(61, 77%, 52%)',
+						color: 'hsl(61, 57%, 62%)'
+					},
+					contentBlock: [		
+							{
+								images:[
+								"/works-assets/Daph cata/chrome_Pwy0c1YiwQ.png",
+								"/works-assets/Daph cata/chrome_DiJ7IbM8r1.png",
+								
+								],
+							},
+							{
+								images:[
+								"/works-assets/Daph cata/chrome_dGjgXF1W0S.png",
+								"/works-assets/Daph cata/chrome_oXJowdQEcq.png",
+								
+								],
+							},
+						],
+					collaborators: {
+						owner: 'Dpahne Bleeker'
+					},
+					tags: ['Catalouge', 'Accessiblty', 'responsive design'],
+
+					link: { src: 'https://daphnebleeker-catalogue.netlify.app/', showType: '' },
+					dateStart: '2025',
+					dateEnd: '',
+					status: { is: 'small', sticker: '' }
 				},
 				// WINDOWS
 				{

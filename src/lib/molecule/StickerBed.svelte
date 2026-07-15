@@ -79,6 +79,14 @@
 			canMove: true
 		},
 		{
+			id: 'nextJs',
+			visible: true,
+			content: '/stickers/nextjs-icon-svgrepo-com.svg',
+			type: 'image',
+			alt: 'next sticker',
+			canMove: true
+		},
+		{
 			id: 'JS',
 			visible: true,
 			content: 'https://res.cloudinary.com/dkemfwmvh/image/upload/js_sticker_2_egl5je?_a=BAMAPqhK0',
@@ -147,7 +155,7 @@
 			visible: true,
 			content:'/stickers/closed-caption.svg',
 			type: 'svg',
-			alt: 'A11y-sticker',
+			alt: 'Cc-sticker',
 			canMove: true
 		}
 	];
@@ -410,10 +418,19 @@
 			left: 12%;
 			/* filter: drop-shadow(.5px .5px 1px black); */
 		}
+		&.nextJs {
+			--sticker-color: hsla(111, 75%, 50%, 0);
+			--sticker-width: auto;
+			--sticker-height: 3rem;
+			--sticker-rotation: -0deg;
+			--sticker-top: 40%;
+			left: 20%;
+			/* filter: drop-shadow(.5px .5px 1px black); */
+		}
 		&.svelte {
 			--sticker-color: hsla(0, 75%, 50%, 0);
 			--sticker-width: auto;
-			--sticker-height: 7rem;
+			--sticker-height: 9rem;
 			--sticker-rotation: -6deg;
 			--sticker-top: 48%;
 			left: 15%;

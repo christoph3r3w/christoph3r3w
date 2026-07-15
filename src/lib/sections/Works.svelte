@@ -221,7 +221,7 @@
 
 {#snippet summaryContent(work: Work)}
 	<summary
-		class={work?.status?.is == 'experiment' ? 'experiment' : ''}
+		class={work?.status?.is == 'experiment' ? 'experiment' : work?.status?.is == 'small'? 'small experiment' : ''}
 		onmouseenter={() => {
 			handleClose;
 			// contentLoad = true;
@@ -237,7 +237,7 @@
 		<span class="small-description">{work.slug}</span>
 		<div class="side-description">
 			<span class="date-start">{work?.dateEnd || work.dateStart || ''}</span>
-			<span class="status">{work?.status?.sticker || `an ${work?.status?.is}`}</span>
+			<span class="status">{work?.status?.sticker || (work?.status?.is && work.status.is !== 'small' ? work.status.is : '') || ''}</span>
 		</div>
 		<div class="close-file-icon">
 			<XIcon />
@@ -536,7 +536,7 @@
 		--transition-duration: 600ms;
 		--delay-factor: 50ms;
 
-		--sticker-color: hsla(21, 79%, 51%, 0.974);
+		--sticker-color: var(--file-primary-hue,#e5641ff8);
 		--sticker-width: 0;
 		--sticker-height: 0;
 		--sticker-rotation: 0deg;
@@ -637,6 +637,12 @@
 			}
 
 			@container (width < 900px) {inset-inline: 2%;}
+
+			&:where(.experiment) {
+				left: calc(0.7dvw * var(--total-work) + 10px * tan(var(--file-index)) + var(--move-all));
+
+				max-width: calc(9.5cqw * var(--total-work) + 30px * tan(var(--file-index)) );
+			}		
 		}
 
 		/* content on cover animation */
@@ -650,7 +656,6 @@
 		details.file summary span > img {
 			opacity: 1;
 		}
-
 	}
 
 	/* the details component */
@@ -674,6 +679,9 @@
 		&:nth-of-type(n) summary.experiment {
 			background-image: url('/works-assets/material-assets/Chris website14.avif');
 			background-blend-mode: soft-light;
+			/* max-width: 60cqw; */
+			/* max-width: calc(4cqw * var(--total-work) + 10px * tan(var(--file-index)) + var(--move-all)); */
+			max-width: calc(13cqw * var(--total-work) + 50px * tan(var(--file-index)));
 		}		
 	}
 
@@ -910,6 +918,23 @@
 		filter: opacity(0.5) contrast(150%) grayscale(0.8);
 	}
 
+	details.file summary.experiment:nth-of-type(n)::after {
+		content: '';
+		position: absolute;
+		border-radius: inherit;
+		inset: 1rem;
+		top: 4rem;
+		left: 10cqw;
+		outline: 2px solid transparent;
+	}
+
+	details.file summary.experiment:nth-of-type(n):hover::after {
+		top: 2rem;
+		transform: translateX(22cqw) rotate(2deg);
+		contain: paint content;
+	}
+
+
 	/* when hover or focus stops */
 	details.work-cover:not(:hover, :focus, :active) :is(summary, ::details-summary),
 	details.work-cover :is(summary, ::details-summary):not(:hover, :focus, :active) {
@@ -1036,6 +1061,14 @@
 
 	.work-section:has(details:nth-of-type(n)[open]) details[open].file > summary.experiment {
 		background-color: color-mix(in lab, var(--file-primary-hue), var(--color-bg) 30%);
+		max-width: 100%;
+	}
+
+	.work-section:has(details:nth-of-type(n)[open]) details[open].file > summary.small {
+		background-color: color-mix(in lab, var(--file-primary-hue), var(--color-bg) 30%);
+		max-width: 100%;
+		right: 0;
+		left: 15cqw;
 	}
 
 
@@ -2164,6 +2197,10 @@
 			animation-play-state: paused;
 			animation-name: none;
 		} */
+
+		&.experiment.experiment{
+			max-width: 100% ;
+		}
 	}
 
 	.big-asset.big-asset.big-asset.big-asset {
@@ -2304,6 +2341,11 @@
 			--move: calc(46vh + (-43vh * (var(--file-index) / var(--total-work, 1))));
 		}
 
+		/* small files/projects */
+		.work-section details.file :is(summary.experiment, ::details-summary.experiment) {
+			max-width: calc(14cqw * var(--total-work) + 30px * tan(var(--file-index)) );
+		}
+
 		details.file:nth-of-type(n):is(:active, :focus) :is(summary, ::details-summary) {
 			--hover-file-top: 0px;
 			background-color: color-mix(
@@ -2319,7 +2361,23 @@
 				transform-origin: bottom left;
 				left: calc(3.5dvw - (var(--file-index) * 5px));
 			}
+
 		}
+
+		details.file summary.experiment:nth-of-type(n)::after {
+			content: none;
+		}
+
+		/* .work-section:where(:focus-within,:focus-visible,:hover,.Orderedlist-container:is(:hover, :focus-within)),
+		.work-section:where(:focus-within, :focus) {
+
+		details.file :is(summary, ::details-summary.experiment),
+		details.file:is(:focus-within) summary.experiment {
+			max-width: 100%;
+		
+		}
+		} */
+
 
 		.work-section:has(details:nth-of-type(n)[open]) details.file > summary {
 			--_fold: 32px;
@@ -2329,6 +2387,8 @@
 			bottom: -4%;
 			.small-description {	display: none;	}
 		}
+
+
 
 		details[open]::details-content {
 			top: 5%;
@@ -2594,5 +2654,20 @@
 
 		}
 
+	}
+
+	@media screen and (max-width: 450px) {
+		.work-section details.file :is(summary.experiment, ::details-summary.experiment) {
+			max-width: 100%;
+		}
+
+			.work-section:where(:focus-within,:focus-visible,:hover,.Orderedlist-container:is(:hover, :focus-within)),
+			.work-section:where(:focus-within, :focus) {
+
+			details.file :is(summary.experiment, ::details-summary.experiment),
+			details.file:is(:focus-within) summary.experiment {
+				max-width: unset !important ;
+			}
+		}		
 	}
 </style>
