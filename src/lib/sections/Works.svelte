@@ -639,8 +639,7 @@
 			@container (width < 900px) {inset-inline: 2%;}
 
 			&:where(.experiment) {
-				left: calc(0.7dvw * var(--total-work) + 10px * tan(var(--file-index)) + var(--move-all));
-
+				left: calc(0.7dvw * var(--total-work) + 2dvw * tan(var(--file-index)) + var(--move-all));
 				max-width: calc(9.5cqw * var(--total-work) + 30px * tan(var(--file-index)) );
 			}		
 		}
@@ -930,7 +929,7 @@
 
 	details.file summary.experiment:nth-of-type(n):hover::after {
 		top: 2rem;
-		transform: translateX(22cqw) rotate(2deg);
+		transform: translateX(16dvi) rotate(2deg);
 		contain: paint content;
 	}
 
@@ -1062,6 +1061,10 @@
 	.work-section:has(details:nth-of-type(n)[open]) details[open].file > summary.experiment {
 		background-color: color-mix(in lab, var(--file-primary-hue), var(--color-bg) 30%);
 		max-width: 100%;
+	}
+
+	details[open].file summary.experiment:nth-of-type(n)::after {
+		content: none;
 	}
 
 	.work-section:has(details:nth-of-type(n)[open]) details[open].file > summary.small {

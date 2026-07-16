@@ -83,22 +83,22 @@ export async function load() {
 						'A simple site cataloging the artwork of Daphne Bleeker',
 					assets: { 
 						image: [''], 
-						icon: '/works-assets/Daph cata/D-logo.png', 
+						icon: '/works-assets/Daph cata/D-logo.avif', 
 						// color: 'hsl(61, 77%, 52%)',
 						color: 'hsl(61, 57%, 62%)'
 					},
 					contentBlock: [		
 							{
 								images:[
-								"/works-assets/Daph cata/chrome_Pwy0c1YiwQ.png",
-								"/works-assets/Daph cata/chrome_DiJ7IbM8r1.png",
+								"/works-assets/Daph cata/chrome_Pwy0c1YiwQ.avif",
+								"/works-assets/Daph cata/chrome_DiJ7IbM8r1.avif",
 								
 								],
 							},
 							{
 								images:[
-								"/works-assets/Daph cata/chrome_dGjgXF1W0S.png",
-								"/works-assets/Daph cata/chrome_oXJowdQEcq.png",
+								"/works-assets/Daph cata/chrome_dGjgXF1W0S.avif",
+								"/works-assets/Daph cata/chrome_oXJowdQEcq.avif",
 								
 								],
 							},
@@ -112,87 +112,7 @@ export async function load() {
 					dateStart: '2025',
 					dateEnd: '',
 					status: { is: 'small', sticker: '' }
-				},
-				// WINDOWS
-				{
-					title: 'Windows',
-					slug: 'School project',
-					published: { is: true, date: '' },
-					// description: 'I got to create a profile card that showcased my understanding of the web fundamentals in the form of a profilecard. I took this opportunity to experiemnt with toen die tijd the new popover api and styled it in the look and feel of the Windows XP interface.',
-					assets: {
-						image: [
-							'25acb22a-22a3-41d5-a0eb-c91529c4c6c8.avif',
-							'chris icon lowlowres.avif',
-							'works-assets/chris landing page portfolio ideas-02.avif'
-						],
-						icon: '/works-assets/windows/pngwing.com.avif',
-						// color: 'skyblue'
-						color:'#94c5f8',
-					},
-					contentBlock: [
-						{
-							text: [
-								// 'I created a profile card that showcased my understanding of some web fundamentals. I took this opportunity to experiment with the new <a target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/API/Popover_API">popover api</a> and styled it in the look and feel of the Windows XP interface.'
-								'I created a profile card that showcased my understanding of some web fundamentals using <a target="_blank" href="https://www.npmjs.com/package/ejs">ejs</a>, and styled it in the look and feel of the Windows XP interface.'
-							]
-						},
-						{
-							images: ['./works-assets/windows/chrome_KDKznicEhK.gif']
-						},
-						{
-							images: [
-								'/works-assets/windows/Recording 2026-03-02 022626.gif',
-								'/works-assets/windows/chrome_hh5Wv4h7nO.gif',
-								'/works-assets/windows/pngwing.com.avif'
-							]
-						},
-						{
-							text:['I took this opportunity to experiment with "at that time" new web features:'],
-							html: [`
-							<ul class="flat-list">
-								<li>Popover Api</li>
-								<li>Anchor Api</li>
-								<li>Iframes</li>
-								<li>Embed</li>
-								<li>Clip-mask</li>
-								<li>Preferred color scheme </li>
-								<li>Dynamic grid </li>
-							</ul>
-								`
-							]
-						},
-						{
-							text: [
-								'- The <a target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/API/Popover_API">Popover Api</a> was a natural fit, since it handles component toggling and window coordinate persistence natively, removing the need for JavaScript and keeping the implementation clean. ',
-								'- The <a target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Anchor_positioning">Anchor positioning Api</a> was also essential to this project, as it reduced the need for manual precise positioning typically required for tethered components.',
-							]
-						},
-						{
-							text: ['Afterwards these features and styling was used for a game based on our classmates that resembles a Pokemon card game. ']
-						},
-						{
-							images: [
-								'/works-assets/windows/Screenshot 2024-02-11 174708.avif',
-								'/works-assets/windows/Screenshot 2024-03-01 001326.avif',
-								'/works-assets/windows/Screenshot 2024-02-11 174723.avif',
-								'/works-assets/windows/Screenshot 2024-03-01 125947.avif'
-							]
-						},
-						{
-							text:["The result of this project was a playful and responsive UI that mimicked some of the interactions of Windows XP, an opportunity to implement new web features at that time, while showcasing the skills of my teammates and me."]
-						}
-					],
-					collaborators: {
-						owner: 'Christopher Willems',
-						designer: 'Christopher Willems',
-						collaborator: 'Anna-kyra'
-					},
-					tags: ['Svelte', 'NodeJS', 'Responsive ui', 'UI/UX', 'popover'],
-					link: { src: 'https://brilletjes-squad-page.vercel.app/', showType: 'desktop' },
-					dateStart: '2024',
-					dateEnd: '',
-					status: { is: 'experiment', sticker: '' }
-				},
+				},			
 				// MERLIN
 				{
 					title: 'Merlin studios',
@@ -281,6 +201,86 @@ export async function load() {
 					dateStart: '2024',
 					dateEnd: '',
 					status: { is: '', sticker: '' }
+				},
+					// WINDOWS
+				{
+					title: 'Windows',
+					slug: 'School project',
+					published: { is: true, date: '' },
+					// description: 'I got to create a profile card that showcased my understanding of the web fundamentals in the form of a profilecard. I took this opportunity to experiemnt with toen die tijd the new popover api and styled it in the look and feel of the Windows XP interface.',
+					assets: {
+						image: [
+							'25acb22a-22a3-41d5-a0eb-c91529c4c6c8.avif',
+							'chris icon lowlowres.avif',
+							'works-assets/chris landing page portfolio ideas-02.avif'
+						],
+						icon: '/works-assets/windows/pngwing.com.avif',
+						// color: 'skyblue'
+						color:'#94c5f8',
+					},
+					contentBlock: [
+						{
+							text: [
+								// 'I created a profile card that showcased my understanding of some web fundamentals. I took this opportunity to experiment with the new <a target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/API/Popover_API">popover api</a> and styled it in the look and feel of the Windows XP interface.'
+								'I created a profile card that showcased my understanding of some web fundamentals using <a target="_blank" href="https://www.npmjs.com/package/ejs">ejs</a>, and styled it in the look and feel of the Windows XP interface.'
+							]
+						},
+						{
+							images: ['./works-assets/windows/chrome_KDKznicEhK.gif']
+						},
+						{
+							images: [
+								'/works-assets/windows/Recording 2026-03-02 022626.gif',
+								'/works-assets/windows/chrome_hh5Wv4h7nO.gif',
+								'/works-assets/windows/pngwing.com.avif'
+							]
+						},
+						{
+							text:['I took this opportunity to experiment with "at that time" new web features:'],
+							html: [`
+							<ul class="flat-list">
+								<li>Popover Api</li>
+								<li>Anchor Api</li>
+								<li>Iframes</li>
+								<li>Embed</li>
+								<li>Clip-mask</li>
+								<li>Preferred color scheme </li>
+								<li>Dynamic grid </li>
+							</ul>
+								`
+							]
+						},
+						{
+							text: [
+								'- The <a target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/API/Popover_API">Popover Api</a> was a natural fit, since it handles component toggling and window coordinate persistence natively, removing the need for JavaScript and keeping the implementation clean. ',
+								'- The <a target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Anchor_positioning">Anchor positioning Api</a> was also essential to this project, as it reduced the need for manual precise positioning typically required for tethered components.',
+							]
+						},
+						{
+							text: ['Afterwards these features and styling was used for a game based on our classmates that resembles a Pokemon card game. ']
+						},
+						{
+							images: [
+								'/works-assets/windows/Screenshot 2024-02-11 174708.avif',
+								'/works-assets/windows/Screenshot 2024-03-01 001326.avif',
+								'/works-assets/windows/Screenshot 2024-02-11 174723.avif',
+								'/works-assets/windows/Screenshot 2024-03-01 125947.avif'
+							]
+						},
+						{
+							text:["The result of this project was a playful and responsive UI that mimicked some of the interactions of Windows XP, an opportunity to implement new web features at that time, while showcasing the skills of my teammates and me."]
+						}
+					],
+					collaborators: {
+						owner: 'Christopher Willems',
+						designer: 'Christopher Willems',
+						collaborator: 'Anna-kyra'
+					},
+					tags: ['Svelte', 'NodeJS', 'Responsive ui', 'UI/UX', 'popover'],
+					link: { src: 'https://brilletjes-squad-page.vercel.app/', showType: 'desktop' },
+					dateStart: '2024',
+					dateEnd: '',
+					status: { is: 'experiment', sticker: '' }
 				},
 				// ZUZA
 				{
