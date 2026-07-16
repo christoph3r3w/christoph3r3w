@@ -380,7 +380,7 @@
 		&.in-progress {
 			--sticker-color: hsla(0, 75%, 50%, 0);
 			--sticker-width: auto;
-			--sticker-height: 14rem;
+			--sticker-height: 10rem;
 			--sticker-rotation: 7deg;
 			--sticker-top: 6%;
 			left: 5%;
@@ -390,7 +390,7 @@
 		&.clear {
 			--sticker-color: hsla(0, 75%, 50%, 0);
 			--sticker-width: auto;
-			--sticker-height: 12rem;
+			--sticker-height: 10rem;
 			--sticker-rotation: 307deg !important;
 			--sticker-top: auto;
 			rotate: 119deg !important;
