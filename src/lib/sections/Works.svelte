@@ -5,6 +5,9 @@
 	import { fade} from 'svelte/transition';
 	import QRCode from 'qrcode';
 	import { ListCollapse, ListIndentDecrease, QrCode, XIcon,ArrowUpRight,BookText } from '@lucide/svelte';
+	import {audioAction} from '$lib/audio/audio.action.js';
+	import { audio } from '$lib/audio/audio.js'
+
 	
 	interface Props {
 		data?: any;
@@ -219,12 +222,18 @@
 	<link rel="preload" fetchpriority="low" as="image" href="/works-assets/material-assets/Chris website14.avif" />
 </svelte:head>
 
-{#snippet summaryContent(work: Work)}
+{#snippet summaryContent(work: Work, i: number)}
 	<summary
 		class={work?.status?.is == 'experiment' ? 'experiment' : work?.status?.is == 'small'? 'small experiment' : ''}
 		onmouseenter={() => {
 			handleClose;
 			// contentLoad = true;
+		}}
+		use:audioAction={{
+			sounds: {
+				mouseenter: 'hover',
+				focus: 'hover',
+			}, volume: 0.5 + i * 0.2, playbackRate: work?.status?.is == 'experiment' ? 1.8 : Math.max(.5, Math.min(.7, 1 + Math.tan(i * 0.8) * 0.2))
 		}}
 		
 	>
@@ -255,13 +264,15 @@
 				if (e.currentTarget.open) {
 					openDetailsIndex = i;
 					contentLoad[i] = true;
+					audio.play('clickIn');
 				} else if (openDetailsIndex === i) {
 					openDetailsIndex = null;
 					contentLoad[i] = false;
+					audio.play('clickOut');
 				}
 			}}
 		>
-			{@render summaryContent(work)}
+			{@render summaryContent(work, i)}
 			{@render workDescription(work)}
 			{@render workAssets(work, i)}
 		</details>
@@ -270,7 +281,7 @@
 {/snippet}
 
 {#snippet workAssets(work: Work, index: number)}
-	<article class="work-assets">
+	<article class="work-assets" >
 		<div class="asset-border b-left"></div>
 		<div class="asset-border b-right"></div>
 		<div class="asset-border b-bottom"></div>
@@ -299,7 +310,7 @@
 						{#await projects then dataWorks} 
 						<Carousel imageBlock={block.images} blockIndex={i} controls={['base']} >
 						{#each block.images as img}
-							<span	class="asset-img-ctnr">
+							<span	class="asset-img-ctnr" >
 								<picture >	
 									<img src={img} alt={'Image'} loading="lazy"
 									 sizes="(min-width:1920px) 1280px, (min-width:1080px) 640px, (min-width:768px) 400px"
@@ -426,6 +437,11 @@
 			class="file loading"
 			style="--file-index:{i +
 				1}; --file-primary-color:rgba(213, 213, 213, 0.904); --total-work:{t}"
+				use:audioAction={{
+			sounds: {
+				animationiteration: 'scroll',
+			},volume: 0.5
+		}}
 		>
 			<summary tabindex="-1" class="experiment">
 				<span class="work-title">...loading</span>

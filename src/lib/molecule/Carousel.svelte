@@ -1,6 +1,8 @@
 <script lang="ts">
  import {onDestroy,tick, onMount} from 'svelte';
  import type {Snippet}  from 'svelte';
+ import {audioAction} from '$lib/audio/audio.action.js';
+ 
 import { Play, Pause, Maximize2, Minimize2, ChevronLeft, ChevronRight, CircleDashed, Dot } from '@lucide/svelte';
 
 interface CarouselProps {
@@ -62,11 +64,12 @@ let observer: IntersectionObserver;
 
 $effect(() => {
   if (!trackContainer || !track) return;
+	const trackElement = track;
 
   observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        const slides = Array.from(track?.children);
+				const slides = Array.from(trackElement.children);
         currentIndex = slides.indexOf(entry.target as HTMLElement);
       }
     });
@@ -76,7 +79,7 @@ $effect(() => {
     threshold: 0.1, // trigger as soon as it enters this middle section
   });
 
-  Array.from(track.children).forEach(slide => {
+	Array.from(trackElement.children).forEach(slide => {
     observer.observe(slide);
   });
 
@@ -101,6 +104,11 @@ onMount(() => {
 		class="track" 	
 		onclick={(e) => {bigPicture(e,blockIndex)}}
 		bind:this={track}
+		use:audioAction={{
+			sounds: {
+				pointerdown: 'scroll',
+			},volume: 0.2
+		}}
 		>
 		{@render children()}
 	</button>
@@ -135,13 +143,32 @@ onMount(() => {
 
 	{#snippet nextBtn()}
 		<span class=" ctrl-next">
-			<button class="shift-btn" onclick={nextImage}><ChevronRight size={20} /></button>
+			<button 
+			class="shift-btn" 
+			onclick={nextImage}
+			use:audioAction={{
+			sounds: {
+				pointerdown: 'clickOut',
+			},volume: 0.2
+		}}>
+			<ChevronRight size={20} />
+			</button>
 		</span>
 	{/snippet}
 
 	{#snippet prevBtn()}
 		<span class="ctrl-prev">
-			<button class="shift-btn" onclick={prevImage}><ChevronLeft size={20} /></button>
+			<button 
+				class="shift-btn" 
+				onclick={prevImage}
+				use:audioAction={{
+					sounds: {
+						pointerdown: 'clickOut',
+					},volume: 0.2
+				}}
+			>
+				<ChevronLeft size={20} />
+			</button>
 		</span>
 	{/snippet}
 
@@ -159,7 +186,12 @@ onMount(() => {
 
 	{#snippet big(x: number)}
 		<span class="ctrl-sections ctrl-big pill">
-			<button onclick={(e) => {bigPicture(e, x)}}>
+			<button 	onclick={(e) => {bigPicture(e, x)}}	
+				use:audioAction={{
+				sounds: {
+					pointerdown: 'scroll',
+				},volume: 0.2
+			}}>
 				{#if !isBig }
 				<Maximize2 size={iconSize}/>
 				{:else }
@@ -170,7 +202,15 @@ onMount(() => {
 	{/snippet}
 
 	{#snippet radioRange(blockI: number, index: number)}
-		<label >
+		<label
+			use:audioAction={{
+				sounds: {
+					pointerdown: 'clickIn',
+					pointerup: 'clickOut'
+				},
+				volume: 0.2
+			}}
+		>
 			<input
 				type="radio"
 				name="carousel-{blockI}"

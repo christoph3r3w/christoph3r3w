@@ -12,6 +12,10 @@
 
 <svelte:head>
 	<link rel="preload" fetchpriority="high" as="image" href="/cuttingmat55-33-2.svg" />
+	<link rel="preload" as="audio" href="/sounds/movement sounds hover.mp3" />
+	<link rel="preload" as="audio" href="/sounds/movement sounds click in.mp3" />
+	<link rel="preload" as="audio" href="/sounds/movement sounds click out.mp3" />
+	<link rel="preload" as="audio" href="/sounds/movement sounds click out long.mp3" />
 </svelte:head>
 
 
