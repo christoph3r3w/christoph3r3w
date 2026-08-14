@@ -1,3 +1,4 @@
+import {globalMute} from '$lib/store.js'
 export interface SoundConfig {
     src: string
 }
@@ -12,6 +13,13 @@ export class AudioManager {
     buffers = new Map<string, AudioBuffer>()
     configs = new Map<string, SoundConfig>()
     context: AudioContext | null = null
+    isMuted = false
+
+    constructor() {
+        globalMute.subscribe(value => {
+            this.isMuted = value
+        })
+    }
 
     register(name: string, config: SoundConfig): void {
         if (typeof Audio === 'undefined') return
@@ -49,7 +57,7 @@ export class AudioManager {
 
         if (!audio) return
 
-        audio.volume = options.volume ?? 1
+        audio.volume = this.isMuted ? 0 : (options.volume ?? 1)
         audio.playbackRate = options.playbackRate ?? 1
         audio.currentTime = 0
 
@@ -72,7 +80,7 @@ export class AudioManager {
 
         source.buffer = buffer
         source.playbackRate.value = options.playbackRate ?? 1
-        gain.gain.value = options.volume ?? 1
+        gain.gain.value = this.isMuted ? 0 : (options.volume ?? 1)
 
         source.connect(gain)
         gain.connect(context.destination)

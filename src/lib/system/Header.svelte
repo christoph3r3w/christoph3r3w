@@ -1,9 +1,12 @@
 <script lang="ts">
-	import { menuOpen, contactsOpen, aboutOpen, aboutMoreOpen, modeDark } from '$lib/store';
+	import { menuOpen, contactsOpen, aboutOpen, aboutMoreOpen, modeDark, globalMute } from '$lib/store';
 	import * as themeToggleFn from '$lib/atoms/themeToggleFn.svelte';
+	import { Volume2, VolumeOff } from '@lucide/svelte';
+
 	let openMenu = $derived($menuOpen);
 	let openContacts = $derived($contactsOpen);
 	let openAbout = $derived($aboutOpen);
+	let soundOn = $derived($globalMute);
 
 	function handleViewTransition(callback: () => void, target?: HTMLElement) {
 		const transitionTarget = target || document;
@@ -71,6 +74,10 @@
 
 	function handleAboutMore() {
 		aboutMoreOpen.set(!$aboutMoreOpen);
+	}
+
+	function toggleSound(){
+		globalMute.set(!$globalMute);
 	}
 
 	$effect(() => {
@@ -192,7 +199,21 @@
 					/>
 				</svg>
 			</button>
+			<button
+				class=" icon-btn"
+				title="sound toggle"
+				aria-label="sound toggle"
+				onclick={toggleSound}>
+				{#if $globalMute}
+				<VolumeOff />
+				{:else}
+				<Volume2 />
+				{/if} 
+			</button>
 		{/if}
+		{#if openMenu == false && $globalMute}
+			<VolumeOff />
+		{/if} 
 	</li>
 {/snippet}
 

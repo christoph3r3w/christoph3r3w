@@ -232,7 +232,7 @@
 		use:audioAction={{
 			sounds: {
 				mouseenter: 'hover',
-				focus: 'hover',
+				// focus: 'hover',
 			}, volume: 0.5 + i * 0.2, playbackRate: work?.status?.is == 'experiment' ? 1.8 : Math.max(.5, Math.min(.7, 1 + Math.tan(i * 0.8) * 0.2))
 		}}
 		

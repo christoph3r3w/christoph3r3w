@@ -10,6 +10,9 @@ export const aboutMoreOpen = writable(false);
 // dark mode toggle
 export const modeDark = writable(false);
 
+// global mute toggle
+export const globalMute = writable(true);
+
 // other
 // export const userAnswers = writable([]);
 export const fileType = writable('files');
