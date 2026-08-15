@@ -11,6 +11,9 @@ export const sounds = {
 	scroll:{
 		src:"/sounds/movement sounds scroll.mp3",
 	},
+	flop:{
+		src:"/sounds/movement sounds flop.mp3",
+	},
 	hover: {
 		src:"/sounds/movement sounds hover.mp3",
 	},

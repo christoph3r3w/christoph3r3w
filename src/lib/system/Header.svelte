@@ -2,6 +2,8 @@
 	import { menuOpen, contactsOpen, aboutOpen, aboutMoreOpen, modeDark, globalMute } from '$lib/store';
 	import * as themeToggleFn from '$lib/atoms/themeToggleFn.svelte';
 	import { Volume2, VolumeOff } from '@lucide/svelte';
+	import {audioAction} from '$lib/audio/audio.action.js';
+
 
 	let openMenu = $derived($menuOpen);
 	let openContacts = $derived($contactsOpen);
@@ -122,7 +124,8 @@
 {#snippet buttonNav()}
 	<li class="D-menu">
 		<!-- main menu btn -->
-		<button onmouseup={toggleMenu} onkeydown={toggleMenu} class="menu-btn" aria-label="menu button">
+		<button onmouseup={toggleMenu} onkeydown={toggleMenu} class="menu-btn" aria-label="menu button"
+		use:audioAction={{sounds:{mouseenter:'hover', pointerdown:'flop'}, volume:0.5, playbackRate:1}}>
 			<svg width="" height="" viewBox="0 0 77 62" fill="none" xmlns="http://www.w3.org/2000/svg">
 				<path d="M25 31.25L25 30.75" stroke="black" stroke-width="5" stroke-linecap="round" />
 				<path d="M39 31.25L39 30.75" stroke="black" stroke-width="5" stroke-linecap="round" />
@@ -130,9 +133,11 @@
 			</svg>
 		</button>
 		<!-- contact btn -->
-		<button onmouseup={toggleContacts} onkeydown={toggleContacts} class="contact-btn">Contact</button>
+		<button onmouseup={toggleContacts} onkeydown={toggleContacts} class="contact-btn"
+		use:audioAction={{sounds:{mouseenter:'hover', pointerdown:'flop'}, volume:0.15, playbackRate:.8}}>Contact</button>
 		<!-- about btn -->
-		<button onmouseup={toggleAbout} onkeydown={toggleAbout} class="about-btn">About</button>
+		<button onmouseup={toggleAbout} onkeydown={toggleAbout} class="about-btn"
+		use:audioAction={{sounds:{mouseenter:'hover', pointerdown:'flop'}, volume:0.15, playbackRate:.8}}>About</button>
 		
 		<!-- dark mode btn -->
 		<button
@@ -140,6 +145,7 @@
 			title="theme toggle"
 			aria-label="theme toggle"
 			onclick={() => themeToggleFn.handleDarkMode()}
+			use:audioAction={{sounds:{mouseenter:'hover', pointerdown:'flop'}, volume:0.15, playbackRate:.6}}
 		>
 			<svg
 				width="24"
@@ -162,7 +168,9 @@
 				class="themes icon-btn"
 				title="theme toggle"
 				aria-label="theme toggle"
-				onclick={themeToggleFn.handleThemeToggle}>
+				onclick={themeToggleFn.handleThemeToggle}
+				use:audioAction={{sounds:{mouseenter:'hover', pointerdown:'clickOutLong'}, volume:0.15, playbackRate:.6}}
+				>
 				<svg
 					width="25"
 					height="32"
@@ -203,7 +211,10 @@
 				class=" icon-btn"
 				title="sound toggle"
 				aria-label="sound toggle"
-				onclick={toggleSound}>
+				onclick={toggleSound}
+				use:audioAction={{sounds:{mouseenter:'hover', pointerdown:'flop'}, volume:0.15, playbackRate:.4}}
+
+				>
 				{#if $globalMute}
 				<VolumeOff />
 				{:else}
