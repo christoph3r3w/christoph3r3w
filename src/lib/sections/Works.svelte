@@ -232,8 +232,9 @@
 		use:audioAction={{
 			sounds: {
 				mouseenter: 'hover',
+				// transitionend: 'hover',
 				// focus: 'hover',
-			}, volume: 0.5 + i * 0.2, playbackRate: work?.status?.is == 'experiment' ? 1.8 : Math.max(.5, Math.min(.7, 1 + Math.tan(i * 0.8) * 0.2))
+			}, volume: 0.25 + i * 0.1, playbackRate: (work?.status?.is == 'experiment' || work?.status?.is == 'small') ? 1.3 : Math.max(.35, Math.min(.55, 0.8 + Math.tan(i * 0.8) * 0.12))
 		}}
 		
 	>
@@ -264,7 +265,7 @@
 				if (e.currentTarget.open) {
 					openDetailsIndex = i;
 					contentLoad[i] = true;
-					audio.play('clickIn');
+					audio.play('clickOutLong', {volume: 0.55});
 				} else if (openDetailsIndex === i) {
 					openDetailsIndex = null;
 					contentLoad[i] = false;
@@ -366,10 +367,24 @@
 			</ul>
 		</div>
 	</article>
-	<!-- the section behind the description -->
+
+		<!-- the section behind the description -->
 	<article class="work-description note stamp {showQr ? 'show-qr-qr' : ''}">
 		<div class="description-space">
-			<button class="wavyBox" onclick={moveDescription}>
+			<button class="wavyBox" onclick={moveDescription}
+			use:audioAction={{
+				sounds: {
+					pointerdown:'slideFlick'
+				},
+				volume:showDescription ? 0.3 : 0,
+				playbackRate: 1.2
+			}}
+			use:audioAction={{
+				sounds: {
+					pointerdown: 'slideOut'
+				},
+				volume:showDescription ? 0.25 : 0.4,
+			}}>
 				{#if showDescription}
 					<ListCollapse size="20" />
 				{:else}
@@ -432,18 +447,19 @@
 {#snippet loadingFiles()}
 	{@const t = 4}
 	{#each { length: t }, i}
-		<details
+		<details 
 			transition:fade
 			class="file loading"
-			style="--file-index:{i +
-				1}; --file-primary-color:rgba(213, 213, 213, 0.904); --total-work:{t}"
-				use:audioAction={{
-			sounds: {
-				animationiteration: 'scroll',
-			},volume: 0.5
-		}}
+			style="--file-index:{i + 1}; --file-primary-color:rgba(213, 213, 213, 0.904); --total-work:{t}"
+			
 		>
-			<summary tabindex="-1" class="experiment">
+			<summary tabindex="-1" class="experiment"
+			
+			use:audioAction={{
+				sounds: {
+					animationstart: 'scroll',
+				}, volume: .5, playbackRate: i % 2 === 0 ? 1.2 : 0.8
+			}}>
 				<span class="work-title">...loading</span>
 			</summary>
 		</details>
@@ -940,7 +956,17 @@
 		inset: 1rem;
 		top: 4rem;
 		left: 10cqw;
+		transition: 200ms var(--transition-timing);
 		outline: 2px solid transparent;
+
+		@starting-style {
+			content: none;
+			max-width: 0;
+			max-height: 0;
+			left: 0;
+			top: 0;
+			transform: translateX(0) rotate(0deg);
+		}
 	}
 
 	details.file summary.experiment:nth-of-type(n):hover::after {
@@ -2326,6 +2352,7 @@
 	}
 
 	@media screen and (max-width: 950px) {
+
 		:root{
 			--content-assets-left-gap: 10cqw;
 			--content-assets-right-gap: 35cqw;
@@ -2387,6 +2414,10 @@
 			content: none;
 		}
 
+		details.file summary.experiment:nth-of-type(n):hover::after {
+			top: 0rem;
+		}
+
 		/* .work-section:where(:focus-within,:focus-visible,:hover,.Orderedlist-container:is(:hover, :focus-within)),
 		.work-section:where(:focus-within, :focus) {
 
@@ -2397,7 +2428,6 @@
 		}
 		} */
 
-
 		.work-section:has(details:nth-of-type(n)[open]) details.file > summary {
 			--_fold: 32px;
 			top: -4%;
@@ -2406,8 +2436,6 @@
 			bottom: -4%;
 			.small-description {	display: none;	}
 		}
-
-
 
 		details[open]::details-content {
 			top: 5%;
@@ -2641,24 +2669,35 @@
 		.work-section details.file :is(summary, ::details-summary),
 		details.file:is(:focus-within) summary {
 			--move: calc(46vh + (-43vh * (var(--file-index) / var(--total-work, 1))));
-			--move-all:170dvw;
+			/* --move-all:170cqw; */
 		}
 
+		details[open] .work-description .description-links {
+			display: none;
+		}
+
+		details.file summary.experiment:nth-of-type(n):hover::after {
+			top: 0rem;
+		}
+
+		details[open] .work-description,
 		details[open]:has(.experiment) .work-description {
-			translate: min(-100%,-30dvw) -25%;
+			/* translate: min(-100%,-30dvw) -25%; */
+			translate: -10dvw 0%;
 			width: 300px;
 			height: 60dvh;
 			max-height: 80dvh;
 
 			&.note{
-				translate: min(-100%,-30dvw) 0;
+				/* translate: min(-100%,-30dvw) 0; */
+				translate: inherit 0;
 				width: 300px;
 				height: 60dvh;
 			}
 		}
 
-		details[open]:has(.work-description:not(.description-links):hover, .move-description) .work-description.note {
-			translate: 0%;
+		details[open]:has(.work-description:not(.description-links):is(:hover,:focus-within), .move-description) .work-description.note {
+			translate: -10dvw 0 ;
 		}
 
 		.show-qr-links.show-qr-links {

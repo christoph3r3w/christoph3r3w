@@ -17,4 +17,14 @@ export const sounds = {
 	hover: {
 		src:"/sounds/movement sounds hover.mp3",
 	},
+	slideOut:{
+		src:"/sounds/movement sounds slide out.mp3",
+	},
+	slideIn:{
+		src:"/sounds/movement sounds slide in.mp3",
+	},
+	slideFlick:{
+		src:"/sounds/movement sounds slide flick.mp3",
+	},
+
 }

@@ -125,7 +125,7 @@
 	<li class="D-menu">
 		<!-- main menu btn -->
 		<button onmouseup={toggleMenu} onkeydown={toggleMenu} class="menu-btn" aria-label="menu button"
-		use:audioAction={{sounds:{mouseenter:'hover', pointerdown:'flop'}, volume:0.5, playbackRate:1}}>
+		use:audioAction={{sounds:{pointerdown:'flop'}, volume:0.5, playbackRate:1}}>
 			<svg width="" height="" viewBox="0 0 77 62" fill="none" xmlns="http://www.w3.org/2000/svg">
 				<path d="M25 31.25L25 30.75" stroke="black" stroke-width="5" stroke-linecap="round" />
 				<path d="M39 31.25L39 30.75" stroke="black" stroke-width="5" stroke-linecap="round" />
@@ -134,10 +134,10 @@
 		</button>
 		<!-- contact btn -->
 		<button onmouseup={toggleContacts} onkeydown={toggleContacts} class="contact-btn"
-		use:audioAction={{sounds:{mouseenter:'hover', pointerdown:'flop'}, volume:0.15, playbackRate:.8}}>Contact</button>
+		use:audioAction={{sounds:{pointerdown:'flop'}, volume:0.25, playbackRate:.8}}>Contact</button>
 		<!-- about btn -->
 		<button onmouseup={toggleAbout} onkeydown={toggleAbout} class="about-btn"
-		use:audioAction={{sounds:{mouseenter:'hover', pointerdown:'flop'}, volume:0.15, playbackRate:.8}}>About</button>
+		use:audioAction={{sounds:{pointerdown:'flop'}, volume:0.25, playbackRate:.8}}>About</button>
 		
 		<!-- dark mode btn -->
 		<button
@@ -145,7 +145,7 @@
 			title="theme toggle"
 			aria-label="theme toggle"
 			onclick={() => themeToggleFn.handleDarkMode()}
-			use:audioAction={{sounds:{mouseenter:'hover', pointerdown:'flop'}, volume:0.15, playbackRate:.6}}
+			use:audioAction={{sounds:{pointerdown:'flop'}, volume:0.25, playbackRate:.6}}
 		>
 			<svg
 				width="24"
@@ -169,7 +169,7 @@
 				title="theme toggle"
 				aria-label="theme toggle"
 				onclick={themeToggleFn.handleThemeToggle}
-				use:audioAction={{sounds:{mouseenter:'hover', pointerdown:'clickOutLong'}, volume:0.15, playbackRate:.6}}
+				use:audioAction={{sounds:{pointerdown:'clickOutLong'}, volume:0.25, playbackRate:.6}}
 				>
 				<svg
 					width="25"
@@ -212,7 +212,7 @@
 				title="sound toggle"
 				aria-label="sound toggle"
 				onclick={toggleSound}
-				use:audioAction={{sounds:{mouseenter:'hover', pointerdown:'flop'}, volume:0.15, playbackRate:.4}}
+				use:audioAction={{sounds:{pointerdown:'flop'}, volume:0.25, playbackRate:.4}}
 
 				>
 				{#if $globalMute}

@@ -1,7 +1,7 @@
 import { audio } from './audio.js'
 
 /**
- * @typedef {'mouseenter' | 'focus' | 'mousedown' | 'mouseup' | 'pointerdown' | 'pointerup' | 'click' | 'wheel' | 'animationiteration'} AudioActionEvent
+ * @typedef {'mouseenter' | 'focus' | 'mousedown' | 'mouseup' | 'pointerdown' | 'pointerup' | 'click' | 'wheel' | 'animationiteration'| 'animationstart'| 'transitionend'| 'transitionrun'} AudioActionEvent
  * @typedef {string | {
  *   sound?: string,
  *   sounds?: Partial<Record<AudioActionEvent, string>>,
@@ -31,7 +31,10 @@ export function audioAction(node, parameter) {
     const handlePointerUp = () => play('pointerup')
     const handleClick = () => play('click')
     const handleWheel = () => play('wheel')
-	 const handleAnimationIteration = () => play('animationiteration')
+	const handleAnimationIteration = () => play('animationiteration')
+	const handleAnimationStart = () => play('animationstart')
+	const handleTransitionEnd = () => play('transitionend')
+    const handleTransitionRun = () => play('transitionrun')
 
     node.addEventListener('mouseenter', handleMouseEnter)
     node.addEventListener('focus', handleFocus)
@@ -40,6 +43,9 @@ export function audioAction(node, parameter) {
     node.addEventListener('click', handleClick)
     node.addEventListener('wheel', handleWheel)
     node.addEventListener('animationiteration', handleAnimationIteration)
+    node.addEventListener('animationstart', handleAnimationStart)
+    node.addEventListener('transitionend', handleTransitionEnd)
+    node.addEventListener('transitionrun', handleTransitionRun)
 
     return {
         update(nextParameter) {
@@ -54,6 +60,9 @@ export function audioAction(node, parameter) {
             node.removeEventListener('click', handleClick)
             node.removeEventListener('wheel', handleWheel)
             node.removeEventListener('animationiteration', handleAnimationIteration)
+            node.removeEventListener('animationstart', handleAnimationStart)
+            node.removeEventListener('transitionend', handleTransitionEnd)
+            node.removeEventListener('transitionrun', handleTransitionRun)
         }
     }
 }

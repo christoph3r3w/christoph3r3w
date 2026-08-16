@@ -11,7 +11,7 @@ export const aboutMoreOpen = writable(false);
 export const modeDark = writable(false);
 
 // global mute toggle
-export const globalMute = writable(true);
+export const globalMute = writable(false);
 
 // other
 // export const userAnswers = writable([]);
