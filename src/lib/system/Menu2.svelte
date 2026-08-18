@@ -42,6 +42,15 @@
 		aboutMoreOpen.set(!$aboutMoreOpen);
 	}
 
+	function escMenu (event: KeyboardEvent) {
+		if (event.key === 'Escape') {
+				menuOpen.set(false);
+				contactsOpen.set(false);
+				aboutOpen.set(false);
+				aboutMoreOpen.set(false);
+		}
+	}
+
 	function whoo(
 		node: HTMLElement,
 		params: { delay?: number; duration?: number; easing?: (t: number) => number }
@@ -353,7 +362,7 @@
 	</section>
 {/snippet}
 
-<article class="menu-container {openMenu ? 'active' : 'close'}">
+<article class="menu-container {openMenu ? 'active' : 'close'}" onkeydown={escMenu}>
 	{@render headerC()}
 </article>
 

@@ -23,6 +23,25 @@
 		(transitionTarget as any).startViewTransition(callback);
 	}
 
+	function escMenu (event: KeyboardEvent) {
+		if (event.key === 'Escape') {
+			handleViewTransition(() => {
+				menuOpen.set(false);
+				contactsOpen.set(false);
+				aboutOpen.set(false);
+				aboutMoreOpen.set(false);
+			});
+		}
+	}
+
+	function keyOpenMenuOption(e: KeyboardEvent) {
+		if (e.key === 'space' || e.key === 'enter') {
+			handleViewTransition(() => {
+				(e.target as HTMLElement)?.closest('button')?.click();
+			});
+		}
+	}
+
 	function toggleMenu() {
 		if (openContacts == true || openAbout == true) {
 			handleViewTransition(() => {
@@ -91,6 +110,7 @@
 	});
 </script>
 
+
 {#snippet headerLogo()}
 	<li class="header-logo">
 		<a href="/" data-sveltekit-reload data-sveltekit-preload-code class="logo-link" aria-label="home">
@@ -124,7 +144,7 @@
 {#snippet buttonNav()}
 	<li class="D-menu">
 		<!-- main menu btn -->
-		<button onmouseup={toggleMenu} onkeydown={toggleMenu} class="menu-btn" aria-label="menu button"
+		<button onmouseup={toggleMenu} onkeydown={(e) => {escMenu; keyOpenMenuOption}} class="menu-btn" aria-label="menu button"
 		use:audioAction={{sounds:{pointerdown:'flop'}, volume:0.5, playbackRate:1}}>
 			<svg width="" height="" viewBox="0 0 77 62" fill="none" xmlns="http://www.w3.org/2000/svg">
 				<path d="M25 31.25L25 30.75" stroke="black" stroke-width="5" stroke-linecap="round" />
@@ -133,10 +153,10 @@
 			</svg>
 		</button>
 		<!-- contact btn -->
-		<button onmouseup={toggleContacts} onkeydown={toggleContacts} class="contact-btn"
+		<button onmouseup={toggleContacts} onkeydown={(e) => {escMenu; keyOpenMenuOption}} class="contact-btn"
 		use:audioAction={{sounds:{pointerdown:'flop'}, volume:0.25, playbackRate:.8}}>Contact</button>
 		<!-- about btn -->
-		<button onmouseup={toggleAbout} onkeydown={toggleAbout} class="about-btn"
+		<button onmouseup={toggleAbout} onkeydown={(e) => {escMenu; keyOpenMenuOption}} class="about-btn"
 		use:audioAction={{sounds:{pointerdown:'flop'}, volume:0.25, playbackRate:.8}}>About</button>
 		
 		<!-- dark mode btn -->

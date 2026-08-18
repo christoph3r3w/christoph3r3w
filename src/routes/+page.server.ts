@@ -59,7 +59,7 @@ export async function load() {
 									<h2>Examples</h2>
 									<ul>
 										<li><button data-open-file="3">...</button></li>
-										<li><button data-open-file="2">...</button></li>
+										<li><button data-open-file="4">...</button></li>
 									</ul>																		
 								`],
 							},
@@ -202,7 +202,7 @@ export async function load() {
 					dateEnd: '',
 					status: { is: '', sticker: '' }
 				},
-					// WINDOWS
+				// WINDOWS
 				{
 					title: 'Windows',
 					slug: 'School project',
@@ -282,24 +282,73 @@ export async function load() {
 					dateEnd: '',
 					status: { is: 'experiment', sticker: '' }
 				},
-				// ZUZA
+				// kennis center
 				{
-					title: 'zuza website',
-					slug: 'Portfolio',
+					title: 'Kennis center',
+					slug: 'Kennis-center',
 					published: { is: false, date: '' },
-					description: 'a portfolio website for a designer named zuza',
-					assets: { image: [''], icon: '', color: '' },
-					contentBlock: [{}],
+					description: 'museum website',
+					assets: { image: [''], icon: '', color: 'pink' },
+					contentBlock: [
+					{
+					html:[`
+									<h2>Examples</h2>
+									<ul>
+										<li><button data-open-file="1">...</button></li>
+										<li><button data-open-file="2">...</button></li>
+										<li><button data-open-file="3">...</button></li>
+										<li><button data-open-file="4">...</button></li>
+										<li><button data-open-file="5">...</button></li>
+										<li><button data-open-file="6">...</button></li>
+										<li><button data-open-file="7">...</button></li>
+									</ul>																		
+								`],
+					}
+					],
 					collaborators: {
-						owner: 'Zuza loch',
-						designer: 'Zuza loch',
+						owner: '',
+						designer: 'Christopher Willems',
 						developer: 'Christopher Willems'
 					},
 					tags: ['Svelte/Vue', 'NodeJS', 'Decap'],
 					link: { src: '', showType: '' },
 					dateStart: '2026',
 					dateEnd: '',
-					status: { is: '', sticker: '' }
+					status: { is: 'small', sticker: '' }
+				},
+				// Deloitte
+				{
+					title: 'Deloitte',
+					slug: 'Deloitte',
+					published: { is: false, date: '' },
+					description: 'internal mobility tool',
+					assets: { image: [''], icon: '', color: 'hsla(231, 87%, 40%, 0.86)' },
+					contentBlock: [
+					{
+					html:[`
+									<h2>Examples</h2>
+									<ul>
+										<li><button data-open-file="1">...</button></li>
+										<li><button data-open-file="2">...</button></li>
+										<li><button data-open-file="3">...</button></li>
+										<li><button data-open-file="4">...</button></li>
+										<li><button data-open-file="5">...</button></li>
+										<li><button data-open-file="6">...</button></li>
+										<li><button data-open-file="7">...</button></li>
+									</ul>																		
+								`],
+					}
+					],
+					collaborators: {
+						owner: '',
+						designer: 'Christopher Willems',
+						developer: 'Christopher Willems'
+					},
+					tags: ['Svelte/Vue', 'NodeJS', 'Decap'],
+					link: { src: '', showType: '' },
+					dateStart: '2026',
+					dateEnd: '',
+					status: { is: 'small', sticker: '' }
 				},
 				// MONYTRI
 				{

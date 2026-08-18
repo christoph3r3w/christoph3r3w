@@ -72,7 +72,7 @@
 	let openDetailsIndex = $state<number | null>(null);
 	let m4 = $derived(openDetailsIndex);
 
-	let works = $derived(dataWorks2[1]?.works?.filter((w: any) => w?.published?.is === true).slice(0, 6) || []);
+	let works = $derived(dataWorks2[1]?.works?.filter((w: any) => w?.published?.is === true).slice(0) || []);
 	let fileLinks = $derived(works[m4 ?? 0]?.link.src || '');
 	let qrTimeout: ReturnType<typeof setTimeout> | null = $state(null);
 	let qrURL = $state('');
@@ -101,6 +101,14 @@
 		if (qrTimeout !== null) {
 			clearTimeout(qrTimeout);
 			qrTimeout = null;
+		}
+	}
+
+	function handleSummaryEsc(e: KeyboardEvent) {
+		if (e.key === 'Escape') {
+			e.preventDefault();
+			const detailsElement = (e.currentTarget as HTMLElement).closest('details');
+			if (detailsElement) detailsElement.open = false;
 		}
 	}
 
@@ -225,18 +233,13 @@
 {#snippet summaryContent(work: Work, i: number)}
 	<summary
 		class={work?.status?.is == 'experiment' ? 'experiment' : work?.status?.is == 'small'? 'small experiment' : ''}
-		onmouseenter={() => {
-			handleClose;
-			// contentLoad = true;
-		}}
+		onmouseenter={() => {handleClose;}}
+		onkeydown={handleSummaryEsc}
 		use:audioAction={{
 			sounds: {
 				mouseenter: 'hover',
-				// transitionend: 'hover',
-				// focus: 'hover',
 			}, volume: 0.25 + i * 0.1, playbackRate: (work?.status?.is == 'experiment' || work?.status?.is == 'small') ? 1.3 : Math.max(.35, Math.min(.55, 0.8 + Math.tan(i * 0.8) * 0.12))
 		}}
-		
 	>
 		{#if work?.assets?.icon?.trim()}
 			<span class="work-icon-span">
